@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import React, { useState } from "react";
 
 export default function RegisterPage() {
@@ -36,9 +37,11 @@ export default function RegisterPage() {
           <span className="text-sm text-gray-500 hidden sm:inline">
             Already have an account?
           </span>
-          <button className="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-gray-100 dark:bg-gray-800 text-[#121717] dark:text-white text-sm font-bold transition-colors hover:bg-gray-200 dark:hover:bg-gray-700">
-            Log in
-          </button>
+          <Link href={"/login"}>
+            <button className="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-gray-100 dark:bg-gray-800 text-[#121717] dark:text-white text-sm font-bold transition-colors hover:bg-gray-200 dark:hover:bg-gray-700">
+              Log in
+            </button>
+          </Link>
         </div>
       </header>
 

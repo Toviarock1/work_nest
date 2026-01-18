@@ -9,7 +9,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
   const router = useRouter();
   useEffect(() => {
-    router.push("/auth/register");
+    router.push("/register");
   });
   return (
     <QueryClientProvider client={queryClient}>
