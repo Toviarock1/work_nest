@@ -144,7 +144,7 @@ export default function Home() {
                             data-alt="Modern SaaS dashboard showing project management boards and analytics"
                             style={{
                               backgroundImage:
-                                'url("https://lh3.googleusercontent.com/aida-public/AB6AXuDqUUty4FmlKGJbfeJqZDExq3PqG_0oFHFpdn2B9ZNk16PZ3k9v5m22bHqsWV4cIil5ejR3lQuJ4QaV5bgx2E00c6qpiT6rgZG33wUkl6_M7eBQxIbuS5k5619-nnV7rbH5JYi6sYaqLd7YgrTNGs5WlA1asKfpUPNP7JW5oZFTsUByfCQBOhxXjRFzaGkcxGiVJ8N77tGrh2lMDO9U3Z-ANkhCevUIkYa9oD6Afo9JRUJz826C9aO4D3rkExZCUZ1KQYtBn_2i2wEg")',
+                                "url(https://lh3.googleusercontent.com/aida-public/AB6AXuDqUUty4FmlKGJbfeJqZDExq3PqG_0oFHFpdn2B9ZNk16PZ3k9v5m22bHqsWV4cIil5ejR3lQuJ4QaV5bgx2E00c6qpiT6rgZG33wUkl6_M7eBQxIbuS5k5619-nnV7rbH5JYi6sYaqLd7YgrTNGs5WlA1asKfpUPNP7JW5oZFTsUByfCQBOhxXjRFzaGkcxGiVJ8N77tGrh2lMDO9U3Z-ANkhCevUIkYa9oD6Afo9JRUJz826C9aO4D3rkExZCUZ1KQYtBn_2i2wEg)",
                             }}
                           ></div>
                         </div>
