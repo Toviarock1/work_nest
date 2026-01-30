@@ -106,23 +106,29 @@ export default function Home() {
                         <div className="flex items-center gap-4 text-sm font-medium text-[#608a79]">
                           <div className="flex -space-x-2">
                             <div className="w-8 h-8 rounded-full border-2 border-white dark:border-background-dark bg-gray-200 overflow-hidden">
-                              <img
+                              <Image
                                 className="w-full h-full object-cover"
-                                data-alt="Close-up portrait of professional female user"
+                                width={100}
+                                height={100}
+                                alt="Close-up portrait of professional female user"
                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDb7wDyO_8hTjRNXPFtQaBZ7CuMf4Ggl66BooCQjBDoTvuGegAdOYp3qyw7767F8jn0sHC_gS_8Fcr3VGgkgC0a__6ZWKIYCPb3l2zYlwsmhzz31cRmTf1lV9dHHIElB8U96OTK3UVi7vY4IYm5sugHCwuUBGFObtnArAJ-mi9QuNvvfD6cmpJqGqh-O3cjlOoaNQTThlqkco6sF7ye2P0T_4KY1V4SLEnj2uAK3FdOf1CP7pCO_iIzRVn7QpsMjfIRk9Bt68Z7t1du"
                               />
                             </div>
                             <div className="w-8 h-8 rounded-full border-2 border-white dark:border-background-dark bg-gray-300 overflow-hidden">
-                              <img
+                              <Image
+                                width={100}
+                                height={100}
                                 className="w-full h-full object-cover"
-                                data-alt="Close-up portrait of smiling male professional"
+                                alt="Close-up portrait of smiling male professional"
                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDl479OGR6CaTsz05xzVp94jWWitRdRFyHtm16MwNePPUcBk8ED5p58PX2lcqFvqd5IlTLO-ik0DVg03V2h6y0cZI-ISxUaJYSQVmjRxyrcfmiJ60QQWeQBZPaxRNB_uDXQkDFgjRt_Uk3DTuYBhMF5u8HW3fAVnV8-ecUw_KIZN9GxqJB9KaLHSIJyNFcxuXjqgXbtYRVYPMq5cZ3R76P-oQl2mghmU4cR9ArDhfCtRk-UA3W9FyRkTQjbsnE7UzF0ZFfM4LXccXqa"
                               />
                             </div>
                             <div className="w-8 h-8 rounded-full border-2 border-white dark:border-background-dark bg-gray-400 overflow-hidden">
-                              <img
+                              <Image
+                                width={100}
+                                height={100}
                                 className="w-full h-full object-cover"
-                                data-alt="Portrait of a creative project manager"
+                                alt="Portrait of a creative project manager"
                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDn2Uc1OBb9iVgRGqGGIX2yg9x1GwZ3AFZ18Q4hoUvRK95eBgnWEn8QQ1AX6VMJ4aNuPtk2a7dq7y1hA8ths6qV3Oxxe_uTWe0RQpL78Hsz5z0g28vfykXUGR8GxxYYnYTC-VYKf8F501YvoePjjP9ipP-JVu1f_MP-t4G383da0yOglXbJ5VaEFFzbyx1mCniAY6J8h8bPliue7e6TTWMbyXpmQqXd_-RUqrWIENUE1-nqdNtZzrKpv16nrM-r8npHFs7eXS2htVaK"
                               />
                             </div>
