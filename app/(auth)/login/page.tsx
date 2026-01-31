@@ -1,5 +1,5 @@
 "use client";
-import { loginUser } from "@/services/auth";
+import { loginUser } from "@/services/auth.service";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
@@ -42,6 +42,8 @@ export default function SignInPage() {
     try {
       const res = await loginUser(data);
       setUser(res.data);
+      localStorage.setItem("accessToken", res.data.token);
+      document.cookie = `accessToken=${res.data.token}; path=/; max-age=3600; SameSite=Lax`;
       router.push("/dashboard");
     } catch (error) {
       console.log(error || "Login failed");

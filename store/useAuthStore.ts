@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 
 interface AuthState {
   user: any | null;
@@ -6,8 +7,10 @@ interface AuthState {
   logOut: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  setUser: (user) => set({ user }),
-  logOut: () => set({ user: null }),
-}));
+export const useAuthStore = create<AuthState>()(
+  devtools((set) => ({
+    user: null,
+    setUser: (user) => set({ user }),
+    logOut: () => set({ user: null }),
+  })),
+);

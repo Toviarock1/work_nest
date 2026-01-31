@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useState } from "react";
-import { registerUser } from "@/services/auth";
+import { registerUser } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
