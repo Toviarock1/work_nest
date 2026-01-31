@@ -1,11 +1,13 @@
 "use client";
 
 import AuthGuard from "@/components/auth/AuthGuard";
+import { useAuthStore } from "@/store/useAuthStore";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Bell,
   Briefcase,
   ChevronRight,
+  LogOut,
   Plus,
   Search,
   Settings,
@@ -20,12 +22,13 @@ export default function DashboardLayout({
 }) {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const logout = useAuthStore((state) => state.logOut);
 
-  const logout = () => {
-    localStorage.clear();
-    queryClient.clear();
-    router.push("/login");
-  };
+  // const logout = () => {
+  //   localStorage.clear();
+  //   queryClient.clear();
+  //   router.push("/login");
+  // };
   return (
     <AuthGuard>
       <section className="bg-background-light dark:bg-background-dark text-[#121717] dark:text-white font-display">
@@ -67,11 +70,14 @@ export default function DashboardLayout({
               </nav>
             </div>
             <div className="p-6">
-              <button className="w-full flex items-center justify-center gap-2 rounded-lg h-10 bg-primary2 text-white text-sm font-bold tracking-wide">
+              <button
+                className="btn w-full flex items-center justify-center gap-2 rounded-lg h-10 bg-primary2 text-white text-sm font-bold tracking-wide"
+                onClick={logout}
+              >
                 <span className="material-symbols-outlined text-sm">
-                  <Settings />
+                  <LogOut />
                 </span>
-                <span>Settings</span>
+                <span>Logout</span>
               </button>
             </div>
           </aside>

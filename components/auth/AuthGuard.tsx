@@ -2,31 +2,19 @@ import { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import { getMe } from "@/services/auth.service";
+import { useUser } from "@/lib/hooks/useUser";
 
 const AuthGuard = ({ children }: { children: React.ReactNode }) => {
-  const { user, setUser, logOut } = useAuthStore();
+  const { user, isLoading } = useUser();
   const router = useRouter();
-  const [loading, setLoading] = useState(!user);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        if (!user) {
-          const res = await getMe();
-          setUser(res.data);
-        }
-      } catch (error) {
-        logOut();
-        router.push("/login");
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (!isLoading && !user) {
+      router.push("/login");
+    }
+  }, [user, isLoading, router]);
 
-    checkAuth();
-  }, [user, setUser, logOut, router]);
-
-  if (loading)
+  if (isLoading)
     return (
       <div className="flex h-screen items-center justify-center">
         Loading WorkNest...
