@@ -28,7 +28,7 @@ const ViewProjectTask = ({
     formState: { errors },
   } = useForm();
   return (
-    true && (
+    show && (
       <div className="absolute inset-0 z-20 glass-overlay flex justify-end">
         {/* <!-- Slide-over Panel --> */}
         <div className="w-full max-w-2xl bg-white h-full soft-shadow flex flex-col border-l border-[#dde4e4]">

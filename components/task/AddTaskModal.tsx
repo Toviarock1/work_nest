@@ -8,7 +8,7 @@ const AddTaskModal = ({
 }: {
   show: boolean;
   close: () => void;
-  onSubmit: (data: { title: string; description: string }) => void;
+  onSubmit: (data: any) => void;
 }) => {
   const {
     register,

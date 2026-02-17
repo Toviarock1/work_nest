@@ -502,7 +502,7 @@ export default function ProjectsPage() {
         onSubmit={addMemberHandler}
         isLoading={addMemberLoading}
       />
-      <ViewProjectModal />
+      <ViewProjectModal show={true} close={() => {}} onSubmit={() => {}} />
     </section>
   );
 }
