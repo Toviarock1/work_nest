@@ -71,7 +71,7 @@ const TaskSkeleton = () => {
                       className="bg-white dark:bg-zinc-900 p-5 rounded-xl border border-[#dde4e4] dark:border-zinc-800 shadow-sm hover:shadow-md transition-shadow group cursor-grab active:cursor-grabbing"
                     >
                       <div className="flex justify-between items-start mb-3">
-                        <span className="skeleton px-2 py-0.5 rounded h-7 w-[76px]  dark:bg-orange-900/30  uppercase tracking-tight"></span>
+                        <span className="skeleton px-2 py-0.5 rounded h-7 w-19  dark:bg-orange-900/30  uppercase tracking-tight"></span>
                       </div>
                       <h4 className="skeleton w-42 h-6.25 mb-4 leading-snug"></h4>
                       <div className="flex items-center justify-between">
@@ -100,7 +100,7 @@ const TaskSkeleton = () => {
                       className="bg-white dark:bg-zinc-900 p-5 rounded-xl border border-[#dde4e4] dark:border-zinc-800 shadow-sm hover:shadow-md transition-shadow group cursor-grab active:cursor-grabbing"
                     >
                       <div className="flex justify-between items-start mb-3">
-                        <span className="skeleton px-2 py-0.5 rounded h-7 w-[76px]  dark:bg-orange-900/30  uppercase tracking-tight"></span>
+                        <span className="skeleton px-2 py-0.5 rounded h-7 w-19  dark:bg-orange-900/30  uppercase tracking-tight"></span>
                       </div>
                       <h4 className="skeleton w-42 h-6.25 mb-4 leading-snug"></h4>
                       <div className="flex items-center justify-between">
@@ -128,7 +128,7 @@ const TaskSkeleton = () => {
                       className="bg-white dark:bg-zinc-900 p-5 rounded-xl border border-[#dde4e4] dark:border-zinc-800 shadow-sm hover:shadow-md transition-shadow group cursor-grab active:cursor-grabbing"
                     >
                       <div className="flex justify-between items-start mb-3">
-                        <span className="skeleton px-2 py-0.5 rounded h-7 w-[76px]  dark:bg-orange-900/30  uppercase tracking-tight"></span>
+                        <span className="skeleton px-2 py-0.5 rounded h-7 w-19  dark:bg-orange-900/30  uppercase tracking-tight"></span>
                       </div>
                       <h4 className="skeleton w-42 h-6.25 mb-4 leading-snug"></h4>
                       <div className="flex items-center justify-between">

@@ -44,31 +44,31 @@ export default function DashboardPage() {
       </div>
       {/* <!-- Filters & Search --> */}
       <div className="bg-white dark:bg-background-dark p-3 rounded-xl shadow-soft border border-[#f1f4f4] dark:border-[#2d3238] mb-8 flex flex-wrap items-center gap-4">
-        <div className="flex-1 min-w-[300px] relative">
+        <div className="flex-1 min-w-75 relative">
           <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#678383]">
             <Search />
           </span>
           <input
-            className="w-full pl-10 pr-4 py-2.5 bg-[#f5f7f9] dark:bg-[#2d3238] border-none rounded-lg focus:ring-2 focus:ring-primary2/50"
+            className="w-full pl-10 pr-4 py-2.5 bg-background-light dark:bg-[#2d3238] border-none rounded-lg focus:ring-2 focus:ring-primary2/50"
             placeholder="Search projects by name or client..."
             type="text"
           />
         </div>
         <div className="flex items-center gap-2">
-          <button className="flex items-center gap-2 px-4 py-2.5 bg-[#f5f7f9] dark:bg-[#2d3238] rounded-lg text-sm font-medium border border-transparent hover:border-primary2/20">
+          <button className="flex items-center gap-2 px-4 py-2.5 bg-background-light dark:bg-[#2d3238] rounded-lg text-sm font-medium border border-transparent hover:border-primary2/20">
             <span>Status: All</span>
             <span className="material-symbols-outlined text-sm">
               <ArrowDown />
             </span>
           </button>
-          <button className="flex items-center gap-2 px-4 py-2.5 bg-[#f5f7f9] dark:bg-[#2d3238] rounded-lg text-sm font-medium border border-transparent hover:border-primary2/20">
+          <button className="flex items-center gap-2 px-4 py-2.5 bg-background-light dark:bg-[#2d3238] rounded-lg text-sm font-medium border border-transparent hover:border-primary2/20">
             <span>Team: Everyone</span>
             <span className="material-symbols-outlined text-sm">
               <ArrowDown />
             </span>
           </button>
           <div className="h-8 w-px bg-[#f1f4f4] dark:bg-[#2d3238] mx-2"></div>
-          <div className="flex bg-[#f5f7f9] dark:bg-[#2d3238] p-1 rounded-lg">
+          <div className="flex bg-background-light dark:bg-[#2d3238] p-1 rounded-lg">
             <button className="p-1.5 bg-white dark:bg-background-dark shadow-sm rounded text-primary2">
               <span className="material-symbols-outlined">
                 <LayoutGrid />

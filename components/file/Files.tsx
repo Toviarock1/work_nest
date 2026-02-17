@@ -61,7 +61,7 @@ const file = ({ projectId }: { projectId: string }) => {
             {/* <!-- Row 1 --> */}
             {data?.data?.map((file: GetFileHistorry) => (
               <tr
-                className="file-row group hover:bg-[#f5f7f9] dark:hover:bg-[#2d323a] transition-all"
+                className="file-row group hover:bg-background-light dark:hover:bg-[#2d323a] transition-all"
                 key={file.id}
               >
                 <td className="px-6 py-4">
@@ -71,7 +71,7 @@ const file = ({ projectId }: { projectId: string }) => {
                         <FileText />
                       </span>
                     </div>
-                    <span className="text-sm font-bold text-[#121717] dark:text-white truncate max-w-[200px]">
+                    <span className="text-sm font-bold text-[#121717] dark:text-white truncate max-w-50">
                       {file.name}
                     </span>
                   </div>

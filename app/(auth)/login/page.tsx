@@ -37,12 +37,12 @@ export default function SignInPage() {
   };
   return (
     <GuestGuard>
-      <div className="bg-gray-50 dark:bg-[#181b20] font-sans min-h-screen flex flex-col">
+      <div className="bg-gray-50 dark:bg-background-dark font-sans min-h-screen flex flex-col">
         <div className="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden">
           <div className="flex h-full grow flex-col">
             {/* Minimalist Branding Header */}
             <div className="px-4 md:px-40 flex justify-center py-8">
-              <div className="flex items-center gap-3 text-[#1d6d6b]">
+              <div className="flex items-center gap-3 text-primary2">
                 <div className="w-8 h-8">
                   <svg
                     className="w-full h-full"
@@ -66,7 +66,7 @@ export default function SignInPage() {
 
             {/* Auth Content Container */}
             <main className="flex flex-1 items-center justify-center px-4 pb-20">
-              <div className="flex flex-col w-full max-w-[480px] bg-white dark:bg-[#1f2329] p-8 md:p-12 rounded-xl shadow-lg">
+              <div className="flex flex-col w-full max-w-120 bg-white dark:bg-[#1f2329] p-8 md:p-12 rounded-xl shadow-lg">
                 {/* Headline Section */}
                 <div className="mb-8">
                   <h1 className="text-[#121717] dark:text-white tracking-tight text-3xl font-bold leading-tight text-center pb-2">
@@ -104,11 +104,11 @@ export default function SignInPage() {
 
                 {/* Divider */}
                 <div className="relative flex items-center mb-8">
-                  <div className="flex-grow border-t border-[#dde4e4] dark:border-gray-700"></div>
-                  <span className="flex-shrink mx-4 text-[#678383] text-sm uppercase tracking-widest font-medium">
+                  <div className="grow border-t border-[#dde4e4] dark:border-gray-700"></div>
+                  <span className="shrink mx-4 text-[#678383] text-sm uppercase tracking-widest font-medium">
                     or
                   </span>
-                  <div className="flex-grow border-t border-[#dde4e4] dark:border-gray-700"></div>
+                  <div className="grow border-t border-[#dde4e4] dark:border-gray-700"></div>
                 </div>
 
                 {/* Login Form */}
@@ -120,7 +120,7 @@ export default function SignInPage() {
                       </p>
                       <input
                         autoComplete="email"
-                        className="flex w-full rounded-lg text-[#121717] dark:text-white focus:outline-0 focus:ring-2 focus:ring-[#1d6d6b]/20 border border-[#dde4e4] dark:border-gray-700 bg-white dark:bg-[#2a2f36] focus:border-[#1d6d6b] h-14 placeholder:text-[#678383] p-[15px] text-base font-normal leading-normal"
+                        className="flex w-full rounded-lg text-[#121717] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary2/20 border border-[#dde4e4] dark:border-gray-700 bg-white dark:bg-[#2a2f36] focus:border-primary2 h-14 placeholder:text-[#678383] p-3.75 text-base font-normal leading-normal"
                         placeholder="name@company.com"
                         type="email"
                         {...register("email", {
@@ -142,7 +142,7 @@ export default function SignInPage() {
                           Password
                         </p>
                         <a
-                          className="text-[#1d6d6b] text-sm font-bold hover:underline"
+                          className="text-primary2 text-sm font-bold hover:underline"
                           href="#"
                         >
                           Forgot?
@@ -151,7 +151,7 @@ export default function SignInPage() {
                       <div className="flex w-full items-stretch rounded-lg">
                         <input
                           autoComplete="current-password"
-                          className="flex w-full min-w-0 flex-1 rounded-lg text-[#121717] dark:text-white focus:outline-0 focus:ring-2 focus:ring-[#1d6d6b]/20 border border-[#dde4e4] dark:border-gray-700 bg-white dark:bg-[#2a2f36] focus:border-[#1d6d6b] h-14 placeholder:text-[#678383] p-[15px] rounded-r-none border-r-0 pr-2 text-base font-normal leading-normal"
+                          className="flex w-full min-w-0 flex-1 rounded-lg text-[#121717] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary2/20 border border-[#dde4e4] dark:border-gray-700 bg-white dark:bg-[#2a2f36] focus:border-primary2 h-14 placeholder:text-[#678383] p-3.75 rounded-r-none border-r-0 pr-2 text-base font-normal leading-normal"
                           placeholder="••••••••"
                           type={showPassword ? "text" : "password"}
                           {...register("password", {
@@ -186,7 +186,7 @@ export default function SignInPage() {
                   {/* Primary CTA */}
                   <button
                     type="submit"
-                    className="mt-4 flex w-full cursor-pointer items-center justify-center rounded-lg h-14 px-4 bg-[#1d6d6b] text-white text-base font-bold leading-normal tracking-[0.015em] hover:brightness-110 active:scale-[0.98] transition-all"
+                    className="mt-4 flex w-full cursor-pointer items-center justify-center rounded-lg h-14 px-4 bg-primary2 text-white text-base font-bold leading-normal tracking-[0.015em] hover:brightness-110 active:scale-[0.98] transition-all"
                     onClick={handleSubmit(handleSubmitHandler)}
                     disabled={loading}
                   >
@@ -203,7 +203,7 @@ export default function SignInPage() {
                   <p className="text-[#678383] dark:text-gray-400 text-sm">
                     Don't have an account?
                     <a
-                      className="text-[#1d6d6b] font-bold hover:underline ml-1"
+                      className="text-primary2 font-bold hover:underline ml-1"
                       href="#"
                     >
                       Create an account
@@ -214,7 +214,7 @@ export default function SignInPage() {
             </main>
 
             {/* Decorative Elements */}
-            <div className="fixed bottom-0 left-0 w-full h-1 bg-gradient-to-r from-[#1d6d6b]/10 via-[#1d6d6b] to-[#1d6d6b]/10 opacity-20"></div>
+            <div className="fixed bottom-0 left-0 w-full h-1 bg-linear-to-r from-primary2/10 via-primary2 to-primary2/10 opacity-20"></div>
           </div>
         </div>
       </div>

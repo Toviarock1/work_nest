@@ -116,7 +116,7 @@ const AddTaskModal = ({
                     </button>
                   </div> */}
                   <textarea
-                    className="w-full border-none focus:ring-0 p-4 min-h-[160px] text-base placeholder:text-slate-400 resize-none"
+                    className="w-full border-none focus:ring-0 p-4 min-h-40 text-base placeholder:text-slate-400 resize-none"
                     placeholder="Add some details about this task..."
                     {...register("description", {
                       required: "Description is required",
@@ -205,7 +205,7 @@ const AddTaskModal = ({
                     + Manage
                   </button>
                 </div>
-                <div className="flex flex-wrap gap-2 min-h-[48px] p-2 bg-slate-50 rounded-lg border border-dashed border-slate-300">
+                <div className="flex flex-wrap gap-2 min-h-12 p-2 bg-slate-50 rounded-lg border border-dashed border-slate-300">
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary2/10 text-primary2 text-xs font-bold">
                     Design
                     <span className="material-symbols-outlined text-xs cursor-pointer">
@@ -232,13 +232,13 @@ const AddTaskModal = ({
           <div className="p-6 border-t border-slate-100 flex items-center justify-end gap-3 bg-white">
             <button
               onClick={close}
-              className="btn flex min-w-[100px] h-11 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 font-bold text-sm transition-all hover:bg-slate-50"
+              className="btn flex min-w-25 h-11 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 font-bold text-sm transition-all hover:bg-slate-50"
             >
               Cancel
             </button>
             <button
               onClick={handleSubmit(onSubmit)}
-              className="btn flex min-w-[140px] h-11 items-center justify-center rounded-lg bg-primary2 text-white font-bold text-sm transition-all hover:opacity-90 shadow-lg shadow-primary/20"
+              className="btn flex min-w-35 h-11 items-center justify-center rounded-lg bg-primary2 text-white font-bold text-sm transition-all hover:opacity-90 shadow-lg shadow-primary/20"
             >
               Create Task
             </button>

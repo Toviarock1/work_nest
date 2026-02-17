@@ -50,10 +50,10 @@ export default function RegisterPage() {
 
   return (
     <GuestGuard>
-      <div className="min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-[#181b20]">
+      <div className="min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-background-dark">
         {/* Top Navigation Bar */}
-        <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-800 px-6 lg:px-10 py-4 bg-white dark:bg-[#181b20]">
-          <div className="flex items-center gap-4 text-[#1d6d6b]">
+        <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-800 px-6 lg:px-10 py-4 bg-white dark:bg-background-dark">
+          <div className="flex items-center gap-4 text-primary2">
             <div className="w-8 h-8">
               <svg
                 fill="none"
@@ -77,7 +77,7 @@ export default function RegisterPage() {
               Already have an account?
             </span>
             <Link href={"/login"}>
-              <button className="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-gray-100 dark:bg-gray-800 text-[#121717] dark:text-white text-sm font-bold transition-colors hover:bg-gray-200 dark:hover:bg-gray-700">
+              <button className="flex min-w-21 cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-gray-100 dark:bg-gray-800 text-[#121717] dark:text-white text-sm font-bold transition-colors hover:bg-gray-200 dark:hover:bg-gray-700">
                 Log in
               </button>
             </Link>
@@ -86,12 +86,12 @@ export default function RegisterPage() {
 
         <main className="flex-1 flex flex-col items-center justify-center p-6 lg:p-12 relative overflow-hidden">
           {/* Abstract background elements */}
-          <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-[#1d6d6b]/5 rounded-full blur-3xl pointer-events-none"></div>
-          <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[500px] h-[500px] bg-[#1d6d6b]/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-primary2/5 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-125 h-125 bg-primary2/10 rounded-full blur-3xl pointer-events-none"></div>
 
-          <div className="w-full max-w-[1100px] flex flex-col lg:flex-row items-stretch gap-0 bg-white dark:bg-[#1f2329] rounded-2xl overflow-hidden shadow-2xl shadow-black/5 border border-gray-100 dark:border-gray-800">
+          <div className="w-full max-w-275 flex flex-col lg:flex-row items-stretch gap-0 bg-white dark:bg-[#1f2329] rounded-2xl overflow-hidden shadow-2xl shadow-black/5 border border-gray-100 dark:border-gray-800">
             {/* Left Side: Visual/Context */}
-            <div className="hidden lg:flex flex-1 bg-[#1d6d6b] p-12 flex-col justify-between relative overflow-hidden">
+            <div className="hidden lg:flex flex-1 bg-primary2 p-12 flex-col justify-between relative overflow-hidden">
               <div className="z-10">
                 <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-wider mb-6">
                   Version 2.4
@@ -139,7 +139,7 @@ export default function RegisterPage() {
               </div>
 
               {/* Abstract shape in background */}
-              <div className="absolute -bottom-20 -right-20 w-80 h-80 border-[32px] border-white/5 rounded-full"></div>
+              <div className="absolute -bottom-20 -right-20 w-80 h-80 border-32 border-white/5 rounded-full"></div>
             </div>
 
             {/* Right Side: Registration Form */}
@@ -169,7 +169,7 @@ export default function RegisterPage() {
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                       </svg>
                       <input
-                        className="w-full pl-11 pr-4 py-3.5 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg text-[#121717] dark:text-white focus:ring-2 focus:ring-[#1d6d6b]/20 focus:border-[#1d6d6b] outline-none transition-all placeholder:text-gray-400"
+                        className="w-full pl-11 pr-4 py-3.5 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg text-[#121717] dark:text-white focus:ring-2 focus:ring-primary2/20 focus:border-primary2 outline-none transition-all placeholder:text-gray-400"
                         placeholder="e.g. Alex Rivera"
                         type="text"
                         {...register("name", {
@@ -198,7 +198,7 @@ export default function RegisterPage() {
                         <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
                       </svg>
                       <input
-                        className="w-full pl-11 pr-4 py-3.5 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg text-[#121717] dark:text-white focus:ring-2 focus:ring-[#1d6d6b]/20 focus:border-[#1d6d6b] outline-none transition-all placeholder:text-gray-400"
+                        className="w-full pl-11 pr-4 py-3.5 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg text-[#121717] dark:text-white focus:ring-2 focus:ring-primary2/20 focus:border-primary2 outline-none transition-all placeholder:text-gray-400"
                         placeholder="name@gmail.com"
                         type="email"
                         {...register("email", {
@@ -267,7 +267,7 @@ export default function RegisterPage() {
                         <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
                       </svg>
                       <input
-                        className="w-full pl-11 pr-12 py-3.5 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg text-[#121717] dark:text-white focus:ring-2 focus:ring-[#1d6d6b]/20 focus:border-[#1d6d6b] outline-none transition-all placeholder:text-gray-400"
+                        className="w-full pl-11 pr-12 py-3.5 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg text-[#121717] dark:text-white focus:ring-2 focus:ring-primary2/20 focus:border-primary2 outline-none transition-all placeholder:text-gray-400"
                         placeholder="••••••••"
                         type={showPassword ? "text" : "password"}
                         {...register("password", {
@@ -280,7 +280,7 @@ export default function RegisterPage() {
                         </p>
                       )}
                       <button
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#1d6d6b] transition-colors"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary2 transition-colors"
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
                       >
@@ -302,7 +302,7 @@ export default function RegisterPage() {
                   {/* Submit */}
                   <div className="pt-4">
                     <button
-                      className="w-full bg-[#1d6d6b] hover:bg-[#1d6d6b]/90 text-white font-bold py-4 px-6 rounded-lg transition-all shadow-lg shadow-[#1d6d6b]/20 flex items-center justify-center gap-2"
+                      className="w-full bg-primary2 hover:bg-primary2/90 text-white font-bold py-4 px-6 rounded-lg transition-all shadow-lg shadow-primary2/20 flex items-center justify-center gap-2"
                       onClick={handleSubmit(handleSubmitHandler)}
                     >
                       {loading ? (
@@ -363,14 +363,14 @@ export default function RegisterPage() {
                   <p className="mt-6 text-center text-[11px] text-gray-400 leading-relaxed">
                     By clicking "Create Account", you agree to our{" "}
                     <a
-                      className="text-[#1d6d6b] hover:underline underline-offset-2"
+                      className="text-primary2 hover:underline underline-offset-2"
                       href="#"
                     >
                       Terms of Service
                     </a>{" "}
                     and{" "}
                     <a
-                      className="text-[#1d6d6b] hover:underline underline-offset-2"
+                      className="text-primary2 hover:underline underline-offset-2"
                       href="#"
                     >
                       Privacy Policy
@@ -398,25 +398,25 @@ export default function RegisterPage() {
           </div>
         </main>
 
-        <footer className="py-6 px-10 border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-[#181b20] flex flex-col md:flex-row justify-between items-center gap-4">
+        <footer className="py-6 px-10 border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-background-dark flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-400 text-sm">
             © 2024 WorkNest Inc. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
             <a
-              className="text-sm text-gray-500 hover:text-[#1d6d6b] transition-colors"
+              className="text-sm text-gray-500 hover:text-primary2 transition-colors"
               href="#"
             >
               Help Center
             </a>
             <a
-              className="text-sm text-gray-500 hover:text-[#1d6d6b] transition-colors"
+              className="text-sm text-gray-500 hover:text-primary2 transition-colors"
               href="#"
             >
               Status
             </a>
             <a
-              className="text-sm text-gray-500 hover:text-[#1d6d6b] transition-colors"
+              className="text-sm text-gray-500 hover:text-primary2 transition-colors"
               href="#"
             >
               Contact Sales
