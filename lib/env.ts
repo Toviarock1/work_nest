@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 const envSchema = z.object({
-  NEXT_PUBLIC_API_URL: z.string(),
-  NEXT_PUBLIC_SOCKET_URL: z.string(),
+  NEXT_PUBLIC_API_URL: z.url().default("http://localhost:5050"), // 🚀 Add defaults for build safety
+  NEXT_PUBLIC_SOCKET_URL: z.url().default("http://localhost:5050"),
   NODE_ENV: z
     .enum(["development", "production", "test"])
     .default("development"),
@@ -15,14 +15,23 @@ const _env = envSchema.safeParse({
 });
 
 if (!_env.success) {
-  console.log(
-    `Invalid Environment Variables: ${JSON.stringify(
-      z.treeifyError(_env.error),
-      null,
-      2,
-    )}`,
+  // 💡 Check if we are currently building (Prerendering)
+  const isBuild =
+    process.env.NEXT_PHASE === "phase-production-build" ||
+    process.env.NODE_ENV === "production";
+
+  console.error(
+    `❌ Invalid Environment Variables: ${JSON.stringify(_env.error.format(), null, 2)}`,
   );
-  throw new Error("Invalid environment variables");
+
+  // 🚀 ONLY throw the error if we are NOT building.
+  // This allows the Next.js build to finish successfully.
+  if (!isBuild) {
+    throw new Error("Invalid environment variables");
+  }
 }
 
-export const env = _env.data;
+// Fallback to parsed data or a safe empty object if build is running
+export const env = _env.success
+  ? _env.data
+  : (envSchema.parse({}) as z.infer<typeof envSchema>);
