@@ -9,10 +9,8 @@ import {
   Briefcase,
   ChevronRight,
   LogOut,
-  Plus,
   Search,
   Settings,
-  Zap,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -22,7 +20,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const queryClient = useQueryClient();
+
   const logout = useAuthStore((state) => state.logOut);
 
   // const logout = () => {

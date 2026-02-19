@@ -117,16 +117,16 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
       <div className="flex-1 overflow-y-auto p-6 space-y-8">
         {/* <!-- Date Divider --> */}
         <div className="relative flex items-center py-4">
-          <div className="flex-grow border-t border-[#dde4e4] dark:border-gray-800"></div>
-          <span className="flex-shrink mx-4 text-[10px] font-bold uppercase tracking-widest text-[#678383]">
+          <div className="grow border-t border-[#dde4e4] dark:border-gray-800"></div>
+          <span className="shrink mx-4 text-[10px] font-bold uppercase tracking-widest text-[#678383]">
             Today, October 24
           </span>
-          <div className="flex-grow border-t border-[#dde4e4] dark:border-gray-800"></div>
+          <div className="grow border-t border-[#dde4e4] dark:border-gray-800"></div>
         </div>
         {/* <!-- Single Message Component (Sarah) --> */}
         <div className="flex gap-4 group">
           <div
-            className="bg-center bg-no-repeat aspect-square bg-cover rounded-xl size-10 flex-shrink-0 shadow-sm"
+            className="bg-center bg-no-repeat aspect-square bg-cover rounded-xl size-10 shrink-0 shadow-sm"
             data-alt="Sarah Chen Avatar"
             style={{
               backgroundImage:
@@ -149,7 +149,7 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
             {/* <!-- Attachment Thumbnail --> */}
             <div className="mt-2 relative group/img cursor-pointer">
               <div
-                className="bg-center bg-no-repeat aspect-video bg-cover rounded-xl border border-[#dde4e4] dark:border-gray-800 w-full max-w-[440px] shadow-sm hover:shadow-md transition-shadow"
+                className="bg-center bg-no-repeat aspect-video bg-cover rounded-xl border border-[#dde4e4] dark:border-gray-800 w-full max-w-110 shadow-sm hover:shadow-md transition-shadow"
                 data-alt="Wireframe mobile design mockup"
                 style={{
                   backgroundImage:
@@ -180,7 +180,7 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
         {/* <!-- Single Message Component (Mark) --> */}
         <div className="flex gap-4 group">
           <div
-            className="bg-center bg-no-repeat aspect-square bg-cover rounded-xl size-10 flex-shrink-0 shadow-sm"
+            className="bg-center bg-no-repeat aspect-square bg-cover rounded-xl size-10 shrink-0 shadow-sm"
             data-alt="Mark Wilson Avatar"
             style={{
               backgroundImage:
@@ -303,7 +303,7 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
         <div className="relative bg-white dark:bg-gray-800 border border-[#dde4e4] dark:border-gray-700 rounded-xl shadow-lg focus-within:border-primary2/50 focus-within:ring-4 focus-within:ring-primary2/5 transition-all">
           <div className="flex flex-col p-2">
             <textarea
-              className="w-full border-none focus:ring-0 bg-transparent text-[15px] outline-none resize-none min-h-[44px] max-h-40 placeholder:text-gray-400 font-medium"
+              className="w-full border-none focus:ring-0 bg-transparent text-[15px] outline-none resize-none min-h-11 max-h-40 placeholder:text-gray-400 font-medium"
               placeholder="Type a message..."
               {...register("content", { required: true })}
             ></textarea>

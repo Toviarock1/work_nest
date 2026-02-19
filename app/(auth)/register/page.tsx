@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import { useQueryClient } from "@tanstack/react-query";
+// import { AxiosError } from "axios";
 import { useState } from "react";
 import { registerUser } from "@/services/auth.service";
 import { useRouter } from "next/navigation";

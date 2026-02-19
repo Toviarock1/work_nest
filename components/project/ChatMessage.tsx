@@ -56,7 +56,7 @@ const ChatMessage = ({
                 alt={name || "image"}
                 width={500}
                 height={500}
-                className="rounded-xl border border-[#dde4e4] dark:border-gray-800 max-w-[440px] cursor-pointer hover:shadow-md transition-all"
+                className="rounded-xl border border-[#dde4e4] dark:border-gray-800 max-w-110 cursor-pointer hover:shadow-md transition-all"
                 onClick={() => window.open(url, "_blank")}
               />
             ) : (

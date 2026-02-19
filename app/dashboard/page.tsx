@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import ProjectCard from "@/components/project/ProjectCard";
 import {
   ArrowDown,
@@ -12,13 +12,12 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { fetchMyProjects } from "@/services/project.service";
 import { ProjectsType } from "@/types";
-import Link from "next/link";
 
 export default function DashboardPage() {
   const {
     data: projects,
     isLoading,
-    isError,
+    // isError,
   } = useQuery({
     queryKey: ["projects"],
     queryFn: fetchMyProjects,
