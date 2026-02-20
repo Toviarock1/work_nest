@@ -1,8 +1,17 @@
 import { Calendar } from "lucide-react";
 
-const TaskCard = ({ title }: { title: string }) => {
+const TaskCard = ({
+  title,
+  onViewTask,
+}: {
+  title: string;
+  onViewTask: () => void;
+}) => {
   return (
-    <div className="bg-white dark:bg-zinc-900 p-5 rounded-xl border border-[#dde4e4] dark:border-zinc-800 shadow-sm hover:shadow-md transition-shadow group cursor-grab active:cursor-grabbing">
+    <div
+      className="bg-white dark:bg-zinc-900 p-5 rounded-xl border border-[#dde4e4] dark:border-zinc-800 shadow-sm hover:shadow-md transition-shadow group cursor-grab active:cursor-grabbing"
+      onClick={onViewTask}
+    >
       <div className="flex justify-between items-start mb-3">
         <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 uppercase tracking-tight">
           Medium

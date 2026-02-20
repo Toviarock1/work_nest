@@ -22,3 +22,8 @@ export const updateTaskStatus = async (payload: UpdateTaskStatusPayload) => {
   });
   return response.data;
 };
+
+export const deleteTask = async (taskId: string) => {
+  const response = await axiosInstance.delete(`/tasks/${taskId}`);
+  return response.data;
+};

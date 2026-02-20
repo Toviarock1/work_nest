@@ -37,12 +37,14 @@ import {
 } from "@/services/project.service";
 import AddProjectMemberModal from "@/components/project/AddProjectModal";
 import ChatPanel from "@/components/project/ChatPanel";
-import ViewProjectModal from "@/components/task/ViewProjectModal";
+import ViewProjectTask from "@/components/task/ViewProjectTask";
 
 export default function ProjectsPage() {
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [showProjectMemberModal, setShowProjectMemberModal] = useState(false);
   const [currentPath, setCurrentPath] = useState("tasks");
+  const [currentTask, setCurrentTask] = useState("");
+  const [viewTask, setViewTask] = useState(false);
   const queryClient = useQueryClient();
   const params = useParams();
   const projectId = params.projectId as string;
@@ -146,6 +148,11 @@ export default function ProjectsPage() {
   };
   const removeMemberHandler = (email: string) => {
     membersMutation({ userEmail: email, projectId, type: "remove" });
+  };
+
+  const viewTaskHandler = (taskId: string) => {
+    setCurrentTask(taskId);
+    setViewTask(true);
   };
 
   return todosLoading ? (
@@ -283,7 +290,11 @@ export default function ProjectsPage() {
                                   {...provided.dragHandleProps}
                                   className={`${snapshot.isDragging ? "opacity-50" : "opacity-100"}`}
                                 >
-                                  <TaskCard title={task.title} key={task.id} />
+                                  <TaskCard
+                                    onViewTask={() => viewTaskHandler(task.id)}
+                                    title={task.title}
+                                    key={task.id}
+                                  />
                                 </div>
                               )}
                             </Draggable>
@@ -366,6 +377,9 @@ export default function ProjectsPage() {
                                     className={`${snapshot.isDragging ? "opacity-50" : "opacity-100"}`}
                                   >
                                     <TaskCard
+                                      onViewTask={() =>
+                                        viewTaskHandler(task.id)
+                                      }
                                       title={task.title}
                                       key={task.id}
                                     />
@@ -445,7 +459,11 @@ export default function ProjectsPage() {
                                   {...provided.dragHandleProps}
                                   className={`${snapshot.isDragging ? "opacity-50" : "opacity-100"}`}
                                 >
-                                  <TaskCard title={task.title} key={task.id} />
+                                  <TaskCard
+                                    onViewTask={() => viewTaskHandler(task.id)}
+                                    title={task.title}
+                                    key={task.id}
+                                  />
                                 </div>
                               )}
                             </Draggable>
@@ -502,7 +520,14 @@ export default function ProjectsPage() {
         onSubmit={addMemberHandler}
         isLoading={addMemberLoading}
       />
-      <ViewProjectModal show={true} close={() => {}} onSubmit={() => {}} />
+      <ViewProjectTask
+        show={viewTask}
+        close={() => setViewTask((prev) => !prev)}
+        onSubmit={() => {}}
+        data={todos?.data?.tasks?.find((task: any) => task.id === currentTask)}
+        ownerId={todos?.data?.ownerId}
+        projectId={projectId}
+      />
     </section>
   );
 }

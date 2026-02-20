@@ -1,3 +1,8 @@
+import { useUser } from "@/hooks/useUser";
+import { deleteTask } from "@/services/task.service";
+import { TasksType } from "@/types";
+import { formatDate } from "@/utils/formatData";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   X,
   CircleUser,
@@ -11,25 +16,54 @@ import {
   Calendar,
   Trash2,
 } from "lucide-react";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 const ViewProjectTask = ({
   show,
   close,
   onSubmit,
+  data,
+  ownerId,
+  projectId,
 }: {
   show: boolean;
   close: () => void;
   onSubmit: (data: { title: string; description: string }) => void;
+  data: TasksType;
+  ownerId: string;
+  projectId: string;
 }) => {
+  const { user } = useUser();
+  const queryClient = useQueryClient();
+  const btn = useRef<HTMLButtonElement>(null);
+
+  const { mutate, isPending, isError } = useMutation({
+    mutationFn: deleteTask,
+    onSuccess: () => {
+      toast.success("Task deleted");
+      queryClient.invalidateQueries({ queryKey: ["project-todos", projectId] });
+      btn?.current?.click();
+    },
+    onError: () => {
+      toast.error("Something went wrong, try again");
+    },
+  });
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const onDeleteHandler = () => {
+    mutate(data.id);
+  };
+
   return (
-    show && (
-      <div className="absolute inset-0 z-20 glass-overlay flex justify-end">
+    show &&
+    data && (
+      <div className="absolute inset-0 z-20 glass-overlay flex justify-end h-full">
         {/* <!-- Slide-over Panel --> */}
         <div className="w-full max-w-2xl bg-white h-full soft-shadow flex flex-col border-l border-[#dde4e4]">
           {/* <!-- Panel Header --> */}
@@ -44,7 +78,7 @@ const ViewProjectTask = ({
                 <span className="material-symbols-outlined text-sm">
                   <LayoutGrid />
                 </span>
-                Project Alpha / Sprint 4
+                Task Overview
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -58,7 +92,12 @@ const ViewProjectTask = ({
                   <Ellipsis />
                 </span>
               </button>
-              <button className="p-2 text-[#6A717B] hover:bg-background-light rounded-lg">
+              <button
+                disabled={isPending}
+                className="p-2 text-[#6A717B] hover:bg-background-light rounded-lg"
+                onClick={close}
+                ref={btn}
+              >
                 <span className="material-symbols-outlined text-xl">
                   <X />
                 </span>
@@ -69,7 +108,7 @@ const ViewProjectTask = ({
           <div className="flex-1 overflow-y-auto custom-scrollbar px-10 py-8">
             {/* <!-- Title & Main Meta --> */}
             <div className="mb-8">
-              <div className="flex items-center gap-3 mb-4">
+              {/* <div className="flex items-center gap-3 mb-4">
                 <div className="flex items-center gap-2 bg-primary2/10 text-primary2 px-3 py-1.5 rounded-lg border border-primary2/20">
                   <span className="material-symbols-outlined text-[16px]">
                     <RefreshCcw />
@@ -86,9 +125,9 @@ const ViewProjectTask = ({
                     High Priority
                   </span>
                 </div>
-              </div>
+              </div> */}
               <h1 className="text-3xl font-extrabold text-[#313742] leading-tight mb-6">
-                Develop Homepage Prototype
+                {data.title}
               </h1>
               <div className="grid grid-cols-2 gap-y-6 gap-x-12 border-y border-[#f1f4f4] py-6">
                 <div className="flex flex-col gap-1.5">
@@ -107,7 +146,7 @@ const ViewProjectTask = ({
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <span className="text-[10px] uppercase font-bold text-[#6A717B] tracking-wider">
-                    Due Date
+                    Created Date
                   </span>
                   <div className="flex items-center gap-3">
                     <div className="size-9 rounded-lg bg-background-light flex items-center justify-center text-[#6A717B]">
@@ -115,7 +154,9 @@ const ViewProjectTask = ({
                         <Calendar />
                       </span>
                     </div>
-                    <span className="text-sm font-semibold">Oct 24, 2023</span>
+                    <span className="text-sm font-semibold">
+                      {formatDate(data.createdAt)}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -135,16 +176,16 @@ const ViewProjectTask = ({
               </div>
               <div className="text-[#313742] text-sm leading-relaxed space-y-4">
                 <p>
-                  Design the initial wireframes and interactive prototype for
-                  the main landing page. Focus on conversion-oriented layouts
-                  and the new brand aesthetic.
+                  {data.description
+                    ? data.description
+                    : "c'mon add some description"}
                 </p>
-                <p>Key requirements:</p>
+                {/* <p>Key requirements:</p>
                 <ul className="list-disc pl-5 space-y-1 text-[#6A717B]">
                   <li>Sticky header with mobile-responsive menu</li>
                   <li>Hero section with dynamic product illustration</li>
                   <li>Integrated Figma links for review</li>
-                </ul>
+                </ul> */}
               </div>
             </section>
             {/* <!-- Subtasks --> */}
@@ -350,23 +391,42 @@ const ViewProjectTask = ({
             </section>  */}
           </div>
           {/* <!-- Sticky Footer Actions --> */}
-          <div className="p-6 border-t border-[#dde4e4] bg-white flex items-center justify-between">
-            <button className="text-sm font-bold text-red-500 flex items-center gap-1.5 hover:bg-red-50 px-3 py-2 rounded-lg transition-colors">
-              <span className="material-symbols-outlined text-lg">
-                {" "}
-                <Trash2 />
-              </span>{" "}
-              Delete Task
-            </button>
-            <div className="flex items-center gap-3">
-              <button className="px-5 py-2.5 text-sm font-bold text-[#6A717B] hover:bg-background-light rounded-lg transition-colors">
-                Cancel
+          {ownerId === user.id && (
+            <div className="p-6 border-t border-[#dde4e4] bg-white flex items-center justify-between">
+              <button
+                disabled={isPending}
+                onClick={onDeleteHandler}
+                className="text-sm font-bold text-red-500 flex items-center gap-1.5 hover:bg-red-50 px-3 py-2 rounded-lg transition-colors"
+              >
+                {isPending ? (
+                  <span className="loading loading-dots loading-xl"></span>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined text-lg">
+                      {" "}
+                      <Trash2 />
+                    </span>
+                    Delete Task
+                  </>
+                )}
               </button>
-              <button className="px-6 py-2.5 text-sm font-bold bg-primary2 text-white rounded-lg soft-shadow">
-                Save Changes
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  className="px-5 py-2.5 text-sm font-bold text-[#6A717B] hover:bg-background-light rounded-lg transition-colors"
+                  onClick={close}
+                  disabled={isPending}
+                >
+                  Cancel
+                </button>
+                <button
+                  disabled={isPending}
+                  className="px-6 py-2.5 text-sm font-bold bg-primary2 text-white rounded-lg soft-shadow"
+                >
+                  Save Changes
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     )
