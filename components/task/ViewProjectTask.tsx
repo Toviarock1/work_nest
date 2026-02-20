@@ -16,7 +16,7 @@ import {
   Calendar,
   Trash2,
 } from "lucide-react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -53,12 +53,21 @@ const ViewProjectTask = ({
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      description: data?.description || "",
+    },
+  });
 
   const onDeleteHandler = () => {
     mutate(data.id);
   };
+
+  useEffect(() => {
+    setValue("description", data?.description || "");
+  }, [data?.description, setValue]);
 
   return (
     show &&
@@ -175,11 +184,14 @@ const ViewProjectTask = ({
                 </button>
               </div>
               <div className="text-[#313742] text-sm leading-relaxed space-y-4">
-                <p>
-                  {data.description
-                    ? data.description
-                    : "c'mon add some description"}
-                </p>
+                <textarea
+                  className="w-full"
+                  placeholder={
+                    data.description ? undefined : "c'mon add some description"
+                  }
+                  rows={10}
+                  {...register("description", { required: true })}
+                />
                 {/* <p>Key requirements:</p>
                 <ul className="list-disc pl-5 space-y-1 text-[#6A717B]">
                   <li>Sticky header with mobile-responsive menu</li>

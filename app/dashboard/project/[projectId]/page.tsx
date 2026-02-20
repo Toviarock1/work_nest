@@ -141,6 +141,7 @@ export default function ProjectsPage() {
   };
 
   const addNewTaskHandler = (data: { title: string; description: string }) => {
+    // console.log(data);
     mutation.mutate({ ...data, projectId });
   };
   const addMemberHandler = (data: { email: string }) => {
