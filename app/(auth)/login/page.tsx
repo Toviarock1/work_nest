@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { useAuthStore } from "@/store/useAuthStore";
 import { LoginFormInput } from "@/types";
 import GuestGuard from "@/components/auth/GuestGuard";
+import Link from "next/link";
 
 export default function SignInPage() {
   const {
@@ -202,12 +203,12 @@ export default function SignInPage() {
                 <div className="mt-8 text-center">
                   <p className="text-[#678383] dark:text-gray-400 text-sm">
                     Don't have an account?
-                    <a
+                    <Link
                       className="text-primary2 font-bold hover:underline ml-1"
-                      href="#"
+                      href="/register"
                     >
                       Create an account
-                    </a>
+                    </Link>
                   </p>
                 </div>
               </div>

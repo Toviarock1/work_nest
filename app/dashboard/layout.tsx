@@ -2,8 +2,10 @@
 
 import AuthGuard from "@/components/auth/AuthGuard";
 import UserAvatar from "@/components/UserAvater";
+import { fetchMyProjectsTask } from "@/services/task.service";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useQueryClient } from "@tanstack/react-query";
+import { TasksType } from "@/types";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Bell,
   Briefcase,
@@ -12,14 +14,28 @@ import {
   Search,
   Settings,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useParams, usePathname, useRouter } from "next/navigation";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const params = useParams();
   const router = useRouter();
+  const queryClient = useQueryClient();
+
+  const projectId = params.projectId as string;
+  const { data: project } = useQuery({
+    queryKey: ["project-todos", projectId],
+    queryFn: () => fetchMyProjectsTask(projectId),
+    enabled: !!projectId, // Only run if we are in a project route
+    staleTime: 1000 * 60 * 5, // Consider data "fresh" for 5 mins
+  });
+
+  console.log(projectId);
 
   const logout = useAuthStore((state) => state.logOut);
 
@@ -57,15 +73,15 @@ export default function DashboardLayout({
                 </div>
               </div>
               <nav className="flex flex-col gap-1">
-                <a
+                <Link
                   className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-[#f1f4f4] dark:bg-[#2d3238] border-r-4 border-primary2"
-                  href="#"
+                  href="/dashboard"
                 >
                   <span className="material-symbols-outlined text-primary2">
                     <Briefcase />
                   </span>
                   <p className="text-sm font-bold text-primary2">Projects</p>
-                </a>
+                </Link>
               </nav>
             </div>
             <div className="p-6">
@@ -86,13 +102,49 @@ export default function DashboardLayout({
             <header className="h-16 flex items-center justify-between px-8 bg-white dark:bg-background-dark border-b border-[#f1f4f4] dark:border-[#2d3238] sticky top-0 z-10">
               <div className="flex items-center gap-4 flex-1">
                 <div className="flex items-center gap-2 text-sm text-[#678383]">
-                  <span>Projects</span>
-                  <span className="material-symbols-outlined text-sm">
-                    <ChevronRight />
-                  </span>
-                  <span className="text-[#121717] dark:text-white font-medium">
-                    Directory
-                  </span>
+                  <div className="breadcrumbs text-sm">
+                    {pathname !== "/dashboard" &&
+                      pathname !== "/dashboard/settings" && (
+                        <ul>
+                          <li>
+                            <Link href={"/dashboard"}>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                className="h-4 w-4 stroke-current"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+                                ></path>
+                              </svg>
+                              Projects
+                            </Link>
+                          </li>
+                          <li>
+                            <a>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                className="h-4 w-4 stroke-current"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+                                ></path>
+                              </svg>
+                              {project?.data?.name}
+                            </a>
+                          </li>
+                        </ul>
+                      )}
+                  </div>
                 </div>
               </div>
               <div className="flex items-center gap-4">
