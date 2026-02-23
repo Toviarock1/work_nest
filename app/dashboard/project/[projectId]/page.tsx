@@ -181,12 +181,12 @@ export default function ProjectsPage() {
                 </div>
 
                 <div className="flex gap-3">
-                  <button className="flex items-center px-4 h-10 rounded-lg border border-[#dde4e4] dark:border-zinc-700 text-[#121717] dark:text-white text-sm font-bold hover:bg-background-light dark:hover:bg-zinc-900">
+                  {/* <button className="flex items-center px-4 h-10 rounded-lg border border-[#dde4e4] dark:border-zinc-700 text-[#121717] dark:text-white text-sm font-bold hover:bg-background-light dark:hover:bg-zinc-900">
                     <span className="material-symbols-outlined text-[20px] mr-2">
                       <ListFilter />
                     </span>
                     <span>Filter</span>
-                  </button>
+                  </button> */}
                   {currentPath === "tasks" && (
                     <button
                       onClick={() => setShowTaskModal(true)}

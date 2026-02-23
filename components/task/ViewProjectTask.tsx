@@ -19,6 +19,7 @@ import {
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import BtnLoader from "../BtnLoader";
 
 const ViewProjectTask = ({
   show,
@@ -68,6 +69,10 @@ const ViewProjectTask = ({
   useEffect(() => {
     setValue("description", data?.description || "");
   }, [data?.description, setValue]);
+
+  const onSubmitHandler = (data: { description: string }) => {
+    console.log(data);
+  };
 
   return (
     show &&
@@ -176,22 +181,27 @@ const ViewProjectTask = ({
                 <h3 className="text-sm font-bold text-[#313742]">
                   Description
                 </h3>
-                <button className="text-xs font-bold text-primary2 flex items-center gap-1">
+                {/* <button className="text-xs font-bold text-primary2 flex items-center gap-1">
                   <span className="material-symbols-outlined text-sm">
                     edit
                   </span>{" "}
                   Edit
-                </button>
+                </button> */}
               </div>
               <div className="text-[#313742] text-sm leading-relaxed space-y-4">
-                <textarea
+                {/* <textarea
                   className="w-full"
                   placeholder={
                     data.description ? undefined : "c'mon add some description"
                   }
                   rows={10}
                   {...register("description", { required: true })}
-                />
+                /> */}
+                <p>
+                  {data.description
+                    ? data.description
+                    : "c'mon add some description"}
+                </p>
                 {/* <p>Key requirements:</p>
                 <ul className="list-disc pl-5 space-y-1 text-[#6A717B]">
                   <li>Sticky header with mobile-responsive menu</li>
@@ -411,7 +421,7 @@ const ViewProjectTask = ({
                 className="text-sm font-bold text-red-500 flex items-center gap-1.5 hover:bg-red-50 px-3 py-2 rounded-lg transition-colors"
               >
                 {isPending ? (
-                  <span className="loading loading-dots loading-xl"></span>
+                  <BtnLoader />
                 ) : (
                   <>
                     <span className="material-symbols-outlined text-lg">
@@ -430,12 +440,13 @@ const ViewProjectTask = ({
                 >
                   Cancel
                 </button>
-                <button
+                {/* <button
                   disabled={isPending}
+                  onClick={handleSubmit(onSubmitHandler)}
                   className="px-6 py-2.5 text-sm font-bold bg-primary2 text-white rounded-lg soft-shadow"
                 >
                   Save Changes
-                </button>
+                </button> */}
               </div>
             </div>
           )}

@@ -96,7 +96,7 @@ export default function DashboardLayout({
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <div className="relative hidden md:block">
+                {/* <div className="relative hidden md:block">
                   <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#678383] text-xl">
                     <Search />
                   </span>
@@ -105,12 +105,12 @@ export default function DashboardLayout({
                     placeholder="Global search..."
                     type="text"
                   />
-                </div>
-                <button className="p-2 rounded-lg bg-[#f1f4f4] dark:bg-[#2d3238] text-[#121717] dark:text-white">
+                </div> */}
+                {/* <button className="p-2 rounded-lg bg-[#f1f4f4] dark:bg-[#2d3238] text-[#121717] dark:text-white">
                   <span className="material-symbols-outlined text-xl">
                     <Bell />
                   </span>
-                </button>
+                </button> */}
                 <button
                   onClick={() => router.push("/dashboard/settings")}
                   className="p-2 rounded-lg bg-[#f1f4f4] dark:bg-[#2d3238] text-[#121717] dark:text-white"

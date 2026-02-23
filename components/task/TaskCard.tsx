@@ -13,12 +13,12 @@ const TaskCard = ({
       onClick={onViewTask}
     >
       <div className="flex justify-between items-start mb-3">
-        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 uppercase tracking-tight">
+        {/* <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 uppercase tracking-tight">
           Medium
-        </span>
-        <button className="material-symbols-outlined text-[#678383] opacity-0 group-hover:opacity-100 transition-opacity">
+        </span> */}
+        {/* <button className="material-symbols-outlined text-[#678383] opacity-0 group-hover:opacity-100 transition-opacity">
           more_horiz
-        </button>
+        </button> */}
       </div>
       <h4 className="text-[15px] font-bold mb-4 leading-snug">{title}</h4>
       <div className="flex items-center justify-between">
