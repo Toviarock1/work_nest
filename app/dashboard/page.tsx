@@ -1,5 +1,5 @@
 "use client";
-// import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ProjectCard from "@/components/project/ProjectCard";
 import {
   ArrowDown,
@@ -12,8 +12,11 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { fetchMyProjects } from "@/services/project.service";
 import { ProjectsType } from "@/types";
+import AddNewProject from "@/components/project/AddNewProject";
 
 export default function DashboardPage() {
+  const [modal, setModal] = useState(false);
+
   const {
     data: projects,
     isLoading,
@@ -34,7 +37,10 @@ export default function DashboardPage() {
             Overview of all current engagements, status, and team performance.
           </p>
         </div>
-        <button className="flex items-center gap-2 px-6 py-2.5 bg-primary2 text-white rounded-lg font-bold shadow-lg shadow-primary2/20 hover:bg-primary2/90 transition-all active:scale-95">
+        <button
+          onClick={() => setModal(true)}
+          className="flex items-center gap-2 px-6 py-2.5 bg-primary2 text-white rounded-lg font-bold shadow-lg shadow-primary2/20 hover:bg-primary2/90 transition-all active:scale-95"
+        >
           <span className="material-symbols-outlined">
             <Plus />
           </span>
@@ -121,6 +127,7 @@ export default function DashboardPage() {
           </button>
         )}
       </div>
+      <AddNewProject close={() => setModal(false)} show={modal} />
 
       {/* <!-- Pagination/Load More --> */}
       {/* {!isLoading && projects?.data && (

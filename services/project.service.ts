@@ -1,5 +1,15 @@
 import axiosInstance from "@/lib/axiosInstance";
 
+interface createProjectPayload {
+  name: string;
+  description: string;
+}
+
+export const createProject = async (payload: createProjectPayload) => {
+  const response = await axiosInstance.post("/project", payload);
+  return response.data;
+};
+
 export const fetchMyProjects = async () => {
   const response = await axiosInstance.get("/project");
   return response.data;
