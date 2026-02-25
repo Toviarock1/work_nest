@@ -3,11 +3,16 @@ import { useUser } from "@/hooks/useUser";
 interface Props {
   size?: "sm" | "md" | "lg" | "xl";
   className?: string;
+  customName?: string;
 }
 
-export default function UserAvatar({ size = "md", className = "" }: Props) {
+export default function UserAvatar({
+  size = "md",
+  className = "",
+  customName,
+}: Props) {
   const { user } = useUser();
-  const name = user.name;
+  const name = customName ? customName : user.name;
   const firstLetter = name?.charAt(0).toUpperCase();
 
   // 2. Define sizes

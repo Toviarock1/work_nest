@@ -48,7 +48,7 @@ const ProjectMembers = ({ data, isLoading, onRemove, type }: any) => {
                     >
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <UserAvatar />
+                          <UserAvatar customName={member.user.name} />
                           <div>
                             <p className="text-sm font-bold">
                               {member.user.name}
