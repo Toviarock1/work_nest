@@ -33,3 +33,12 @@ export const removeProjectMembers = async (payload: ProjectMemberPayload) => {
   const response = await axiosInstance.post(`/project/remove-member`, payload);
   return response.data;
 };
+
+interface DeleteProjectPayload {
+  id: string;
+}
+
+export const removeProject = async (payload: DeleteProjectPayload) => {
+  const response = await axiosInstance.delete(`/project/${payload.id}`);
+  return response.data;
+};

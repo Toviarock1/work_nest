@@ -1,5 +1,8 @@
-import { EllipsisVertical } from "lucide-react";
+import { removeProject } from "@/services/project.service";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { EllipsisVertical, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 interface ProjectCardProps {
   id: string;
@@ -8,19 +11,61 @@ interface ProjectCardProps {
 }
 
 const ProjectCard = ({ id, name, description }: ProjectCardProps) => {
+  const queryClient = useQueryClient();
+  const { mutate, isPending } = useMutation({
+    mutationFn: removeProject,
+    onSuccess: () => {
+      toast.success("Project deleted");
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
+  const handleOptions = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const onRemove = (id: string) => {
+    mutate({ id });
+  };
   return (
-    <Link href={`dashboard/project/${id}`}>
-      <div className="bg-white dark:bg-background-dark rounded-xl border border-[#f1f4f4] dark:border-[#2d3238] shadow-soft hover:shadow-xl hover:-translate-y-1 transition-all duration-300 p-6 group">
-        <div className="flex justify-end items-start mb-4">
-          {/* <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600">
+    <div className="bg-white dark:bg-background-dark rounded-xl border border-[#f1f4f4] dark:border-[#2d3238] shadow-soft hover:shadow-xl hover:-translate-y-1 transition-all duration-300 p-6 group">
+      <div className="flex justify-end items-start mb-4">
+        {/* <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600">
           <span className="material-symbols-outlined text-3xl">smartphone</span>
         </div> */}
-          <button className="p-1 text-[#678383] hover:bg-[#f1f4f4] dark:hover:bg-[#2d3238] rounded">
+        <div className="dropdown" onClick={handleOptions}>
+          <button
+            tabIndex={0}
+            className="p-1 text-[#678383] hover:bg-[#f1f4f4] dark:hover:bg-[#2d3238] rounded"
+            onClick={handleOptions}
+          >
             <span className="material-symbols-outlined">
               <EllipsisVertical />
             </span>
           </button>
+          <ul
+            tabIndex={-1}
+            className="dropdown-content menu bg-base-100 rounded-box z-1 p-2 shadow-sm"
+          >
+            <li>
+              <button
+                disabled={isPending}
+                onClick={() => onRemove(id)}
+                className="w-full btn flex justify-start gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors"
+              >
+                <span className="material-symbols-outlined text-[18px]">
+                  <Trash2 />
+                </span>
+                <span className="font-bold">Delete</span>
+              </button>
+            </li>
+          </ul>
         </div>
+      </div>
+      <Link href={`dashboard/project/${id}`}>
         <div className="mb-6">
           <h3 className="text-lg font-bold mb-1 capitalize">{name}</h3>
           <p className="text-sm text-[#678383]">{description}</p>
@@ -62,8 +107,8 @@ const ProjectCard = ({ id, name, description }: ProjectCardProps) => {
           </span> */}
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 };
 

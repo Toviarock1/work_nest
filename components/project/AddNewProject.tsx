@@ -39,7 +39,7 @@ const AddNewProject = ({
 
   return (
     show && (
-      <body className="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+      <div className="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
         {/* <!-- Backdrop for Modal --> */}
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 flex items-center justify-center p-4">
           {/* <!-- Modal Container --> */}
@@ -227,7 +227,7 @@ const AddNewProject = ({
             </div>
           </div>
         </div>
-      </body>
+      </div>
     )
   );
 };
