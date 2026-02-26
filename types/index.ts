@@ -27,6 +27,11 @@ export interface TasksType {
   projectId: string;
   status: string;
   title: string;
+  assignedTo: {
+    name: string;
+    email: string;
+    id: string;
+  };
 }
 
 export interface Message {

@@ -20,6 +20,7 @@ import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import BtnLoader from "../BtnLoader";
+import UserAvatar from "../UserAvater";
 
 const ViewProjectTask = ({
   show,
@@ -149,13 +150,10 @@ const ViewProjectTask = ({
                     Assignee
                   </span>
                   <div className="flex items-center gap-3">
-                    <div
-                      className="size-9 rounded-full bg-teal-100 border-2 border-white soft-shadow flex items-center justify-center text-primary2 font-bold text-xs"
-                      data-alt="Alex Rivera avatar"
-                    >
-                      AR
-                    </div>
-                    <span className="text-sm font-semibold">Alex Rivera</span>
+                    <UserAvatar customName={data.assignedTo.name} />
+                    <span className="text-sm font-semibold">
+                      {data.assignedTo.name}
+                    </span>
                   </div>
                 </div>
                 <div className="flex flex-col gap-1.5">
