@@ -11,7 +11,7 @@ import {
   fetchMyProjectsTask,
   updateTaskStatus,
 } from "@/services/task.service";
-import { TasksType, UpdateTaskStatusPayload } from "@/types";
+import { AssignTaskPayload, TasksType, UpdateTaskStatusPayload } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   BadgeCheck,
@@ -32,6 +32,7 @@ import Link from "next/link";
 import ProjectMembers from "@/components/project/ProjectMembers";
 import {
   addProjectMembers,
+  assignTask,
   fetchProjectMembers,
   removeProjectMembers,
 } from "@/services/project.service";
@@ -68,18 +69,15 @@ export default function ProjectsPage() {
   } = useQuery({
     queryKey: ["project-members", projectId],
     queryFn: () => fetchProjectMembers(projectId),
-    enabled: !!projectId && currentPath === "members",
+    enabled: !!projectId,
   });
 
-  const mutation = useMutation({
+  const createTaskMutation = useMutation({
     mutationFn: createTask,
-    onSuccess: () => {
-      setShowTaskModal(false);
-      toast.success("Task created!");
-    },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to create task");
-    },
+  });
+
+  const assignMutation = useMutation({
+    mutationFn: assignTask,
   });
 
   const updateTaskMutation = useMutation({
@@ -140,9 +138,36 @@ export default function ProjectsPage() {
     });
   };
 
-  const addNewTaskHandler = (data: { title: string; description: string }) => {
+  const addNewTaskHandler = async (data: {
+    title: string;
+    description: string;
+    assignee: string;
+  }) => {
+    try {
+      const newTask = await createTaskMutation.mutateAsync({
+        title: data.title,
+        description: data.description,
+        projectId: projectId,
+      });
+
+      if (data.assignee && newTask.data.id) {
+        await assignMutation.mutateAsync({
+          taskId: newTask.data.id,
+          assigneeEmail: data.assignee,
+          projectId: projectId,
+        });
+      }
+
+      setShowTaskModal(false);
+      toast.success("Task created!");
+      queryClient.invalidateQueries({ queryKey: ["project-todos", projectId] });
+      // close();
+      // reset();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to create task");
+    }
     // console.log(data);
-    mutation.mutate({ ...data, projectId });
+    // mutation.mutate({ ...data, projectId });
   };
   const addMemberHandler = (data: { email: string }) => {
     membersMutation({ userEmail: data.email, projectId, type: "add" });
@@ -513,6 +538,7 @@ export default function ProjectsPage() {
         show={showTaskModal}
         close={() => setShowTaskModal(false)}
         onSubmit={addNewTaskHandler}
+        projectId={projectId}
       />
       <AddProjectMemberModal
         projectName={todos.data.name}

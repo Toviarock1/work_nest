@@ -1,3 +1,6 @@
+import { fetchProjectMembers } from "@/services/project.service";
+import { ProjectMembersType } from "@/types";
+import { useQuery } from "@tanstack/react-query";
 import { X, CircleUser, ChevronDown } from "lucide-react";
 import { useForm } from "react-hook-form";
 
@@ -5,11 +8,19 @@ const AddTaskModal = ({
   show,
   close,
   onSubmit,
+  projectId,
 }: {
   show: boolean;
   close: () => void;
   onSubmit: (data: any) => void;
+  projectId: string;
 }) => {
+  const { data: members, isLoading } = useQuery({
+    queryKey: ["project-members", projectId],
+    queryFn: () => fetchProjectMembers(projectId),
+    enabled: !!projectId,
+  });
+
   const {
     register,
     handleSubmit,
@@ -135,6 +146,35 @@ const AddTaskModal = ({
                   <label className="text-sm font-bold text-[#121717]">
                     Assignee
                   </label>
+
+                  <select
+                    defaultValue=""
+                    className="select"
+                    {...register("assignee", {
+                      required: "Please assign this task to a team member",
+                    })}
+                  >
+                    <option disabled={true} value={""}>
+                      {" "}
+                      Pick a color
+                    </option>
+                    {members?.data.projectMembers?.map(
+                      (member: ProjectMembersType) => (
+                        <option value={member.user.email}>
+                          {member.user.name}
+                        </option>
+                      ),
+                    )}
+                    {/* <option>Crimson</option>
+                    <option>Amber</option>
+                    <option>Velvet</option> */}
+                  </select>
+                  {errors.assignee && (
+                    <p className="text-xs text-red-500">
+                      {errors.assignee.message as string}
+                    </p>
+                  )}
+
                   <div className="relative">
                     <div className="flex items-center gap-3 w-full rounded-lg border border-slate-200 bg-white h-12 px-3 cursor-pointer hover:border-slate-300 transition-colors">
                       <div className="size-7 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden">

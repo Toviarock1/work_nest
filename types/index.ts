@@ -57,3 +57,18 @@ export interface GetFileHistorry {
     name: string;
   };
 }
+
+export interface ProjectMembersType {
+  id: string;
+  userId: string;
+  projectId: string;
+  role: string;
+  joinedAt: string;
+  user: { name: string; email: string };
+}
+
+export interface AssignTaskPayload {
+  taskId: string;
+  projectId: string;
+  assigneeEmail: string;
+}

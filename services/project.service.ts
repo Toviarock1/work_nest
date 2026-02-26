@@ -1,4 +1,5 @@
 import axiosInstance from "@/lib/axiosInstance";
+import { AssignTaskPayload } from "@/types";
 
 interface createProjectPayload {
   name: string;
@@ -40,5 +41,13 @@ interface DeleteProjectPayload {
 
 export const removeProject = async (payload: DeleteProjectPayload) => {
   const response = await axiosInstance.delete(`/project/${payload.id}`);
+  return response.data;
+};
+
+export const assignTask = async (payload: AssignTaskPayload) => {
+  const response = await axiosInstance.patch(
+    `/tasks/${payload.taskId}/assign`,
+    { projectId: payload.projectId, assigneeEmail: payload.assigneeEmail },
+  );
   return response.data;
 };
