@@ -4,16 +4,16 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@/hooks/useUser";
 
 const AuthGuard = ({ children }: { children: React.ReactNode }) => {
-  const { user, isLoading } = useUser();
+  const { user, isLoading, isError } = useUser();
   const logout = useAuthStore((state) => state.logOut);
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && !user) {
+    if (isError || (!isLoading && !user)) {
       logout();
-      // router.push("/login");
+      router.push("/login");
     }
-  }, [user, isLoading, router]);
+  }, [user, isLoading, router, isError, logout]);
 
   if (isLoading)
     return (

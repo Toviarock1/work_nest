@@ -4,15 +4,18 @@ import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 const GuestGuard = ({ children }: { children: React.ReactNode }) => {
-  const { user, isLoading } = useUser();
+  const { user, isLoading, isError } = useUser();
+  const logout = useAuthStore((state) => state.logOut);
   const router = useRouter();
+
   useEffect(() => {
     if (!isLoading && user) {
-      router.push("/dashboard");
+      router.replace("/dashboard");
     }
   }, [user, isLoading, router]);
 
-  if (isLoading) return <p>Checking session...</p>;
+  if (isLoading)
+    return <div className="p-4 text-center">Checking session...</div>;
 
   return !user ? <>{children}</> : null;
 };
