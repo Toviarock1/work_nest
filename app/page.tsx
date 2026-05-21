@@ -41,6 +41,9 @@ export default function Home() {
         className="pointer-events-none fixed inset-0 aurora-bg opacity-40 dark:opacity-35"
       />
 
+      {/* Fixed full-viewport 3D scene behind the whole page */}
+      <HeroBackground />
+
       <div className="relative z-10 flex h-auto min-h-screen w-full flex-col group/design-root">
         <div className="layout-container flex h-full grow flex-col">
           {/* Nav */}
@@ -73,8 +76,6 @@ export default function Home() {
           <main className="flex-1">
             {/* ===== HERO ===== */}
             <div className="relative overflow-hidden min-h-[88vh]">
-              {/* 3D scene scoped to hero */}
-              <HeroBackground />
               <div className="absolute inset-0 grid-floor pointer-events-none z-[1]" />
 
               <div className="relative z-[2] px-4 lg:px-40 flex flex-1 justify-center py-16 lg:py-32 min-h-[88vh] items-center">
@@ -343,7 +344,7 @@ export default function Home() {
             </section>
 
             {/* ===== FEATURE ALT 2 ===== */}
-            <section className="w-full bg-white/30 dark:bg-white/5 backdrop-blur-md py-16 md:py-24 border-y border-white/30 dark:border-white/5 perspective-1200">
+            <section className="w-full bg-white/15 dark:bg-white/5 backdrop-blur-sm py-16 md:py-24 border-y border-white/20 dark:border-white/5">
               <div className="mx-auto px-6 md:px-20 lg:px-40">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                   <ScrollReveal direction="right" className="order-2 lg:order-1">

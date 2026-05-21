@@ -196,8 +196,8 @@ function SceneContents({
 
   useFrame(() => {
     if (!group.current) return;
-    group.current.position.y = scroll.current * 8;
-    group.current.rotation.y = scroll.current * Math.PI * 0.4;
+    group.current.position.y = scroll.current * 28;
+    group.current.rotation.y = scroll.current * Math.PI * 0.6;
   });
 
   return (
@@ -223,37 +223,45 @@ function SceneContents({
       />
 
       <group ref={group}>
-        {/* Hero cluster */}
+        {/* Hero cluster (scroll ~0) */}
         <FloatingKnot position={[3.5, 0.6, -1]} scale={1.1} speed={1} />
         <FloatingIcosahedron position={[-3.8, -0.4, -2]} scale={1.3} />
         <FloatingTorus position={[0, 2.6, -4]} scale={1.1} />
 
-        {/* Mid scene shapes (visible as you scroll) */}
+        {/* Feature-grid section (scroll ~0.15) */}
+        <FloatingTorus position={[-4.5, -4, -1]} scale={0.85} color={ACCENT} />
         <FloatingKnot
-          position={[-4, -8, -2]}
-          scale={0.9}
-          color={ACCENT}
-          distort={0.5}
-        />
-        <FloatingIcosahedron
-          position={[4.2, -10, -3]}
-          scale={1.6}
+          position={[4, -5, -3]}
+          scale={1}
           color={PRIMARY}
+          distort={0.4}
         />
-        <FloatingTorus position={[0, -14, -1]} scale={1.4} color={ACCENT} />
 
-        {/* Deep scene shapes */}
+        {/* Scale header + Feature alt 1 (scroll ~0.3) */}
+        <FloatingIcosahedron position={[-3.5, -9, -2]} scale={1.2} color={PRIMARY} />
+        <FloatingTorus position={[3.8, -10, -2]} scale={1.1} color={ACCENT} />
+
+        {/* Feature alt 2 (scroll ~0.45) */}
         <FloatingKnot
-          position={[3.2, -20, -4]}
-          scale={1.2}
+          position={[0, -14, -3]}
+          scale={1.3}
+          color={ACCENT}
+          distort={0.55}
+        />
+        <FloatingIcosahedron position={[4, -15, -1]} scale={1} color={ACCENT} />
+
+        {/* Trust grid + Pricing (scroll ~0.6) */}
+        <FloatingTorus position={[-4.2, -19, -2]} scale={1.2} color={PRIMARY} />
+        <FloatingKnot
+          position={[3.5, -20, -2]}
+          scale={1.1}
           color={PRIMARY}
           distort={0.45}
         />
-        <FloatingIcosahedron
-          position={[-4, -24, -2]}
-          scale={1.1}
-          color={ACCENT}
-        />
+
+        {/* CTA + footer (scroll ~0.85) */}
+        <FloatingIcosahedron position={[-3.8, -25, -2]} scale={1.3} color={PRIMARY} />
+        <FloatingTorus position={[3.2, -27, -3]} scale={1.4} color={ACCENT} />
 
         {/* Floor disc */}
         <mesh
@@ -289,8 +297,7 @@ export default function LandingScene3D() {
 
   return (
     <div
-      className="pointer-events-none absolute inset-0"
-      style={{ zIndex: 0 }}
+      className="pointer-events-none fixed inset-0"
       aria-hidden
     >
       <Canvas
