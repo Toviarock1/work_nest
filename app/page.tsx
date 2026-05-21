@@ -23,6 +23,7 @@ import {
 import TiltCard from "@/components/landing/TiltCard";
 import ScrollReveal from "@/components/landing/ScrollReveal";
 import ParallaxLayer from "@/components/landing/ParallaxLayer";
+import ParallaxBlobs from "@/components/landing/ParallaxBlobs";
 import LandingScene3D from "@/components/landing/LandingScene3D";
 
 function HeroBackground() {
@@ -43,6 +44,9 @@ export default function Home() {
 
       {/* Fixed full-viewport 3D scene behind the whole page */}
       <HeroBackground />
+
+      {/* Scrolling parallax blobs throughout the page */}
+      <ParallaxBlobs />
 
       <div className="relative z-10 flex h-auto min-h-screen w-full flex-col group/design-root">
         <div className="layout-container flex h-full grow flex-col">
@@ -82,7 +86,7 @@ export default function Home() {
                 <div className="layout-content-container flex flex-col max-w-[1200px] flex-1">
                   <div className="@container">
                     <div className="flex flex-col gap-10 lg:flex-row lg:items-center">
-                      <div className="flex-1">
+                      <ParallaxLayer speed={-0.05} className="flex-1">
                         <div className="flex flex-col gap-8">
                           <div className="inline-flex items-center gap-2 self-start rounded-full glass px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-landing-page-primary">
                             <Sparkles className="size-3.5" />
@@ -151,9 +155,13 @@ export default function Home() {
                             <span>Joined by 10,000+ teams worldwide</span>
                           </div>
                         </div>
-                      </div>
+                      </ParallaxLayer>
 
-                      <div className="flex-1 w-full lg:max-w-[600px]">
+                      <ParallaxLayer
+                        speed={0.12}
+                        rotate={1.5}
+                        className="flex-1 w-full lg:max-w-[600px]"
+                      >
                         <TiltCard intensity={14} className="relative">
                           <div className="absolute -inset-6 bg-landing-page-primary/30 blur-3xl rounded-full" />
                           <div className="relative glass p-2 rounded-2xl shadow-2xl glow-ring">
@@ -185,7 +193,7 @@ export default function Home() {
                             </div>
                           </div>
                         </TiltCard>
-                      </div>
+                      </ParallaxLayer>
                     </div>
                   </div>
                 </div>
@@ -197,16 +205,18 @@ export default function Home() {
               <div className="layout-content-container flex flex-col max-w-[1200px] flex-1">
                 <div className="flex flex-col gap-14 px-4 @container">
                   <ScrollReveal>
-                    <div className="flex flex-col gap-4 text-center items-center">
-                      <h2 className="text-3xl lg:text-5xl font-extrabold leading-tight max-w-[760px]">
-                        Everything you need to{" "}
-                        <span className="gradient-text">manage your team</span>{" "}
-                        in one place.
-                      </h2>
-                      <p className="text-[#608a79] dark:text-gray-300 text-lg font-medium leading-normal max-w-[720px]">
-                        Stop jumping between apps. We've built the ultimate tool for transparency and speed.
-                      </p>
-                    </div>
+                    <ParallaxLayer speed={0.08}>
+                      <div className="flex flex-col gap-4 text-center items-center">
+                        <h2 className="text-3xl lg:text-5xl font-extrabold leading-tight max-w-[760px]">
+                          Everything you need to{" "}
+                          <span className="gradient-text">manage your team</span>{" "}
+                          in one place.
+                        </h2>
+                        <p className="text-[#608a79] dark:text-gray-300 text-lg font-medium leading-normal max-w-[720px]">
+                          Stop jumping between apps. We've built the ultimate tool for transparency and speed.
+                        </p>
+                      </div>
+                    </ParallaxLayer>
                   </ScrollReveal>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 perspective-1200">
@@ -268,20 +278,22 @@ export default function Home() {
 
             {/* ===== SCALE HEADER ===== */}
             <ScrollReveal>
-              <section className="w-full px-6 md:px-20 lg:px-40 pt-20 text-center">
-                <h2 className="text-3xl md:text-6xl font-black leading-tight tracking-tight max-w-3xl mx-auto">
-                  Everything you need to{" "}
-                  <span className="gradient-text glow-text">scale</span>{" "}
-                  your production
-                </h2>
-              </section>
+              <ParallaxLayer speed={0.1} scale={0.04}>
+                <section className="w-full px-6 md:px-20 lg:px-40 pt-20 text-center">
+                  <h2 className="text-3xl md:text-6xl font-black leading-tight tracking-tight max-w-3xl mx-auto">
+                    Everything you need to{" "}
+                    <span className="gradient-text glow-text">scale</span>{" "}
+                    your production
+                  </h2>
+                </section>
+              </ParallaxLayer>
             </ScrollReveal>
 
             {/* ===== FEATURE ALT 1 ===== */}
             <section className="w-full px-6 md:px-20 lg:px-40 py-16 md:py-24 perspective-1200">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <ScrollReveal direction="right">
-                  <div className="flex flex-col gap-6">
+                  <ParallaxLayer speed={-0.04} className="flex flex-col gap-6">
                     <div className="flex flex-col gap-4">
                       <div className="flex items-center gap-2 text-landing-page-primary font-bold">
                         <ClipboardCheck className="size-5" />
@@ -321,11 +333,11 @@ export default function Home() {
                         <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
                       </button>
                     </Link>
-                  </div>
+                  </ParallaxLayer>
                 </ScrollReveal>
 
                 <ScrollReveal direction="left" delay={120}>
-                  <ParallaxLayer speed={0.08}>
+                  <ParallaxLayer speed={0.14} rotate={-1.2}>
                     <TiltCard intensity={10}>
                       <div className="relative">
                         <div className="absolute -inset-6 bg-landing-page-primary/25 rounded-2xl blur-2xl" />
@@ -348,7 +360,7 @@ export default function Home() {
               <div className="mx-auto px-6 md:px-20 lg:px-40">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                   <ScrollReveal direction="right" className="order-2 lg:order-1">
-                    <ParallaxLayer speed={0.08}>
+                    <ParallaxLayer speed={0.14} rotate={1.2}>
                       <TiltCard intensity={10}>
                         <div className="relative">
                           <div className="absolute -inset-6 bg-landing-page-primary/20 rounded-2xl blur-2xl" />
@@ -365,7 +377,7 @@ export default function Home() {
                   </ScrollReveal>
 
                   <ScrollReveal direction="left" delay={120} className="order-1 lg:order-2">
-                    <div className="flex flex-col gap-6">
+                    <ParallaxLayer speed={-0.04} className="flex flex-col gap-6">
                       <div className="flex flex-col gap-4">
                         <div className="flex items-center gap-2 text-landing-page-primary font-bold">
                           <MessagesSquare className="size-5" />
@@ -409,7 +421,7 @@ export default function Home() {
                           <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
                         </button>
                       </Link>
-                    </div>
+                    </ParallaxLayer>
                   </ScrollReveal>
                 </div>
               </div>
@@ -461,18 +473,20 @@ export default function Home() {
                 <div className="layout-container flex h-full grow flex-col">
                   <div className="px-6 md:px-40 flex flex-col items-center justify-center py-16 md:py-20">
                     <ScrollReveal>
-                      <div className="layout-content-container flex flex-col max-w-[960px] w-full text-center">
-                        <span className="text-landing-page-primary font-bold tracking-wider text-sm uppercase mb-3">
-                          Pricing Plans
-                        </span>
-                        <h2 className="text-[32px] md:text-5xl font-extrabold leading-tight tracking-[-0.015em] px-4 pb-4">
-                          Simple, transparent pricing for{" "}
-                          <span className="gradient-text">teams of all sizes</span>
-                        </h2>
-                        <p className="text-[#4f6b5a] dark:text-gray-300 text-lg max-w-2xl mx-auto px-4">
-                          Choose the plan that fits your current needs and scale as your business grows. No hidden fees.
-                        </p>
-                      </div>
+                      <ParallaxLayer speed={0.07}>
+                        <div className="layout-content-container flex flex-col max-w-[960px] w-full text-center">
+                          <span className="text-landing-page-primary font-bold tracking-wider text-sm uppercase mb-3">
+                            Pricing Plans
+                          </span>
+                          <h2 className="text-[32px] md:text-5xl font-extrabold leading-tight tracking-[-0.015em] px-4 pb-4">
+                            Simple, transparent pricing for{" "}
+                            <span className="gradient-text">teams of all sizes</span>
+                          </h2>
+                          <p className="text-[#4f6b5a] dark:text-gray-300 text-lg max-w-2xl mx-auto px-4">
+                            Choose the plan that fits your current needs and scale as your business grows. No hidden fees.
+                          </p>
+                        </div>
+                      </ParallaxLayer>
                     </ScrollReveal>
 
                     <div className="layout-content-container flex flex-col max-w-[1100px] w-full mt-12 perspective-1200">
