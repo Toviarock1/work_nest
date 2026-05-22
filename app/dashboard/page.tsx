@@ -1,33 +1,45 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import ProjectCard from "@/components/project/ProjectCard";
-import {
-  ArrowDown,
-  LayoutGrid,
-  List,
-  Loader2,
-  Plus,
-  Search,
-} from "lucide-react";
+import { LayoutGrid, List, Plus, Search, X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchMyProjects } from "@/services/project.service";
 import { ProjectsType } from "@/types";
 import AddNewProject from "@/components/project/AddNewProject";
 
+type ViewMode = "grid" | "list";
+
 export default function DashboardPage() {
   const [modal, setModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
   const {
     data: projects,
     isLoading,
-    // isError,
   } = useQuery({
     queryKey: ["projects"],
     queryFn: fetchMyProjects,
   });
+
+  const filteredProjects = useMemo(() => {
+    const list: ProjectsType[] = projects?.data ?? [];
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return list;
+    return list.filter((p) => {
+      const name = p.project?.name?.toLowerCase() ?? "";
+      const description = p.project?.description?.toLowerCase() ?? "";
+      return name.includes(q) || description.includes(q);
+    });
+  }, [projects, searchQuery]);
+
+  const totalCount = projects?.data?.length ?? 0;
+  const visibleCount = filteredProjects.length;
+  const isSearching = searchQuery.trim().length > 0;
+
   return (
     <>
-      {/* <!-- Page Heading --> */}
+      {/* Page Heading */}
       <div className="flex flex-col md:flex-row justify-between md:items-end gap-4 mb-8">
         <div>
           <h2 className="text-3xl font-extrabold tracking-tight mb-2">
@@ -41,64 +53,120 @@ export default function DashboardPage() {
           onClick={() => setModal(true)}
           className="flex items-center gap-2 px-6 py-2.5 bg-primary2 text-white rounded-lg font-bold shadow-lg shadow-primary2/20 hover:bg-primary2/90 transition-all active:scale-95"
         >
-          <span className="material-symbols-outlined">
-            <Plus />
-          </span>
+          <Plus className="size-5" />
           New Project
         </button>
       </div>
-      {/* <!-- Filters & Search --> */}
+
+      {/* Filters & Search */}
       <div className="bg-white dark:bg-background-dark p-3 rounded-xl shadow-soft border border-[#f1f4f4] dark:border-[#2d3238] mb-8 flex flex-wrap items-center gap-4">
         <div className="flex-1 min-w-75 relative">
-          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#678383]">
-            <Search />
-          </span>
+          <Search className="size-5 absolute left-3 top-1/2 -translate-y-1/2 text-[#678383] pointer-events-none" />
           <input
-            className="w-full pl-10 pr-4 py-2.5 bg-background-light dark:bg-[#2d3238] border-none rounded-lg focus:ring-2 focus:ring-primary2/50"
-            placeholder="Search projects by name or client..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-10 py-2.5 bg-background-light dark:bg-[#2d3238] border-none rounded-lg focus:ring-2 focus:ring-primary2/50 focus:outline-none"
+            placeholder="Search projects by name or description..."
             type="text"
+            aria-label="Search projects"
           />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery("")}
+              aria-label="Clear search"
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[#678383] hover:text-[#121717] dark:hover:text-white transition-colors"
+            >
+              <X className="size-4" />
+            </button>
+          )}
         </div>
         <div className="flex items-center gap-2">
-          <button className="flex items-center gap-2 px-4 py-2.5 bg-background-light dark:bg-[#2d3238] rounded-lg text-sm font-medium border border-transparent hover:border-primary2/20">
-            <span>Status: All</span>
-            <span className="material-symbols-outlined text-sm">
-              <ArrowDown />
-            </span>
-          </button>
-          <button className="flex items-center gap-2 px-4 py-2.5 bg-background-light dark:bg-[#2d3238] rounded-lg text-sm font-medium border border-transparent hover:border-primary2/20">
-            <span>Team: Everyone</span>
-            <span className="material-symbols-outlined text-sm">
-              <ArrowDown />
-            </span>
-          </button>
-          <div className="h-8 w-px bg-[#f1f4f4] dark:bg-[#2d3238] mx-2"></div>
           <div className="flex bg-background-light dark:bg-[#2d3238] p-1 rounded-lg">
-            <button className="p-1.5 bg-white dark:bg-background-dark shadow-sm rounded text-primary2">
-              <span className="material-symbols-outlined">
-                <LayoutGrid />
-              </span>
+            <button
+              type="button"
+              onClick={() => setViewMode("grid")}
+              aria-label="Grid view"
+              aria-pressed={viewMode === "grid"}
+              className={`p-1.5 rounded transition-colors ${
+                viewMode === "grid"
+                  ? "bg-white dark:bg-background-dark shadow-sm text-primary2"
+                  : "text-[#678383] hover:text-primary2"
+              }`}
+            >
+              <LayoutGrid className="size-5" />
             </button>
-            <button className="p-1.5 text-[#678383]">
-              <span className="material-symbols-outlined">
-                <List />
-              </span>
+            <button
+              type="button"
+              onClick={() => setViewMode("list")}
+              aria-label="List view"
+              aria-pressed={viewMode === "list"}
+              className={`p-1.5 rounded transition-colors ${
+                viewMode === "list"
+                  ? "bg-white dark:bg-background-dark shadow-sm text-primary2"
+                  : "text-[#678383] hover:text-primary2"
+              }`}
+            >
+              <List className="size-5" />
             </button>
           </div>
         </div>
       </div>
-      {/* <!-- Project Grid --> */}
+
+      {/* Result count + active search hint */}
+      {!isLoading && (
+        <div className="mb-4 flex items-center gap-2 text-sm text-[#678383]">
+          {isSearching ? (
+            <span>
+              Showing <strong className="text-[#121717] dark:text-white">{visibleCount}</strong> of {totalCount} project{totalCount === 1 ? "" : "s"} matching{" "}
+              <span className="font-semibold text-[#121717] dark:text-white">
+                &ldquo;{searchQuery}&rdquo;
+              </span>
+            </span>
+          ) : (
+            <span>
+              <strong className="text-[#121717] dark:text-white">{totalCount}</strong> project{totalCount === 1 ? "" : "s"}
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* Loading */}
       {isLoading && (
         <div className="flex justify-center p-4">
           <span className="loading loading-ring loading-xl"></span>
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* <!-- Project Card 2 --> */}
+      {/* Empty search state */}
+      {!isLoading && isSearching && visibleCount === 0 && (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <div className="size-14 rounded-full bg-[#f1f4f4] dark:bg-[#2d3238] flex items-center justify-center text-[#678383] mb-4">
+            <Search className="size-6" />
+          </div>
+          <h3 className="text-lg font-bold mb-1">No projects found</h3>
+          <p className="text-sm text-[#678383] mb-4">
+            Nothing matched &ldquo;{searchQuery}&rdquo;. Try a different search.
+          </p>
+          <button
+            onClick={() => setSearchQuery("")}
+            className="px-4 py-2 text-sm font-bold text-primary2 hover:underline"
+          >
+            Clear search
+          </button>
+        </div>
+      )}
 
-        {!isLoading &&
-          projects?.data?.map((project: ProjectsType) => (
+      {/* Project Grid / List */}
+      {!isLoading && !(isSearching && visibleCount === 0) && (
+        <div
+          className={
+            viewMode === "grid"
+              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              : "flex flex-col gap-4"
+          }
+        >
+          {filteredProjects.map((project) => (
             <ProjectCard
               id={project.project.id}
               name={project.project.name}
@@ -111,32 +179,36 @@ export default function DashboardPage() {
             />
           ))}
 
-        {!isLoading && projects?.data && (
-          <button className="group border-2 border-dashed border-[#f1f4f4] dark:border-[#2d3238] rounded-xl flex flex-col items-center justify-center p-6 hover:border-primary2/50 hover:bg-white dark:hover:bg-background-dark transition-all duration-300">
-            <div className="w-12 h-12 rounded-full bg-[#f1f4f4] dark:bg-[#2d3238] flex items-center justify-center text-[#678383] group-hover:bg-primary2/10 group-hover:text-primary2 mb-4 transition-colors">
-              <span className="material-symbols-outlined text-3xl">
-                <Plus />
-              </span>
-            </div>
-            <h3 className="text-base font-bold text-[#678383] group-hover:text-primary2 transition-colors">
-              Create Project
-            </h3>
-            <p className="text-xs text-[#678383] mt-1">
-              Start a new engagement
-            </p>
-          </button>
-        )}
-      </div>
-      <AddNewProject close={() => setModal(false)} show={modal} />
-
-      {/* <!-- Pagination/Load More --> */}
-      {/* {!isLoading && projects?.data && (
-        <div className="mt-12 flex items-center justify-center">
-          <button className="px-8 py-3 bg-white dark:bg-background-dark border border-[#f1f4f4] dark:border-[#2d3238] rounded-lg text-sm font-bold hover:bg-[#f1f4f4] dark:hover:bg-[#2d3238] transition-colors shadow-soft">
-            Load More Projects
-          </button>
+          {!isSearching && projects?.data && (
+            <button
+              onClick={() => setModal(true)}
+              className={`group border-2 border-dashed border-[#f1f4f4] dark:border-[#2d3238] rounded-xl flex ${
+                viewMode === "grid"
+                  ? "flex-col items-center justify-center p-6"
+                  : "flex-row items-center gap-4 p-4"
+              } hover:border-primary2/50 hover:bg-white dark:hover:bg-background-dark transition-all duration-300`}
+            >
+              <div
+                className={`${
+                  viewMode === "grid" ? "w-12 h-12 mb-4" : "w-10 h-10"
+                } rounded-full bg-[#f1f4f4] dark:bg-[#2d3238] flex items-center justify-center text-[#678383] group-hover:bg-primary2/10 group-hover:text-primary2 transition-colors`}
+              >
+                <Plus className="size-5" />
+              </div>
+              <div className={viewMode === "list" ? "text-left" : ""}>
+                <h3 className="text-base font-bold text-[#678383] group-hover:text-primary2 transition-colors">
+                  Create Project
+                </h3>
+                <p className="text-xs text-[#678383] mt-1">
+                  Start a new engagement
+                </p>
+              </div>
+            </button>
+          )}
         </div>
-      )} */}
+      )}
+
+      <AddNewProject close={() => setModal(false)} show={modal} />
     </>
   );
 }
