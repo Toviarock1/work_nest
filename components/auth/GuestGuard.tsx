@@ -1,23 +1,29 @@
+"use client";
+
 import { useUser } from "@/hooks/useUser";
-import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 const GuestGuard = ({ children }: { children: React.ReactNode }) => {
-  const { user, isLoading, isError } = useUser();
-  const logout = useAuthStore((state) => state.logOut);
   const router = useRouter();
+  const [hasToken, setHasToken] = useState(false);
+
+  // Check for an existing token client-side after mount.
+  // Skipping the session check entirely when there's no token avoids the
+  // network round-trip that previously caused "Checking session..." delay.
+  useEffect(() => {
+    setHasToken(
+      typeof window !== "undefined" && !!localStorage.getItem("accessToken"),
+    );
+  }, []);
+
+  const { user } = useUser({ enabled: hasToken });
 
   useEffect(() => {
-    if (!isLoading && user) {
-      router.replace("/dashboard");
-    }
-  }, [user, isLoading, router]);
+    if (user) router.replace("/dashboard");
+  }, [user, router]);
 
-  if (isLoading)
-    return <div className="p-4 text-center">Checking session...</div>;
-
-  return !user ? <>{children}</> : null;
+  return <>{children}</>;
 };
 
 export default GuestGuard;

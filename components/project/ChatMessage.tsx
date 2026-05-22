@@ -27,7 +27,7 @@ const ChatMessage = ({
       <div className={`chat ${userId === id ? "chat-end" : "chat-start"} my-4`}>
         <div className="chat-image avatar">
           <div className="w-10 rounded-full">
-            <UserAvatar />
+            <UserAvatar customName={name} />
           </div>
         </div>
         <div className="chat-header">
