@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
-// import { AxiosError } from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { registerUser } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -11,6 +10,14 @@ import { useForm } from "react-hook-form";
 import GuestGuard from "@/components/auth/GuestGuard";
 import { RegisterFormInput } from "@/types";
 import { useAuthStore } from "@/store/useAuthStore";
+import AuthScene3D from "@/components/landing/AuthScene3D";
+
+function AuthBackground() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
+  return <AuthScene3D />;
+}
 
 export default function RegisterPage() {
   const {
@@ -50,9 +57,16 @@ export default function RegisterPage() {
 
   return (
     <GuestGuard>
-      <div className="min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-background-dark">
+      <div className="relative min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-background-dark">
+        {/* 3D scene background — paints behind everything */}
+        <AuthBackground />
+        {/* Soft tint over the 3D so content stays readable */}
+        <div
+          aria-hidden
+          className="pointer-events-none fixed inset-0 bg-gray-50/60 dark:bg-background-dark/60"
+        />
         {/* Top Navigation Bar */}
-        <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-800 px-6 lg:px-10 py-4 bg-white dark:bg-background-dark">
+        <header className="relative z-10 flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-800 px-6 lg:px-10 py-4 bg-white/85 dark:bg-background-dark/85 backdrop-blur-md">
           <div className="flex items-center gap-4 text-primary2">
             <div className="w-8 h-8">
               <svg
@@ -84,7 +98,7 @@ export default function RegisterPage() {
           </div>
         </header>
 
-        <main className="flex-1 flex flex-col items-center justify-center p-6 lg:p-12 relative overflow-hidden">
+        <main className="relative z-10 flex-1 flex flex-col items-center justify-center p-6 lg:p-12 overflow-hidden">
           {/* Abstract background elements */}
           <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-primary2/5 rounded-full blur-3xl pointer-events-none"></div>
           <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-125 h-125 bg-primary2/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -402,7 +416,7 @@ export default function RegisterPage() {
           </div>
         </main>
 
-        <footer className="py-6 px-10 border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-background-dark flex flex-col md:flex-row justify-between items-center gap-4">
+        <footer className="relative z-10 py-6 px-10 border-t border-gray-100 dark:border-gray-800 bg-white/85 dark:bg-background-dark/85 backdrop-blur-md flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-400 text-sm">
             © 2024 WorkNest Inc. All rights reserved.
           </p>

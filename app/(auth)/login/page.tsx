@@ -2,13 +2,21 @@
 import { loginUser } from "@/services/auth.service";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useAuthStore } from "@/store/useAuthStore";
 import { LoginFormInput } from "@/types";
 import GuestGuard from "@/components/auth/GuestGuard";
 import Link from "next/link";
+import AuthScene3D from "@/components/landing/AuthScene3D";
+
+function AuthBackground() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
+  return <AuthScene3D />;
+}
 
 export default function SignInPage() {
   const {
@@ -39,7 +47,14 @@ export default function SignInPage() {
   return (
     <GuestGuard>
       <div className="bg-gray-50 dark:bg-background-dark font-sans min-h-screen flex flex-col">
-        <div className="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden">
+        {/* 3D scene background — paints behind everything */}
+        <AuthBackground />
+        {/* Soft tint over the 3D so the form stays readable */}
+        <div
+          aria-hidden
+          className="pointer-events-none fixed inset-0 bg-gray-50/60 dark:bg-background-dark/60"
+        />
+        <div className="relative z-10 flex h-full min-h-screen w-full flex-col overflow-x-hidden">
           <div className="flex h-full grow flex-col">
             {/* Minimalist Branding Header */}
             <div className="px-4 md:px-40 flex justify-center py-8">
