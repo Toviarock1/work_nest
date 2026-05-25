@@ -154,7 +154,10 @@ export default function RegisterPage() {
                   </p>
                 </div>
 
-                <div className="space-y-4">
+                <form
+                  className="space-y-4"
+                  onSubmit={handleSubmit(handleSubmitHandler)}
+                >
                   {/* Full Name */}
                   <div className="flex flex-col gap-1.5">
                     <label className="text-[#121717] dark:text-white text-sm font-semibold">
@@ -302,8 +305,9 @@ export default function RegisterPage() {
                   {/* Submit */}
                   <div className="pt-4">
                     <button
-                      className="w-full bg-primary2 hover:bg-primary2/90 text-white font-bold py-4 px-6 rounded-lg transition-all shadow-lg shadow-primary2/20 flex items-center justify-center gap-2"
-                      onClick={handleSubmit(handleSubmitHandler)}
+                      type="submit"
+                      disabled={loading}
+                      className="w-full bg-primary2 hover:bg-primary2/90 text-white font-bold py-4 px-6 rounded-lg transition-all shadow-lg shadow-primary2/20 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                     >
                       {loading ? (
                         <span className="loading loading-dots loading-xl"></span>
@@ -377,7 +381,7 @@ export default function RegisterPage() {
                     </a>
                     .
                   </p>
-                </div>
+                </form>
               </div>
             </div>
           </div>

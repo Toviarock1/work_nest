@@ -113,7 +113,10 @@ export default function SignInPage() {
                 </div>
 
                 {/* Login Form */}
-                <form className="flex flex-col gap-5">
+                <form
+                  className="flex flex-col gap-5"
+                  onSubmit={handleSubmit(handleSubmitHandler)}
+                >
                   <div className="flex flex-col gap-2">
                     <label className="flex flex-col w-full">
                       <p className="text-[#121717] dark:text-white text-sm font-bold leading-normal pb-2">
@@ -188,7 +191,6 @@ export default function SignInPage() {
                   <button
                     type="submit"
                     className="mt-4 flex w-full cursor-pointer items-center justify-center rounded-lg h-14 px-4 bg-primary2 text-white text-base font-bold leading-normal tracking-[0.015em] hover:brightness-110 active:scale-[0.98] transition-all"
-                    onClick={handleSubmit(handleSubmitHandler)}
                     disabled={loading}
                   >
                     {loading ? (
