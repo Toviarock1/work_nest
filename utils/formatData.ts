@@ -8,6 +8,23 @@ export const formatDate = (dateString: string | Date) => {
   });
 };
 
+// "Today" / "Yesterday" / "3d ago" / "2w ago" / falls back to absolute date
+export const formatRelative = (dateString: string | Date) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return "";
+
+  const diffMs = Date.now() - date.getTime();
+  const day = 24 * 60 * 60 * 1000;
+  const diffDays = Math.floor(diffMs / day);
+
+  if (diffDays < 1) return "Today";
+  if (diffDays === 1) return "Yesterday";
+  if (diffDays < 7) return `${diffDays}d ago`;
+  if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
+  return formatDate(date);
+};
+
 export const formatTime = (dateString: string | Date) => {
   if (!dateString) return "";
 
