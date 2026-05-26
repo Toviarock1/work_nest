@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import TaskSkeleton from "@/components/skeleton/TaskSkeleton";
+import QueryError from "@/components/ui/QueryError";
 import AddTaskModal from "@/components/task/AddTaskModal";
 import TaskCard from "@/components/task/TaskCard";
 import FilesView from "@/components/file/Files";
@@ -56,6 +57,7 @@ export default function ProjectsPage() {
     data: todos,
     isLoading: todosLoading,
     isError: todosError,
+    refetch: refetchTodos,
   } = useQuery({
     queryKey: ["project-todos", projectId],
     queryFn: () => fetchMyProjectsTask(projectId),
@@ -183,6 +185,13 @@ export default function ProjectsPage() {
 
   return todosLoading ? (
     <TaskSkeleton />
+  ) : todosError ? (
+    <div className="p-8">
+      <QueryError
+        message="We couldn't load this project. Check your connection and try again."
+        onRetry={() => refetchTodos()}
+      />
+    </div>
   ) : (
     <section className="bg-background-light dark:bg-background-dark font-display text-[#121717] dark:text-white transition-colors duration-200">
       <div className="flex h-screen overflow-hidden">

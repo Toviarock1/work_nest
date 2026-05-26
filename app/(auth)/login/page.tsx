@@ -34,8 +34,9 @@ export default function SignInPage() {
     try {
       const res = await loginUser(data);
       setUser(res.data);
-      localStorage.setItem("accessToken", res.data.token);
-      document.cookie = `accessToken=${res.data.token}; path=/; max-age=3600; SameSite=Lax`;
+      const secure =
+        process.env.NODE_ENV === "production" ? "; Secure" : "";
+      document.cookie = `accessToken=${res.data.token}; path=/; max-age=3600; SameSite=Lax${secure}`;
       router.push("/dashboard");
     } catch (error: any) {
       console.log(error || "Login failed");

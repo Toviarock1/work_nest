@@ -5,6 +5,7 @@ import { useChatSocket } from "@/hooks/useChatSocket";
 import { useForm } from "react-hook-form";
 import { Send, Loader2, SendHorizontal, Paperclip } from "lucide-react";
 import ChatMessage from "./ChatMessage";
+import QueryError from "@/components/ui/QueryError";
 import { formatTime, groupMessagesByDate } from "@/utils/formatData";
 import { Message } from "@/types";
 import { toast } from "react-toastify";
@@ -24,7 +25,12 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
   };
 
   // 1. Fetch Message History
-  const { data: messages, isLoading } = useQuery({
+  const {
+    data: messages,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ["chat-history", projectId],
     queryFn: () => fetchChatHistory(projectId),
   });
@@ -111,6 +117,17 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
 
   if (isLoading)
     return <div className="p-4 text-center">Loading messages...</div>;
+
+  if (isError)
+    return (
+      <div className="p-4">
+        <QueryError
+          compact
+          message="Couldn't load chat history."
+          onRetry={() => refetch()}
+        />
+      </div>
+    );
 
   return (
     <>

@@ -36,8 +36,9 @@ export default function RegisterPage() {
     try {
       const res = await registerUser(data);
 
-      localStorage.setItem("accessToken", res.data.token);
-      document.cookie = `accessToken=${res.data.token}; path=/; max-age=3600; SameSite=Lax`;
+      const secure =
+        process.env.NODE_ENV === "production" ? "; Secure" : "";
+      document.cookie = `accessToken=${res.data.token}; path=/; max-age=3600; SameSite=Lax${secure}`;
 
       setUser(res.data);
 

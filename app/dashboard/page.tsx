@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import ProjectCard from "@/components/project/ProjectCard";
 import ProjectCardSkeleton from "@/components/skeleton/ProjectCardSkeleton";
+import QueryError from "@/components/ui/QueryError";
 import {
   ArrowDownAZ,
   ArrowUpAZ,
@@ -46,7 +47,12 @@ export default function DashboardPage() {
     localStorage.setItem(SORT_KEY, sortBy);
   }, [sortBy]);
 
-  const { data: projects, isLoading } = useQuery({
+  const {
+    data: projects,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ["projects"],
     queryFn: fetchMyProjects,
   });
@@ -78,7 +84,7 @@ export default function DashboardPage() {
   const totalCount = projects?.data?.length ?? 0;
   const visibleCount = filteredProjects.length;
   const isSearching = searchQuery.trim().length > 0;
-  const isEmptyAccount = !isLoading && totalCount === 0;
+  const isEmptyAccount = !isLoading && !isError && totalCount === 0;
 
   return (
     <>
@@ -102,7 +108,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Filters & Search (hidden when empty account so the welcome state is the focal point) */}
-      {!isEmptyAccount && (
+      {!isEmptyAccount && !isError && (
         <div className="bg-white dark:bg-background-dark p-3 rounded-xl shadow-soft border border-[#f1f4f4] dark:border-[#2d3238] mb-8 flex flex-wrap items-center gap-4">
           <div className="flex-1 min-w-75 relative">
             <Search className="size-5 absolute left-3 top-1/2 -translate-y-1/2 text-[#678383] pointer-events-none" />
@@ -184,7 +190,7 @@ export default function DashboardPage() {
       )}
 
       {/* Result count */}
-      {!isLoading && !isEmptyAccount && (
+      {!isLoading && !isEmptyAccount && !isError && (
         <div className="mb-4 flex items-center gap-2 text-sm text-[#678383]">
           {isSearching ? (
             <span>
@@ -209,6 +215,13 @@ export default function DashboardPage() {
       )}
 
       {/* Loading: skeleton grid matching the chosen layout */}
+      {!isLoading && isError && (
+        <QueryError
+          message="We couldn't load your projects. Check your connection and try again."
+          onRetry={() => refetch()}
+        />
+      )}
+
       {isLoading && (
         <div
           className={

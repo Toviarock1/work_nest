@@ -12,9 +12,8 @@ const GuestGuard = ({ children }: { children: React.ReactNode }) => {
   // Skipping the session check entirely when there's no token avoids the
   // network round-trip that previously caused "Checking session..." delay.
   useEffect(() => {
-    setHasToken(
-      typeof window !== "undefined" && !!localStorage.getItem("accessToken"),
-    );
+    if (typeof document === "undefined") return;
+    setHasToken(/(?:^|;\s*)accessToken=/.test(document.cookie));
   }, []);
 
   const { user } = useUser({ enabled: hasToken });
