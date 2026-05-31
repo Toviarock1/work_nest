@@ -31,12 +31,16 @@ export default function DashboardPage() {
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [sortBy, setSortBy] = useState<SortMode>("newest");
 
-  // Hydrate persisted preferences (client only, after mount → no SSR mismatch)
+  // Hydrate persisted preferences from localStorage. This intentionally calls
+  // setState inside an effect — localStorage isn't available during SSR, so we
+  // read after mount and accept one extra render to avoid hydration mismatch.
   useEffect(() => {
     const v = localStorage.getItem(VIEW_KEY);
+    /* eslint-disable react-hooks/set-state-in-effect */
     if (v === "grid" || v === "list") setViewMode(v);
     const s = localStorage.getItem(SORT_KEY);
     if (s === "newest" || s === "oldest" || s === "name") setSortBy(s);
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
   useEffect(() => {
@@ -277,56 +281,58 @@ export default function DashboardPage() {
       )}
 
       {/* Project Grid / List */}
-      {!isLoading && !isEmptyAccount && !(isSearching && visibleCount === 0) && (
-        <div
-          className={
-            viewMode === "grid"
-              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-              : "flex flex-col gap-4"
-          }
-        >
-          {filteredProjects.map((p) => (
-            <ProjectCard
-              id={p.project.id}
-              name={p.project.name}
-              description={
-                p.project.description
-                  ? p.project.description
-                  : "Give this project a description. what do you think?"
-              }
-              createdAt={p.project.createdAt}
-              key={p.project.id}
-            />
-          ))}
+      {!isLoading &&
+        !isEmptyAccount &&
+        !(isSearching && visibleCount === 0) && (
+          <div
+            className={
+              viewMode === "grid"
+                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                : "flex flex-col gap-4"
+            }
+          >
+            {filteredProjects.map((p) => (
+              <ProjectCard
+                id={p.project.id}
+                name={p.project.name}
+                description={
+                  p.project.description
+                    ? p.project.description
+                    : "Give this project a description. what do you think?"
+                }
+                createdAt={p.project.createdAt}
+                key={p.project.id}
+              />
+            ))}
 
-          {!isSearching && (
-            <button
-              onClick={() => setModal(true)}
-              className={`group border-2 border-dashed border-[#f1f4f4] dark:border-[#2d3238] rounded-xl flex ${
-                viewMode === "grid"
-                  ? "flex-col items-center justify-center p-6"
-                  : "flex-row items-center gap-4 p-4"
-              } hover:border-primary2/50 hover:bg-white dark:hover:bg-background-dark transition-all duration-300`}
-            >
-              <div
-                className={`${
-                  viewMode === "grid" ? "w-12 h-12 mb-4" : "w-10 h-10"
-                } rounded-full bg-[#f1f4f4] dark:bg-[#2d3238] flex items-center justify-center text-[#678383] group-hover:bg-primary2/10 group-hover:text-primary2 transition-colors`}
+            {!isSearching && (
+              <button
+                onClick={() => setModal(true)}
+                className={`group border-2 border-dashed border-[#f1f4f4] dark:border-[#2d3238] rounded-xl flex ${
+                  viewMode === "grid"
+                    ? "flex-col items-center justify-center p-6"
+                    : "flex-row items-center gap-4 p-4"
+                } hover:border-primary2/50 hover:bg-white dark:hover:bg-background-dark transition-all duration-300`}
               >
-                <Plus className="size-5" />
-              </div>
-              <div className={viewMode === "list" ? "text-left" : ""}>
-                <h3 className="text-base font-bold text-[#678383] group-hover:text-primary2 transition-colors">
-                  Create Project
-                </h3>
-                <p className="text-xs text-[#678383] mt-1">
-                  Start a new engagement
-                </p>
-              </div>
-            </button>
-          )}
-        </div>
-      )}
+                <div
+                  className={`${
+                    viewMode === "grid" ? "w-12 h-12 mb-4" : "w-10 h-10"
+                  } rounded-full bg-[#f1f4f4] dark:bg-[#2d3238] flex items-center justify-center text-[#678383] group-hover:bg-primary2/10 group-hover:text-primary2 transition-colors`}
+                >
+                  <Plus className="size-5" />
+                </div>
+                <div className={viewMode === "list" ? "text-left" : ""}>
+                  <h3 className="text-base font-bold text-[#678383] group-hover:text-primary2 transition-colors">
+                    Create Project
+                  </h3>
+                  <p className="text-xs text-[#678383] mt-1">
+                    Start a new engagement
+                  </p>
+                </div>
+              </button>
+            )}
+          </div>
+        )}
 
       <AddNewProject close={() => setModal(false)} show={modal} />
     </>

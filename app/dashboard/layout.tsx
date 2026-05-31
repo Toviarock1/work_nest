@@ -2,19 +2,11 @@
 
 import AuthGuard from "@/components/auth/AuthGuard";
 import DesktopOnlyGuard from "@/components/ui/DesktopOnlyGuard";
-import UserAvatar from "@/components/UserAvater";
+import UserAvatar from "@/components/UserAvatar";
 import { fetchMyProjectsTask } from "@/services/task.service";
 import { useAuthStore } from "@/store/useAuthStore";
-import { TasksType } from "@/types";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Bell,
-  Briefcase,
-  ChevronRight,
-  LogOut,
-  Search,
-  Settings,
-} from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Briefcase, LogOut, Settings } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 
@@ -26,8 +18,6 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const params = useParams();
   const router = useRouter();
-  const queryClient = useQueryClient();
-
   const projectId = params.projectId as string;
   const { data: project } = useQuery({
     queryKey: ["project-todos", projectId],
@@ -35,8 +25,6 @@ export default function DashboardLayout({
     enabled: !!projectId, // Only run if we are in a project route
     staleTime: 1000 * 60 * 5, // Consider data "fresh" for 5 mins
   });
-
-  console.log(projectId);
 
   const logout = useAuthStore((state) => state.logOut);
 

@@ -1,3 +1,29 @@
+/** Standard envelope every WorkNest API endpoint returns. */
+export interface ApiResponse<T> {
+  data: T;
+  message?: string;
+}
+
+/** Logged-in user shape — what the auth store + /user/me serve. */
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  token?: string;
+}
+
+/** Generic error shape we get back from the API. Used for typing catch blocks. */
+export interface ApiError {
+  response?: {
+    status?: number;
+    data?: {
+      message?: string;
+      [key: string]: unknown;
+    };
+  };
+  message?: string;
+}
+
 export interface LoginFormInput {
   email: string;
   password: string;

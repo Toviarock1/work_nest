@@ -22,7 +22,7 @@ export default function DashboardError({
         <AlertTriangle className="size-6" />
       </div>
       <h2 className="text-xl font-bold text-[#121717] dark:text-white mb-1">
-        This page couldn't load
+        This page couldn&apos;t load
       </h2>
       <p className="text-sm text-[#678383] dark:text-gray-400 max-w-md mb-6">
         Try again, or jump back to your project list.

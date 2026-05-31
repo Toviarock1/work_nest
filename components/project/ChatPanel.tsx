@@ -3,11 +3,10 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { fetchChatHistory, sendMessage } from "@/services/message.service";
 import { useChatSocket } from "@/hooks/useChatSocket";
 import { useForm } from "react-hook-form";
-import { Send, Loader2, SendHorizontal, Paperclip } from "lucide-react";
+import { SendHorizontal, Paperclip } from "lucide-react";
 import ChatMessage from "./ChatMessage";
 import QueryError from "@/components/ui/QueryError";
 import { formatTime, groupMessagesByDate } from "@/utils/formatData";
-import { Message } from "@/types";
 import { toast } from "react-toastify";
 import {
   deleteFile,
@@ -35,7 +34,7 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
     queryFn: () => fetchChatHistory(projectId),
   });
   // 1. Fetch File History
-  const { data: projectFiles, isLoading: filesIsLoading } = useQuery({
+  const { data: projectFiles } = useQuery({
     queryKey: ["file-history", projectId],
     queryFn: () => fetchFileHistory(projectId),
   });
@@ -109,8 +108,6 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
     fileInputRef.current?.click();
   };
 
-  console.log(unifiedFeed);
-
   useEffect(() => {
     scrollbottom();
   }, [messages]);
@@ -159,8 +156,8 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
             </div>
             <div className="text-[15px] leading-relaxed text-[#121717] dark:text-gray-300">
               Hey <span className="text-primary2 font-bold">@Team</span>, check
-              out the latest wireframes for the landing page. I've focused on
-              mobile responsiveness first. What do you think about the hero
+              out the latest wireframes for the landing page. I&apos;ve focused
+              on mobile responsiveness first. What do you think about the hero
               section layout?
             </div>
             {/* <!-- Attachment Thumbnail --> */}
@@ -215,8 +212,8 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
               Looks sharp, Sarah. I like the simplified navigation on mobile.
               The CTA stands out much better than the previous version. <br />
               <br />
-              Let's make sure the background patterns don't interfere with the
-              text legibility on smaller screens.
+              Let&apos;s make sure the background patterns don&apos;t interfere
+              with the text legibility on smaller screens.
             </div>
             <div className="flex gap-2 mt-1">
               <div className="px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-800 border border-[#dde4e4] dark:border-gray-700 flex items-center gap-1.5 cursor-pointer hover:bg-primary2/5 hover:border-primary2/30 transition-colors">

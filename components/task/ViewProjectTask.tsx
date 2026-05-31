@@ -5,14 +5,10 @@ import { formatDate } from "@/utils/formatData";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   X,
-  CircleUser,
-  ChevronDown,
   LayoutGrid,
   Minimize2,
-  RefreshCcw,
   Share2,
   Ellipsis,
-  TimerReset,
   Calendar,
   Trash2,
 } from "lucide-react";
@@ -20,19 +16,18 @@ import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import BtnLoader from "../BtnLoader";
-import UserAvatar from "../UserAvater";
+import UserAvatar from "../UserAvatar";
 
 const ViewProjectTask = ({
   show,
   close,
-  onSubmit,
   data,
   ownerId,
   projectId,
 }: {
   show: boolean;
   close: () => void;
-  onSubmit: (data: { title: string; description: string }) => void;
+  onSubmit?: (data: { title: string; description: string }) => void;
   data: TasksType;
   ownerId: string;
   projectId: string;
@@ -41,7 +36,7 @@ const ViewProjectTask = ({
   const queryClient = useQueryClient();
   const btn = useRef<HTMLButtonElement>(null);
 
-  const { mutate, isPending, isError } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: deleteTask,
     onSuccess: () => {
       toast.success("Task deleted");
@@ -52,12 +47,7 @@ const ViewProjectTask = ({
       toast.error("Something went wrong, try again");
     },
   });
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm({
+  const { setValue } = useForm({
     defaultValues: {
       description: data?.description || "",
     },
@@ -70,10 +60,6 @@ const ViewProjectTask = ({
   useEffect(() => {
     setValue("description", data?.description || "");
   }, [data?.description, setValue]);
-
-  const onSubmitHandler = (data: { description: string }) => {
-    console.log(data);
-  };
 
   return (
     show &&

@@ -11,10 +11,15 @@ import GuestGuard from "@/components/auth/GuestGuard";
 import { RegisterFormInput } from "@/types";
 import { useAuthStore } from "@/store/useAuthStore";
 import AuthScene3D from "@/components/landing/AuthScene3D";
+import { logger } from "@/lib/logger";
+import Image from "next/image";
 
 function AuthBackground() {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
   if (!mounted) return null;
   return <AuthScene3D />;
 }
@@ -29,27 +34,26 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const setUser = useAuthStore((state) => state.setUser);
   const router = useRouter();
-  const queyClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   const handleSubmitHandler = async (data: RegisterFormInput) => {
     setLoading(true);
     try {
       const res = await registerUser(data);
 
-      const secure =
-        process.env.NODE_ENV === "production" ? "; Secure" : "";
+      const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
       document.cookie = `accessToken=${res.data.token}; path=/; max-age=3600; SameSite=Lax${secure}`;
 
       setUser(res.data);
 
-      await queyClient.invalidateQueries({ queryKey: ["user-me"] });
+      await queryClient.invalidateQueries({ queryKey: ["user-me"] });
 
       router.refresh();
       toast.success("Welcome to WorkNest!");
 
       router.push("/dashboard");
     } catch (error) {
-      console.log(error || "Registration failed");
+      logger.error("Registration failed", error);
       toast.error("Registration failed");
     } finally {
       setLoading(false);
@@ -132,15 +136,17 @@ export default function RegisterPage() {
                     </svg>
                   </div>
                   <p className="text-white text-sm italic">
-                    "The workspace setup was so fast. We were collaborating on
-                    our first project within 5 minutes."
+                    &ldquo;The workspace setup was so fast. We were
+                    collaborating on our first project within 5 minutes.&rdquo;
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
-                    <img
-                      alt="Headshot of a smiling professional man"
+                    <Image
+                      alt="Headshot of a smiling professional"
                       src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4CwhUBI9VaEzLdxEHg4HsrzKQ5F0mAlhURfvevJGk3ftadvHJr4yNXYIkYhBtXi9g8huq1FdRLlJqX6CKl7KJIbSFLnCrQg_xYodPX03cVX3O6iZyfOePIo4f-Q_HfgLa9jIBN6jggo7bBvTkXtlg_LOktsSVqswT299oCQiGVTq90uQvbiQ-9GHpp3_hBKdAI0TmgOzwnDUC51xNjsXh85bA_bF4mSjle97eYK32Y822TXPZ6Y79UfxlCte5v-_UNWYEz6CBQebJ"
+                      width={32}
+                      height={32}
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -300,6 +306,10 @@ export default function RegisterPage() {
                       <button
                         className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary2 transition-colors"
                         type="button"
+                        aria-label={
+                          showPassword ? "Hide password" : "Show password"
+                        }
+                        aria-pressed={showPassword}
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         <svg
@@ -380,7 +390,7 @@ export default function RegisterPage() {
                   </button>
 
                   <p className="mt-6 text-center text-[11px] text-gray-400 leading-relaxed">
-                    By clicking "Create Account", you agree to our{" "}
+                    By clicking &ldquo;Create Account&rdquo;, you agree to our{" "}
                     <a
                       className="text-primary2 hover:underline underline-offset-2"
                       href="#"

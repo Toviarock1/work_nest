@@ -1,10 +1,11 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import Cookies from "js-cookie";
+import type { AuthUser } from "@/types";
 
 interface AuthState {
-  user: any | null;
-  setUser: (user: any) => void;
+  user: AuthUser | null;
+  setUser: (user: AuthUser | null) => void;
   logOut: () => void;
 }
 

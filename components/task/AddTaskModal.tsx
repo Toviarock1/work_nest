@@ -15,7 +15,7 @@ const AddTaskModal = ({
   onSubmit: (data: any) => void;
   projectId: string;
 }) => {
-  const { data: members, isLoading } = useQuery({
+  const { data: members } = useQuery({
     queryKey: ["project-members", projectId],
     queryFn: () => fetchProjectMembers(projectId),
     enabled: !!projectId,
@@ -160,7 +160,7 @@ const AddTaskModal = ({
                     </option>
                     {members?.data.projectMembers?.map(
                       (member: ProjectMembersType) => (
-                        <option value={member.user.email}>
+                        <option key={member.id} value={member.user.email}>
                           {member.user.name}
                         </option>
                       ),

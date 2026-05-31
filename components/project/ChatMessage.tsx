@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Paperclip, Trash2 } from "lucide-react";
-import UserAvatar from "./../UserAvater";
+import UserAvatar from "./../UserAvatar";
 
 const ChatMessage = ({
   name,
@@ -20,7 +20,7 @@ const ChatMessage = ({
   url: string;
   onDelete: () => void;
 }) => {
-  const userId = useAuthStore((state) => state.user.id);
+  const userId = useAuthStore((state) => state.user?.id);
 
   return (
     <>

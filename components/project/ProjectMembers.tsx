@@ -5,13 +5,11 @@ import {
   Settings,
   Trash2,
 } from "lucide-react";
-import React from "react";
 import Loader from "../Loader";
 import { formatDate } from "@/utils/formatData";
-import { useForm } from "react-hook-form";
-import UserAvatar from "./../UserAvater";
+import UserAvatar from "./../UserAvatar";
 
-const ProjectMembers = ({ data, isLoading, onRemove, type }: any) => {
+const ProjectMembers = ({ data, isLoading, onRemove }: any) => {
   return (
     <div className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col">
       <div className="flex-1 p-8 bg-background-light dark:bg-background-dark">

@@ -28,7 +28,10 @@ import LandingScene3D from "@/components/landing/LandingScene3D";
 
 function HeroBackground() {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
   if (!mounted) return null;
   return <LandingScene3D />;
 }
@@ -54,7 +57,11 @@ export default function Home() {
           <header className="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-white/40 dark:border-[#1e3a2f]/60 glass px-6 lg:px-40 py-3">
             <div className="flex items-center gap-3 text-[#111815] dark:text-white">
               <div className="size-8 text-landing-page-primary spin-slow">
-                <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                <svg
+                  fill="none"
+                  viewBox="0 0 48 48"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <path
                     clipRule="evenodd"
                     d="M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z"
@@ -102,9 +109,9 @@ export default function Home() {
                               </span>
                             </h1>
                             <p className="text-[#608a79] dark:text-gray-300 text-lg lg:text-xl font-medium leading-relaxed max-w-[540px]">
-                              The all-in-one workspace for modern teams to manage
-                              projects, chat in real-time, and share files without
-                              the clutter.
+                              The all-in-one workspace for modern teams to
+                              manage projects, chat in real-time, and share
+                              files without the clutter.
                             </p>
                           </div>
 
@@ -112,7 +119,9 @@ export default function Home() {
                             <Link href={"/register"}>
                               <button className="group relative flex min-w-[220px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-xl h-14 px-8 bg-landing-page-primary text-[#111815] text-lg font-extrabold tracking-[0.015em] shadow-[0_20px_60px_-12px_rgba(13,242,147,0.7)] hover:scale-[1.04] transition-transform">
                                 <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/60 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-                                <span className="relative">Get Started for Free</span>
+                                <span className="relative">
+                                  Get Started for Free
+                                </span>
                                 <ArrowRight className="relative size-5 transition-transform group-hover:translate-x-1" />
                               </button>
                             </Link>
@@ -179,7 +188,9 @@ export default function Home() {
                             >
                               <div className="flex items-center gap-2">
                                 <div className="size-2 rounded-full bg-landing-page-primary animate-pulse" />
-                                <span className="text-xs font-bold">3 deploys today</span>
+                                <span className="text-xs font-bold">
+                                  3 deploys today
+                                </span>
                               </div>
                             </div>
                             <div
@@ -188,7 +199,9 @@ export default function Home() {
                             >
                               <div className="flex items-center gap-2">
                                 <BadgeCheck className="size-5 text-landing-page-primary" />
-                                <span className="text-xs font-bold">Task shipped</span>
+                                <span className="text-xs font-bold">
+                                  Task shipped
+                                </span>
                               </div>
                             </div>
                           </div>
@@ -209,11 +222,14 @@ export default function Home() {
                       <div className="flex flex-col gap-4 text-center items-center">
                         <h2 className="text-3xl lg:text-5xl font-extrabold leading-tight max-w-[760px]">
                           Everything you need to{" "}
-                          <span className="gradient-text">manage your team</span>{" "}
+                          <span className="gradient-text">
+                            manage your team
+                          </span>{" "}
                           in one place.
                         </h2>
                         <p className="text-[#608a79] dark:text-gray-300 text-lg font-medium leading-normal max-w-[720px]">
-                          Stop jumping between apps. We've built the ultimate tool for transparency and speed.
+                          Stop jumping between apps. We&apos;ve built the
+                          ultimate tool for transparency and speed.
                         </p>
                       </div>
                     </ParallaxLayer>
@@ -223,7 +239,17 @@ export default function Home() {
                     {[
                       {
                         icon: (
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
                             <path d="M5 3v14" />
                             <path d="M12 3v8" />
                             <path d="M19 3v18" />
@@ -243,7 +269,11 @@ export default function Home() {
                         copy: "Keep all your project assets in one secure place with unlimited cloud storage and versioning.",
                       },
                     ].map((f, i) => (
-                      <ScrollReveal key={f.title} delay={i * 120} direction="up">
+                      <ScrollReveal
+                        key={f.title}
+                        delay={i * 120}
+                        direction="up"
+                      >
                         <TiltCard className="h-full">
                           <div className="relative flex h-full gap-5 rounded-2xl border border-white/40 dark:border-white/10 glass p-8 flex-col overflow-hidden group">
                             <div
@@ -282,8 +312,8 @@ export default function Home() {
                 <section className="w-full px-6 md:px-20 lg:px-40 pt-20 text-center">
                   <h2 className="text-3xl md:text-6xl font-black leading-tight tracking-tight max-w-3xl mx-auto">
                     Everything you need to{" "}
-                    <span className="gradient-text glow-text">scale</span>{" "}
-                    your production
+                    <span className="gradient-text glow-text">scale</span> your
+                    production
                   </h2>
                 </section>
               </ParallaxLayer>
@@ -301,10 +331,14 @@ export default function Home() {
                       </div>
                       <h1 className="tracking-tight text-3xl md:text-5xl font-black leading-tight">
                         Manage projects with{" "}
-                        <span className="gradient-text">surgical precision</span>
+                        <span className="gradient-text">
+                          surgical precision
+                        </span>
                       </h1>
                       <p className="text-[#61896f] dark:text-gray-300 text-lg font-normal leading-relaxed">
-                        Assign tasks, set deadlines, and track progress in real-time. Our intuitive interface keeps your team focused on what matters most without the overhead.
+                        Assign tasks, set deadlines, and track progress in
+                        real-time. Our intuitive interface keeps your team
+                        focused on what matters most without the overhead.
                       </p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -359,7 +393,10 @@ export default function Home() {
             <section className="w-full bg-white/15 dark:bg-white/5 backdrop-blur-sm py-16 md:py-24 border-y border-white/20 dark:border-white/5">
               <div className="mx-auto px-6 md:px-20 lg:px-40">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                  <ScrollReveal direction="right" className="order-2 lg:order-1">
+                  <ScrollReveal
+                    direction="right"
+                    className="order-2 lg:order-1"
+                  >
                     <ParallaxLayer speed={0.14} rotate={1.2}>
                       <TiltCard intensity={10}>
                         <div className="relative">
@@ -376,8 +413,15 @@ export default function Home() {
                     </ParallaxLayer>
                   </ScrollReveal>
 
-                  <ScrollReveal direction="left" delay={120} className="order-1 lg:order-2">
-                    <ParallaxLayer speed={-0.04} className="flex flex-col gap-6">
+                  <ScrollReveal
+                    direction="left"
+                    delay={120}
+                    className="order-1 lg:order-2"
+                  >
+                    <ParallaxLayer
+                      speed={-0.04}
+                      className="flex flex-col gap-6"
+                    >
                       <div className="flex flex-col gap-4">
                         <div className="flex items-center gap-2 text-landing-page-primary font-bold">
                           <MessagesSquare className="size-5" />
@@ -388,7 +432,9 @@ export default function Home() {
                           <span className="gradient-text">loop, always</span>
                         </h1>
                         <p className="text-[#61896f] dark:text-gray-300 text-lg font-normal leading-relaxed">
-                          Communication is the lifeblood of great work. Integrated chat and commenting threads ensure context is never lost. Talk where the work happens.
+                          Communication is the lifeblood of great work.
+                          Integrated chat and commenting threads ensure context
+                          is never lost. Talk where the work happens.
                         </p>
                       </div>
                       <div className="flex flex-col gap-4">
@@ -396,9 +442,12 @@ export default function Home() {
                           <div className="flex gap-4 items-start p-5 glass rounded-xl border-l-4 border-landing-page-primary">
                             <Video className="size-6 text-landing-page-primary mt-1" />
                             <div>
-                              <h3 className="font-bold">One-click Video Sync</h3>
+                              <h3 className="font-bold">
+                                One-click Video Sync
+                              </h3>
                               <p className="text-[#61896f] dark:text-gray-300 text-sm">
-                                Instant huddles for when a chat message isn't enough.
+                                Instant huddles for when a chat message
+                                isn&apos;t enough.
                               </p>
                             </div>
                           </div>
@@ -409,7 +458,8 @@ export default function Home() {
                             <div>
                               <h3 className="font-bold">In-context Feedback</h3>
                               <p className="text-[#61896f] dark:text-gray-300 text-sm">
-                                Threaded comments directly on your design and code blocks.
+                                Threaded comments directly on your design and
+                                code blocks.
                               </p>
                             </div>
                           </div>
@@ -456,10 +506,15 @@ export default function Home() {
                         >
                           {t.icon}
                         </div>
-                        <h3 className="text-xl font-bold" style={{ transform: "translateZ(15px)" }}>
+                        <h3
+                          className="text-xl font-bold"
+                          style={{ transform: "translateZ(15px)" }}
+                        >
                           {t.title}
                         </h3>
-                        <p className="text-[#61896f] dark:text-gray-300">{t.copy}</p>
+                        <p className="text-[#61896f] dark:text-gray-300">
+                          {t.copy}
+                        </p>
                       </div>
                     </TiltCard>
                   </ScrollReveal>
@@ -480,10 +535,13 @@ export default function Home() {
                           </span>
                           <h2 className="text-[32px] md:text-5xl font-extrabold leading-tight tracking-[-0.015em] px-4 pb-4">
                             Simple, transparent pricing for{" "}
-                            <span className="gradient-text">teams of all sizes</span>
+                            <span className="gradient-text">
+                              teams of all sizes
+                            </span>
                           </h2>
                           <p className="text-[#4f6b5a] dark:text-gray-300 text-lg max-w-2xl mx-auto px-4">
-                            Choose the plan that fits your current needs and scale as your business grows. No hidden fees.
+                            Choose the plan that fits your current needs and
+                            scale as your business grows. No hidden fees.
                           </p>
                         </div>
                       </ParallaxLayer>
@@ -496,13 +554,19 @@ export default function Home() {
                           <TiltCard intensity={8} className="h-full">
                             <div className="flex h-full flex-col gap-6 rounded-2xl border border-white/40 dark:border-white/10 glass p-8 transition-all hover:shadow-2xl">
                               <div className="flex flex-col gap-1">
-                                <h3 className="text-lg font-bold leading-tight">Basic</h3>
+                                <h3 className="text-lg font-bold leading-tight">
+                                  Basic
+                                </h3>
                                 <p className="text-[#4f6b5a] dark:text-gray-300 text-sm mb-4">
                                   Perfect for side projects and individuals.
                                 </p>
                                 <p className="flex items-baseline gap-1">
-                                  <span className="text-5xl font-black leading-tight tracking-[-0.033em]">$0</span>
-                                  <span className="text-base font-bold">/month</span>
+                                  <span className="text-5xl font-black leading-tight tracking-[-0.033em]">
+                                    $0
+                                  </span>
+                                  <span className="text-base font-bold">
+                                    /month
+                                  </span>
                                 </p>
                               </div>
                               <Link href={"/register"}>
@@ -511,8 +575,15 @@ export default function Home() {
                                 </button>
                               </Link>
                               <div className="flex flex-col gap-4 mt-2">
-                                {["5 Active Projects", "10 GB Storage", "Basic Community Support"].map((f) => (
-                                  <div key={f} className="text-sm font-medium flex gap-3 items-center">
+                                {[
+                                  "5 Active Projects",
+                                  "10 GB Storage",
+                                  "Basic Community Support",
+                                ].map((f) => (
+                                  <div
+                                    key={f}
+                                    className="text-sm font-medium flex gap-3 items-center"
+                                  >
                                     <BadgeCheck className="size-5 text-landing-page-primary" />
                                     {f}
                                   </div>
@@ -524,7 +595,10 @@ export default function Home() {
 
                         {/* Pro */}
                         <ScrollReveal delay={120} direction="up">
-                          <TiltCard intensity={10} className="h-full md:scale-105 z-10">
+                          <TiltCard
+                            intensity={10}
+                            className="h-full md:scale-105 z-10"
+                          >
                             <div className="relative flex h-full flex-col gap-6 rounded-2xl border-2 border-landing-page-primary glass p-8 shadow-2xl glow-ring">
                               <div className="absolute inset-x-0 -top-3 mx-auto w-fit rounded-full bg-landing-page-primary px-4 py-1 text-[11px] font-bold uppercase tracking-[0.05em] text-[#111814]">
                                 Most Popular
@@ -535,13 +609,19 @@ export default function Home() {
                                   Everything you need for growing teams.
                                 </p>
                                 <p className="flex items-baseline gap-1">
-                                  <span className="text-5xl font-black leading-tight tracking-[-0.033em]">$29</span>
-                                  <span className="text-base font-bold">/month</span>
+                                  <span className="text-5xl font-black leading-tight tracking-[-0.033em]">
+                                    $29
+                                  </span>
+                                  <span className="text-base font-bold">
+                                    /month
+                                  </span>
                                 </p>
                               </div>
                               <Link href={"/register"}>
                                 <button className="flex w-full min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-landing-page-primary text-[#111814] text-sm font-bold leading-normal tracking-[0.015em] hover:shadow-[0_15px_40px_-8px_rgba(13,242,147,0.8)] transition-shadow">
-                                  <span className="truncate">Start 14-Day Free Trial</span>
+                                  <span className="truncate">
+                                    Start 14-Day Free Trial
+                                  </span>
                                 </button>
                               </Link>
                               <div className="flex flex-col gap-4 mt-2">
@@ -551,7 +631,10 @@ export default function Home() {
                                   "Priority Email Support",
                                   "Advanced Team Analytics",
                                 ].map((f) => (
-                                  <div key={f} className="text-sm font-medium flex gap-3 items-center">
+                                  <div
+                                    key={f}
+                                    className="text-sm font-medium flex gap-3 items-center"
+                                  >
                                     <BadgeCheck className="size-5 text-landing-page-primary" />
                                     {f}
                                   </div>
@@ -566,13 +649,19 @@ export default function Home() {
                           <TiltCard intensity={8} className="h-full">
                             <div className="flex h-full flex-col gap-6 rounded-2xl border border-white/40 dark:border-white/10 glass p-8 transition-all hover:shadow-2xl">
                               <div className="flex flex-col gap-1">
-                                <h3 className="text-lg font-bold">Enterprise</h3>
+                                <h3 className="text-lg font-bold">
+                                  Enterprise
+                                </h3>
                                 <p className="text-[#4f6b5a] dark:text-gray-300 text-sm mb-4">
                                   Advanced security and custom controls.
                                 </p>
                                 <p className="flex items-baseline gap-1">
-                                  <span className="text-5xl font-black leading-tight tracking-[-0.033em]">$99</span>
-                                  <span className="text-base font-bold">/month</span>
+                                  <span className="text-5xl font-black leading-tight tracking-[-0.033em]">
+                                    $99
+                                  </span>
+                                  <span className="text-base font-bold">
+                                    /month
+                                  </span>
                                 </p>
                               </div>
                               <button className="flex w-full min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 glass text-sm font-bold leading-normal tracking-[0.015em] border border-white/40 dark:border-white/10 hover:bg-white/70 dark:hover:bg-white/10 transition-colors">
@@ -585,7 +674,10 @@ export default function Home() {
                                   "24/7 Dedicated Manager",
                                   "SSO & Advanced Security",
                                 ].map((f) => (
-                                  <div key={f} className="text-sm font-medium flex gap-3 items-center">
+                                  <div
+                                    key={f}
+                                    className="text-sm font-medium flex gap-3 items-center"
+                                  >
                                     <BadgeCheck className="size-5 text-landing-page-primary" />
                                     {f}
                                   </div>
@@ -609,16 +701,19 @@ export default function Home() {
                             <div className="absolute -bottom-20 -right-20 size-72 bg-[#111814]/20 blur-3xl rounded-full float-y-slow" />
                             <div className="relative flex flex-col gap-4 items-center">
                               <h2 className="text-[#111814] tracking-tight text-3xl font-extrabold leading-tight md:text-6xl md:tracking-[-0.04em] max-w-[800px]">
-                                Ready to boost your team's productivity?
+                                Ready to boost your team&apos;s productivity?
                               </h2>
                               <p className="text-[#111814]/80 text-lg md:text-xl font-medium max-w-[600px]">
-                                Join 10,000+ teams today and transform how you work together. Start your free trial in seconds.
+                                Join 10,000+ teams today and transform how you
+                                work together. Start your free trial in seconds.
                               </p>
                             </div>
                             <div className="relative flex flex-wrap justify-center gap-4">
                               <Link href={"/register"}>
                                 <button className="group flex min-w-[180px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full h-14 px-8 bg-[#111814] text-white text-base font-bold leading-normal hover:bg-[#1a2e23] transition-all shadow-xl hover:-translate-y-0.5">
-                                  <span className="truncate">Get Started Now</span>
+                                  <span className="truncate">
+                                    Get Started Now
+                                  </span>
                                   <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
                                 </button>
                               </Link>
@@ -642,7 +737,11 @@ export default function Home() {
               <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                 <div className="flex items-center gap-3">
                   <div className="size-6 text-landing-page-primary spin-slow">
-                    <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                    <svg
+                      fill="none"
+                      viewBox="0 0 48 48"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
                       <path
                         clipRule="evenodd"
                         d="M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z"
@@ -654,16 +753,42 @@ export default function Home() {
                   <h2 className="text-lg font-bold">WorkNest</h2>
                 </div>
                 <div className="flex flex-wrap justify-center gap-8">
-                  <a className="text-[#608a79] hover:text-landing-page-primary transition-colors text-sm font-semibold" href="#">Privacy Policy</a>
-                  <a className="text-[#608a79] hover:text-landing-page-primary transition-colors text-sm font-semibold" href="#">Terms of Service</a>
-                  <a className="text-[#608a79] hover:text-landing-page-primary transition-colors text-sm font-semibold" href="#">Contact Us</a>
-                  <a className="text-[#608a79] hover:text-landing-page-primary transition-colors text-sm font-semibold" href="#">Careers</a>
+                  <a
+                    className="text-[#608a79] hover:text-landing-page-primary transition-colors text-sm font-semibold"
+                    href="#"
+                  >
+                    Privacy Policy
+                  </a>
+                  <a
+                    className="text-[#608a79] hover:text-landing-page-primary transition-colors text-sm font-semibold"
+                    href="#"
+                  >
+                    Terms of Service
+                  </a>
+                  <a
+                    className="text-[#608a79] hover:text-landing-page-primary transition-colors text-sm font-semibold"
+                    href="#"
+                  >
+                    Contact Us
+                  </a>
+                  <a
+                    className="text-[#608a79] hover:text-landing-page-primary transition-colors text-sm font-semibold"
+                    href="#"
+                  >
+                    Careers
+                  </a>
                 </div>
                 <div className="flex gap-4">
-                  <a className="w-10 h-10 rounded-full glass flex items-center justify-center text-[#608a79] hover:text-landing-page-primary transition-colors" href="#">
+                  <a
+                    className="w-10 h-10 rounded-full glass flex items-center justify-center text-[#608a79] hover:text-landing-page-primary transition-colors"
+                    href="#"
+                  >
                     <Earth className="size-5" />
                   </a>
-                  <a className="w-10 h-10 rounded-full glass flex items-center justify-center text-[#608a79] hover:text-landing-page-primary transition-colors" href="#">
+                  <a
+                    className="w-10 h-10 rounded-full glass flex items-center justify-center text-[#608a79] hover:text-landing-page-primary transition-colors"
+                    href="#"
+                  >
                     <AtSign className="size-5" />
                   </a>
                 </div>

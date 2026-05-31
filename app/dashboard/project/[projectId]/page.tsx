@@ -12,7 +12,7 @@ import {
   fetchMyProjectsTask,
   updateTaskStatus,
 } from "@/services/task.service";
-import { AssignTaskPayload, TasksType, UpdateTaskStatusPayload } from "@/types";
+import { TasksType, UpdateTaskStatusPayload } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   BadgeCheck,
@@ -20,16 +20,11 @@ import {
   Folder,
   Plus,
   CopyPlus,
-  ListFilter,
-  X,
-  CircleUser,
-  ChevronDown,
   Users,
   UserPlus,
 } from "lucide-react";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
-import Link from "next/link";
 import ProjectMembers from "@/components/project/ProjectMembers";
 import {
   addProjectMembers,
@@ -64,11 +59,7 @@ export default function ProjectsPage() {
     enabled: !!projectId,
   });
 
-  const {
-    data: members,
-    isLoading: membersLoading,
-    isError: membersError,
-  } = useQuery({
+  const { data: members, isLoading: membersLoading } = useQuery({
     queryKey: ["project-members", projectId],
     queryFn: () => fetchProjectMembers(projectId),
     enabled: !!projectId,
@@ -131,7 +122,6 @@ export default function ProjectsPage() {
   const onDragEnd = (result: any) => {
     const { destination, source, draggableId } = result;
     if (!destination) return;
-    console.log(destination.droppableId, source.droppableId);
     if (destination.droppableId === source.droppableId) return;
 
     updateTaskMutation.mutate({

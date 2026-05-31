@@ -1,14 +1,11 @@
-import {
-  fetchProjectMembers,
-  removeProject,
-} from "@/services/project.service";
+import { fetchProjectMembers, removeProject } from "@/services/project.service";
 import { ProjectMembersType } from "@/types";
 import { formatRelative } from "@/utils/formatData";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Clock, EllipsisVertical, Trash2, Users } from "lucide-react";
 import Link from "next/link";
 import { toast } from "react-toastify";
-import UserAvatar from "../UserAvater";
+import UserAvatar from "../UserAvatar";
 
 interface ProjectCardProps {
   id: string;
@@ -19,7 +16,12 @@ interface ProjectCardProps {
 
 const MAX_AVATARS = 3;
 
-const ProjectCard = ({ id, name, description, createdAt }: ProjectCardProps) => {
+const ProjectCard = ({
+  id,
+  name,
+  description,
+  createdAt,
+}: ProjectCardProps) => {
   const queryClient = useQueryClient();
 
   const { data: membersData, isLoading: membersLoading } = useQuery({

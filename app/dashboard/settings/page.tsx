@@ -1,13 +1,12 @@
 "use client";
-import UserAvatar from "@/components/UserAvater";
+import UserAvatar from "@/components/UserAvatar";
 import { useUser } from "@/hooks/useUser";
 import { updateUserName } from "@/services/user.service";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { email } from "zod";
 
-const page = () => {
+const SettingsPage = () => {
   const { user } = useUser();
   const {
     register,
@@ -233,4 +232,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default SettingsPage;

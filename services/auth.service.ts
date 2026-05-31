@@ -1,6 +1,5 @@
 import axiosInstance from "@/lib/axiosInstance";
-import { useQuery } from "@tanstack/react-query";
-import { useQueryClient } from "@tanstack/react-query";
+import type { ApiResponse, AuthUser } from "@/types";
 
 // REGISTER
 export interface RegisterPayload {
@@ -9,8 +8,13 @@ export interface RegisterPayload {
   password: string;
 }
 
-export const registerUser = async (payload: RegisterPayload) => {
-  const { data } = await axiosInstance.post("/auth/register", payload);
+export const registerUser = async (
+  payload: RegisterPayload,
+): Promise<ApiResponse<AuthUser>> => {
+  const { data } = await axiosInstance.post<ApiResponse<AuthUser>>(
+    "/auth/register",
+    payload,
+  );
   return data;
 };
 
@@ -20,7 +24,12 @@ export interface LoginPayload {
   password: string;
 }
 
-export const loginUser = async (payload: LoginPayload) => {
-  const response = await axiosInstance.post("/auth/login", payload);
-  return response.data;
+export const loginUser = async (
+  payload: LoginPayload,
+): Promise<ApiResponse<AuthUser>> => {
+  const { data } = await axiosInstance.post<ApiResponse<AuthUser>>(
+    "/auth/login",
+    payload,
+  );
+  return data;
 };

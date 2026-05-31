@@ -3,12 +3,12 @@ import { deleteFile, fetchFileHistory } from "@/services/file.service";
 import { GetFileHistorry } from "@/types";
 import { formatDate } from "@/utils/formatData";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Eye, FileText, FileVideoCamera, Image, Trash } from "lucide-react";
+import { Eye, FileText, Trash } from "lucide-react";
 import { toast } from "react-toastify";
 import Loader from "../Loader";
-import UserAvatar from "./../UserAvater";
+import UserAvatar from "./../UserAvatar";
 
-const file = ({ projectId }: { projectId: string }) => {
+const FilesView = ({ projectId }: { projectId: string }) => {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const { data } = useQuery({
     queryKey: ["file-history", projectId],
@@ -92,23 +92,27 @@ const file = ({ projectId }: { projectId: string }) => {
                 <td className="px-6 py-4 text-right">
                   <div className="file-actions flex justify-end gap-1 transition-opacity">
                     <button
+                      type="button"
+                      aria-label={`Open ${file.name} in a new tab`}
                       onClick={() =>
                         window.open(file.url, "_blank", "noopener,noreferrer")
                       }
                       className="p-2 text-[#678383] hover:text-primary2 transition-colors"
                     >
-                      <span className="material-symbols-outlined text-lg">
-                        <Eye />
-                      </span>
+                      <Eye className="size-4" />
                     </button>
                     <button
+                      type="button"
+                      aria-label={`Delete ${file.name}`}
                       disabled={deleteLoading}
                       onClick={() => deleteFileMutation.mutate(file.id)}
                       className="p-2 text-[#678383] hover:text-red-500 transition-colors"
                     >
-                      <span className="material-symbols-outlined text-lg">
-                        {deleteLoading ? <Loader /> : <Trash />}
-                      </span>
+                      {deleteLoading ? (
+                        <Loader />
+                      ) : (
+                        <Trash className="size-4" />
+                      )}
                     </button>
                   </div>
                 </td>
@@ -294,4 +298,4 @@ const file = ({ projectId }: { projectId: string }) => {
   );
 };
 
-export default file;
+export default FilesView;
