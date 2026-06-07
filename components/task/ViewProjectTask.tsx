@@ -66,16 +66,16 @@ const ViewProjectTask = ({
     data && (
       <div className="absolute inset-0 z-20 glass-overlay flex justify-end h-full">
         {/* <!-- Slide-over Panel --> */}
-        <div className="w-full max-w-2xl bg-white h-full soft-shadow flex flex-col border-l border-[#dde4e4]">
+        <div className="w-full max-w-2xl bg-white dark:bg-zinc-900 h-full soft-shadow flex flex-col border-l border-[#dde4e4] dark:border-zinc-800">
           {/* <!-- Panel Header --> */}
-          <div className="px-8 py-6 border-b border-[#dde4e4] flex items-center justify-between">
+          <div className="px-8 py-6 border-b border-[#dde4e4] dark:border-zinc-800 flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <button className="size-8 flex items-center justify-center rounded-lg hover:bg-background-light text-[#6A717B]">
+              <button className="size-8 flex items-center justify-center rounded-lg hover:bg-background-light dark:hover:bg-zinc-800 text-[#6A717B] dark:text-zinc-400">
                 <span className="material-symbols-outlined">
                   <Minimize2 />
                 </span>
               </button>
-              <div className="flex items-center gap-2 text-sm font-medium text-[#6A717B]">
+              <div className="flex items-center gap-2 text-sm font-medium text-[#6A717B] dark:text-zinc-400">
                 <span className="material-symbols-outlined text-sm">
                   <LayoutGrid />
                 </span>
@@ -83,19 +83,19 @@ const ViewProjectTask = ({
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <button className="p-2 text-[#6A717B] hover:bg-background-light rounded-lg">
+              <button className="p-2 text-[#6A717B] dark:text-zinc-400 hover:bg-background-light dark:hover:bg-zinc-800 rounded-lg">
                 <span className="material-symbols-outlined text-xl">
                   <Share2 />
                 </span>
               </button>
-              <button className="p-2 text-[#6A717B] hover:bg-background-light rounded-lg">
+              <button className="p-2 text-[#6A717B] dark:text-zinc-400 hover:bg-background-light dark:hover:bg-zinc-800 rounded-lg">
                 <span className="material-symbols-outlined text-xl">
                   <Ellipsis />
                 </span>
               </button>
               <button
                 disabled={isPending}
-                className="p-2 text-[#6A717B] hover:bg-background-light rounded-lg"
+                className="p-2 text-[#6A717B] dark:text-zinc-400 hover:bg-background-light dark:hover:bg-zinc-800 rounded-lg"
                 onClick={close}
                 ref={btn}
               >
@@ -127,32 +127,32 @@ const ViewProjectTask = ({
                   </span>
                 </div>
               </div> */}
-              <h1 className="text-3xl font-extrabold text-[#313742] leading-tight mb-6">
+              <h1 className="text-3xl font-extrabold text-[#313742] dark:text-zinc-100 leading-tight mb-6">
                 {data.title}
               </h1>
-              <div className="grid grid-cols-2 gap-y-6 gap-x-12 border-y border-[#f1f4f4] py-6">
+              <div className="grid grid-cols-2 gap-y-6 gap-x-12 border-y border-[#f1f4f4] dark:border-zinc-800 py-6">
                 <div className="flex flex-col gap-1.5">
-                  <span className="text-[10px] uppercase font-bold text-[#6A717B] tracking-wider">
+                  <span className="text-[10px] uppercase font-bold text-[#6A717B] dark:text-zinc-400 tracking-wider">
                     Assignee
                   </span>
                   <div className="flex items-center gap-3">
                     <UserAvatar customName={data.assignedTo.name} />
-                    <span className="text-sm font-semibold">
+                    <span className="text-sm font-semibold dark:text-zinc-200">
                       {data.assignedTo.name}
                     </span>
                   </div>
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <span className="text-[10px] uppercase font-bold text-[#6A717B] tracking-wider">
+                  <span className="text-[10px] uppercase font-bold text-[#6A717B] dark:text-zinc-400 tracking-wider">
                     Created Date
                   </span>
                   <div className="flex items-center gap-3">
-                    <div className="size-9 rounded-lg bg-background-light flex items-center justify-center text-[#6A717B]">
+                    <div className="size-9 rounded-lg bg-background-light dark:bg-zinc-800 flex items-center justify-center text-[#6A717B] dark:text-zinc-400">
                       <span className="material-symbols-outlined text-[20px]">
                         <Calendar />
                       </span>
                     </div>
-                    <span className="text-sm font-semibold">
+                    <span className="text-sm font-semibold dark:text-zinc-200">
                       {formatDate(data.createdAt)}
                     </span>
                   </div>
@@ -162,7 +162,7 @@ const ViewProjectTask = ({
             {/* <!-- Description --> */}
             <section className="mb-10">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-bold text-[#313742]">
+                <h3 className="text-sm font-bold text-[#313742] dark:text-zinc-100">
                   Description
                 </h3>
                 {/* <button className="text-xs font-bold text-primary2 flex items-center gap-1">
@@ -172,7 +172,7 @@ const ViewProjectTask = ({
                   Edit
                 </button> */}
               </div>
-              <div className="text-[#313742] text-sm leading-relaxed space-y-4">
+              <div className="text-[#313742] dark:text-zinc-300 text-sm leading-relaxed space-y-4">
                 {/* <textarea
                   className="w-full"
                   placeholder={
@@ -398,11 +398,11 @@ const ViewProjectTask = ({
           </div>
           {/* <!-- Sticky Footer Actions --> */}
           {ownerId === user.id && (
-            <div className="p-6 border-t border-[#dde4e4] bg-white flex items-center justify-between">
+            <div className="p-6 border-t border-[#dde4e4] dark:border-zinc-800 bg-white dark:bg-zinc-900 flex items-center justify-between">
               <button
                 disabled={isPending}
                 onClick={onDeleteHandler}
-                className="text-sm font-bold text-red-500 flex items-center gap-1.5 hover:bg-red-50 px-3 py-2 rounded-lg transition-colors"
+                className="text-sm font-bold text-red-500 dark:text-red-400 flex items-center gap-1.5 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-2 rounded-lg transition-colors"
               >
                 {isPending ? (
                   <BtnLoader />
@@ -418,7 +418,7 @@ const ViewProjectTask = ({
               </button>
               <div className="flex items-center gap-3">
                 <button
-                  className="px-5 py-2.5 text-sm font-bold text-[#6A717B] hover:bg-background-light rounded-lg transition-colors"
+                  className="px-5 py-2.5 text-sm font-bold text-[#6A717B] dark:text-zinc-400 hover:bg-background-light dark:hover:bg-zinc-800 rounded-lg transition-colors"
                   onClick={close}
                   disabled={isPending}
                 >
