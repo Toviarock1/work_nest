@@ -229,10 +229,7 @@ function SceneContents() {
 
 export default function AuthScene3D() {
   return (
-    <div
-      className="pointer-events-none fixed inset-0"
-      aria-hidden
-    >
+    <div className="pointer-events-none fixed inset-0" aria-hidden>
       <Canvas
         dpr={[1, 1.75]}
         camera={{ position: [0, 0, 8], fov: 55 }}

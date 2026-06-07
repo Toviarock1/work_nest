@@ -187,11 +187,7 @@ function MouseCamera({ scroll }: { scroll: React.MutableRefObject<number> }) {
   return null;
 }
 
-function SceneContents({
-  scroll,
-}: {
-  scroll: React.MutableRefObject<number>;
-}) {
+function SceneContents({ scroll }: { scroll: React.MutableRefObject<number> }) {
   const group = useRef<THREE.Group>(null);
 
   useFrame(() => {
@@ -238,7 +234,11 @@ function SceneContents({
         />
 
         {/* Scale header + Feature alt 1 (scroll ~0.3) */}
-        <FloatingIcosahedron position={[-3.5, -9, -2]} scale={1.2} color={PRIMARY} />
+        <FloatingIcosahedron
+          position={[-3.5, -9, -2]}
+          scale={1.2}
+          color={PRIMARY}
+        />
         <FloatingTorus position={[3.8, -10, -2]} scale={1.1} color={ACCENT} />
 
         {/* Feature alt 2 (scroll ~0.45) */}
@@ -260,7 +260,11 @@ function SceneContents({
         />
 
         {/* CTA + footer (scroll ~0.85) */}
-        <FloatingIcosahedron position={[-3.8, -25, -2]} scale={1.3} color={PRIMARY} />
+        <FloatingIcosahedron
+          position={[-3.8, -25, -2]}
+          scale={1.3}
+          color={PRIMARY}
+        />
         <FloatingTorus position={[3.2, -27, -3]} scale={1.4} color={ACCENT} />
 
         {/* Floor disc */}
@@ -296,10 +300,7 @@ export default function LandingScene3D() {
   }, []);
 
   return (
-    <div
-      className="pointer-events-none fixed inset-0"
-      aria-hidden
-    >
+    <div className="pointer-events-none fixed inset-0" aria-hidden>
       <Canvas
         dpr={[1, 1.75]}
         camera={{ position: [0, 0, 8], fov: 55 }}

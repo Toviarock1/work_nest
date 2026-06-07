@@ -12,12 +12,48 @@ interface Blob {
 }
 
 const BLOBS: Blob[] = [
-  { topVh: 30, leftPct: 8, size: 320, color: "rgba(13,242,147,0.25)", speed: 0.25 },
-  { topVh: 80, leftPct: 78, size: 380, color: "rgba(17,214,98,0.20)", speed: -0.18 },
-  { topVh: 150, leftPct: 12, size: 280, color: "rgba(13,242,147,0.22)", speed: 0.3 },
-  { topVh: 220, leftPct: 70, size: 420, color: "rgba(29,109,107,0.28)", speed: -0.22 },
-  { topVh: 300, leftPct: 20, size: 340, color: "rgba(13,242,147,0.20)", speed: 0.28 },
-  { topVh: 380, leftPct: 75, size: 360, color: "rgba(17,214,98,0.18)", speed: -0.2 },
+  {
+    topVh: 30,
+    leftPct: 8,
+    size: 320,
+    color: "rgba(13,242,147,0.25)",
+    speed: 0.25,
+  },
+  {
+    topVh: 80,
+    leftPct: 78,
+    size: 380,
+    color: "rgba(17,214,98,0.20)",
+    speed: -0.18,
+  },
+  {
+    topVh: 150,
+    leftPct: 12,
+    size: 280,
+    color: "rgba(13,242,147,0.22)",
+    speed: 0.3,
+  },
+  {
+    topVh: 220,
+    leftPct: 70,
+    size: 420,
+    color: "rgba(29,109,107,0.28)",
+    speed: -0.22,
+  },
+  {
+    topVh: 300,
+    leftPct: 20,
+    size: 340,
+    color: "rgba(13,242,147,0.20)",
+    speed: 0.28,
+  },
+  {
+    topVh: 380,
+    leftPct: 75,
+    size: 360,
+    color: "rgba(17,214,98,0.18)",
+    speed: -0.2,
+  },
 ];
 
 export default function ParallaxBlobs() {
