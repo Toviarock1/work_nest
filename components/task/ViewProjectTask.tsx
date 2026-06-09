@@ -1,8 +1,9 @@
 import { useUser } from "@/hooks/useUser";
 import { deleteTask } from "@/services/task.service";
-import { TasksType } from "@/types";
+import { assignTask, fetchProjectMembers } from "@/services/project.service";
+import { ProjectMembersType, TasksType } from "@/types";
 import { formatDate } from "@/utils/formatData";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   X,
   LayoutGrid,
@@ -11,8 +12,10 @@ import {
   Ellipsis,
   Calendar,
   Trash2,
+  ChevronDown,
+  Check,
 } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import BtnLoader from "../BtnLoader";
@@ -35,6 +38,9 @@ const ViewProjectTask = ({
   const { user } = useUser();
   const queryClient = useQueryClient();
   const btn = useRef<HTMLButtonElement>(null);
+  const pickerRef = useRef<HTMLDivElement>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const isOwner = ownerId === user?.id;
 
   const { mutate, isPending } = useMutation({
     mutationFn: deleteTask,
@@ -47,6 +53,35 @@ const ViewProjectTask = ({
       toast.error("Something went wrong, try again");
     },
   });
+
+  const { data: members } = useQuery({
+    queryKey: ["project-members", projectId],
+    queryFn: () => fetchProjectMembers(projectId),
+    enabled: !!projectId && isOwner,
+  });
+
+  const { mutate: assignMutate, isPending: isAssigning } = useMutation({
+    mutationFn: assignTask,
+    onSuccess: () => {
+      toast.success("Assignee updated");
+      queryClient.invalidateQueries({ queryKey: ["project-todos", projectId] });
+      setPickerOpen(false);
+    },
+    onError: () => {
+      toast.error("Couldn't update assignee, try again");
+    },
+  });
+
+  useEffect(() => {
+    if (!pickerOpen) return;
+    const onClick = (e: MouseEvent) => {
+      if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
+        setPickerOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, [pickerOpen]);
   const { setValue } = useForm({
     defaultValues: {
       description: data?.description || "",
@@ -135,14 +170,74 @@ const ViewProjectTask = ({
                   <span className="text-[10px] uppercase font-bold text-[#6A717B] dark:text-zinc-400 tracking-wider">
                     Assignee
                   </span>
-                  <div className="flex items-center gap-3">
-                    <UserAvatar
-                      customName={data.assignedTo?.name ?? "Unassigned"}
-                    />
-                    <span className="text-sm font-semibold dark:text-zinc-200">
-                      {data.assignedTo?.name ?? "Unassigned"}
-                    </span>
-                  </div>
+                  {isOwner ? (
+                    <div className="relative" ref={pickerRef}>
+                      <button
+                        type="button"
+                        disabled={isAssigning}
+                        onClick={() => setPickerOpen((p) => !p)}
+                        className="flex items-center gap-3 w-full rounded-lg border border-transparent hover:border-[#dde4e4] dark:hover:border-zinc-700 hover:bg-background-light dark:hover:bg-zinc-800 px-2 py-1 -mx-2 transition-colors disabled:opacity-60"
+                      >
+                        <UserAvatar
+                          customName={data.assignedTo?.name ?? "Unassigned"}
+                        />
+                        <span className="text-sm font-semibold dark:text-zinc-200 flex-1 text-left">
+                          {isAssigning
+                            ? "Updating…"
+                            : (data.assignedTo?.name ?? "Unassigned")}
+                        </span>
+                        <ChevronDown className="size-4 text-[#6A717B] dark:text-zinc-400" />
+                      </button>
+                      {pickerOpen && (
+                        <div className="absolute z-10 mt-2 w-64 max-h-72 overflow-y-auto rounded-lg border border-[#dde4e4] dark:border-zinc-700 bg-white dark:bg-zinc-900 soft-shadow py-1">
+                          {members?.data?.projectMembers?.length ? (
+                            members.data.projectMembers.map(
+                              (member: ProjectMembersType) => {
+                                const selected =
+                                  data.assignedTo?.email === member.user.email;
+                                return (
+                                  <button
+                                    type="button"
+                                    key={member.id}
+                                    disabled={isAssigning || selected}
+                                    onClick={() =>
+                                      assignMutate({
+                                        taskId: data.id,
+                                        projectId,
+                                        assigneeEmail: member.user.email,
+                                      })
+                                    }
+                                    className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-background-light dark:hover:bg-zinc-800 disabled:opacity-60"
+                                  >
+                                    <UserAvatar customName={member.user.name} />
+                                    <span className="text-sm font-medium dark:text-zinc-200 flex-1 truncate">
+                                      {member.user.name}
+                                    </span>
+                                    {selected && (
+                                      <Check className="size-4 text-primary2" />
+                                    )}
+                                  </button>
+                                );
+                              },
+                            )
+                          ) : (
+                            <p className="px-3 py-2 text-xs text-[#6A717B] dark:text-zinc-400">
+                              No members available
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-3">
+                      <UserAvatar
+                        customName={data.assignedTo?.name ?? "Unassigned"}
+                      />
+                      <span className="text-sm font-semibold dark:text-zinc-200">
+                        {data.assignedTo?.name ?? "Unassigned"}
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <span className="text-[10px] uppercase font-bold text-[#6A717B] dark:text-zinc-400 tracking-wider">
