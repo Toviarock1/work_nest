@@ -64,7 +64,7 @@ const ViewProjectTask = ({
   return (
     show &&
     data && (
-      <div className="absolute inset-0 z-20 glass-overlay flex justify-end h-full">
+      <div className="fixed inset-0 z-50 glass-overlay flex justify-end bg-black/30 backdrop-blur-sm">
         {/* <!-- Slide-over Panel --> */}
         <div className="w-full max-w-2xl bg-white dark:bg-zinc-900 h-full soft-shadow flex flex-col border-l border-[#dde4e4] dark:border-zinc-800">
           {/* <!-- Panel Header --> */}
@@ -136,9 +136,11 @@ const ViewProjectTask = ({
                     Assignee
                   </span>
                   <div className="flex items-center gap-3">
-                    <UserAvatar customName={data.assignedTo.name} />
+                    <UserAvatar
+                      customName={data.assignedTo?.name ?? "Unassigned"}
+                    />
                     <span className="text-sm font-semibold dark:text-zinc-200">
-                      {data.assignedTo.name}
+                      {data.assignedTo?.name ?? "Unassigned"}
                     </span>
                   </div>
                 </div>
