@@ -5,14 +5,20 @@ import QueryError from "@/components/ui/QueryError";
 import AddTaskModal from "@/components/task/AddTaskModal";
 import TaskCard from "@/components/task/TaskCard";
 import FilesView from "@/components/file/Files";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  type DropResult,
+} from "@hello-pangea/dnd";
+import { AxiosError } from "axios";
 import { useProjectSocket } from "@/hooks/useProjectSocket";
 import {
   createTask,
   fetchMyProjectsTask,
-  updateTaskStatus,
+  updateTask,
 } from "@/services/task.service";
-import { TasksType, UpdateTaskStatusPayload } from "@/types";
+import { TasksType } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   BadgeCheck,
@@ -74,9 +80,7 @@ export default function ProjectsPage() {
   });
 
   const updateTaskMutation = useMutation({
-    mutationFn: async (payload: UpdateTaskStatusPayload) => {
-      updateTaskStatus(payload);
-    },
+    mutationFn: updateTask,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["project-todos", projectId] });
     },
@@ -103,7 +107,7 @@ export default function ProjectsPage() {
       }
       toast.success(`Successfully ${data.type}ed member`);
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || "Failed to add member");
     },
   });
@@ -119,14 +123,14 @@ export default function ProjectsPage() {
   );
   // console.log(todosData);
 
-  const onDragEnd = (result: any) => {
+  const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
     if (!destination) return;
     if (destination.droppableId === source.droppableId) return;
 
     updateTaskMutation.mutate({
       taskId: draggableId,
-      status: destination.droppableId,
+      status: destination.droppableId as "todo" | "in_progress" | "done",
     });
   };
 
@@ -134,32 +138,37 @@ export default function ProjectsPage() {
     title: string;
     description: string;
     assignee: string;
+    status: "todo" | "in_progress" | "done";
   }) => {
     try {
       const newTask = await createTaskMutation.mutateAsync({
         title: data.title,
         description: data.description,
-        projectId: projectId,
+        projectId,
       });
 
       if (data.assignee && newTask.data.id) {
         await assignMutation.mutateAsync({
           taskId: newTask.data.id,
           assigneeEmail: data.assignee,
-          projectId: projectId,
+          projectId,
+        });
+      }
+
+      if (data.status && data.status !== "todo" && newTask.data.id) {
+        await updateTaskMutation.mutateAsync({
+          taskId: newTask.data.id,
+          status: data.status,
         });
       }
 
       setShowTaskModal(false);
       toast.success("Task created!");
       queryClient.invalidateQueries({ queryKey: ["project-todos", projectId] });
-      // close();
-      // reset();
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to create task");
+    } catch (error) {
+      const err = error as AxiosError<{ message?: string }>;
+      toast.error(err.response?.data?.message || "Failed to create task");
     }
-    // console.log(data);
-    // mutation.mutate({ ...data, projectId });
   };
   const addMemberHandler = (data: { email: string }) => {
     membersMutation({ userEmail: data.email, projectId, type: "add" });
@@ -538,6 +547,11 @@ export default function ProjectsPage() {
         close={() => setShowTaskModal(false)}
         onSubmit={addNewTaskHandler}
         projectId={projectId}
+        isLoading={
+          createTaskMutation.isPending ||
+          assignMutation.isPending ||
+          updateTaskMutation.isPending
+        }
       />
       <AddProjectMemberModal
         projectName={todos.data.name}
@@ -547,10 +561,13 @@ export default function ProjectsPage() {
         isLoading={addMemberLoading}
       />
       <ViewProjectTask
+        key={currentTask}
         show={viewTask}
         close={() => setViewTask((prev) => !prev)}
         onSubmit={() => {}}
-        data={todos?.data?.tasks?.find((task: any) => task.id === currentTask)}
+        data={todos?.data?.tasks?.find(
+          (task: TasksType) => task.id === currentTask,
+        )}
         ownerId={todos?.data?.ownerId}
         projectId={projectId}
       />

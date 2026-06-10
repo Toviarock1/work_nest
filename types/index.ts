@@ -71,11 +71,6 @@ export interface Message {
   };
 }
 
-export interface UpdateTaskStatusPayload {
-  taskId: string;
-  status: string;
-}
-
 export interface GetFileHistorry {
   id: string;
   name: string;

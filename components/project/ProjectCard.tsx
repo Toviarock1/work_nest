@@ -54,7 +54,13 @@ const ProjectCard = ({
     e.stopPropagation();
   };
 
-  const onRemove = (id: string) => {
+  const onRemove = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const ok = window.confirm(
+      `Delete project "${name}"? This will permanently remove all its tasks and cannot be undone.`,
+    );
+    if (!ok) return;
     mutate({ id });
   };
 
@@ -77,7 +83,7 @@ const ProjectCard = ({
             <li>
               <button
                 disabled={isPending}
-                onClick={() => onRemove(id)}
+                onClick={(e) => onRemove(e, id)}
                 className="w-full btn flex justify-start gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors"
               >
                 <Trash2 className="size-4" />
