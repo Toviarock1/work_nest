@@ -1,41 +1,71 @@
 import { Calendar } from "lucide-react";
+import { TasksType } from "@/types";
+import { formatDate } from "@/utils/formatData";
+import UserAvatar from "../UserAvatar";
+
+const STATUS_PILL: Record<
+  "todo" | "in_progress" | "done",
+  { label: string; classes: string }
+> = {
+  todo: {
+    label: "To Do",
+    classes: "bg-slate-100 text-slate-600 dark:bg-zinc-800 dark:text-zinc-300",
+  },
+  in_progress: {
+    label: "In Progress",
+    classes:
+      "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300",
+  },
+  done: {
+    label: "Done",
+    classes:
+      "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300",
+  },
+};
 
 const TaskCard = ({
-  title,
+  task,
   onViewTask,
+  showStatusPill = false,
 }: {
-  title: string;
+  task: TasksType;
   onViewTask: () => void;
+  /** Show a status pill — useful when a card appears outside its native column. */
+  showStatusPill?: boolean;
 }) => {
+  const status = STATUS_PILL[task.status as keyof typeof STATUS_PILL];
+
   return (
     <div
-      className="bg-white dark:bg-zinc-900 p-5 rounded-xl border border-[#dde4e4] dark:border-zinc-800 shadow-sm hover:shadow-md transition-shadow group cursor-grab active:cursor-grabbing"
+      className="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-[#dde4e4] dark:border-zinc-800 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all group cursor-grab active:cursor-grabbing"
       onClick={onViewTask}
     >
-      <div className="flex justify-between items-start mb-3">
-        {/* <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 uppercase tracking-tight">
-          Medium
-        </span> */}
-        {/* <button className="material-symbols-outlined text-[#678383] opacity-0 group-hover:opacity-100 transition-opacity">
-          more_horiz
-        </button> */}
-      </div>
-      <h4 className="text-[15px] font-bold mb-4 leading-snug">{title}</h4>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center text-[#678383] text-xs font-medium">
-          <span className="material-symbols-outlined text-[16px] mr-1">
-            <Calendar />
+      {showStatusPill && status && (
+        <div className="mb-2">
+          <span
+            className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight ${status.classes}`}
+          >
+            {status.label}
           </span>
-          Oct 24
+        </div>
+      )}
+      <h4 className="text-sm font-bold leading-snug mb-3 dark:text-zinc-100 line-clamp-2">
+        {task.title}
+      </h4>
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center text-[#678383] dark:text-zinc-400 text-xs font-medium tabular-nums">
+          <Calendar className="size-3.5 mr-1.5" />
+          {formatDate(task.createdAt)}
         </div>
         <div
-          className="size-7 rounded-full bg-cover bg-center ring-2 ring-white dark:ring-zinc-900"
-          data-alt="Avatar of Sarah designer"
-          style={{
-            backgroundImage:
-              "url(https://lh3.googleusercontent.com/aida-public/AB6AXuAHWLd4etMBH8ftvhro8reQ5UFZq6Vt5Jk8ukWFg6id1ehkaMOTuxdH8atETvyuscg-Vt1NdLGiXOyP_ciY1usIcXDgESpGJUGTZcPwUeycey5cfgZ2i5KaEtNxa2BQ8healawvVM_a8hzEtCJyK-aisCt2i2Q3IDR-SAMAoBkKTWqf64A0HO3xD7YNAH40yyitMyfKBjvUgt2h6hJ1dIkjoJrTdBoapCmCSpnmAbl4QCywlciR1MJfkPo7okH50YCqgzQz_RcvVkOS)",
-          }}
-        ></div>
+          title={task.assignedTo?.name ?? "Unassigned"}
+          className="shrink-0 ring-2 ring-white dark:ring-zinc-900 rounded-xl"
+        >
+          <UserAvatar
+            size="sm"
+            customName={task.assignedTo?.name ?? "Unassigned"}
+          />
+        </div>
       </div>
     </div>
   );

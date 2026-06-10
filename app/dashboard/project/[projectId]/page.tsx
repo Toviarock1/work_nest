@@ -17,12 +17,14 @@ import { TasksType } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   BadgeCheck,
+  ChevronLeft,
   MessagesSquare,
   Folder,
   Plus,
   Users,
   UserPlus,
 } from "lucide-react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
 import ProjectMembers from "@/components/project/ProjectMembers";
@@ -259,18 +261,23 @@ export default function ProjectsPage() {
         <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
           <div className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col">
             {/* <!-- PageHeading & Tabs --> */}
-            <div className="bg-white dark:bg-zinc-950 pt-8 px-8 border-b border-[#dde4e4] dark:border-zinc-800">
-              <div className="flex items-end justify-between mb-8">
-                <div>
-                  <div className="flex items-center gap-3 mb-1">
-                    <h2 className="text-3xl font-black tracking-tight dark:text-white">
-                      {todos.data.name}
-                    </h2>
-                  </div>
-                  <p className="text-[#678383] text-sm">
+            <div className="bg-white dark:bg-zinc-950 pt-6 px-8 border-b border-[#dde4e4] dark:border-zinc-800">
+              <div className="flex items-end justify-between mb-6">
+                <div className="min-w-0">
+                  <Link
+                    href="/dashboard"
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-[#678383] hover:text-primary2 transition-colors mb-2"
+                  >
+                    <ChevronLeft className="size-3.5" />
+                    All projects
+                  </Link>
+                  <h2 className="text-xl font-extrabold tracking-tight dark:text-white truncate">
+                    {todos.data.name}
+                  </h2>
+                  <p className="text-[#678383] text-sm mt-0.5 whitespace-pre-wrap">
                     {todos.data.description
                       ? todos.data.description
-                      : "Add a description to this project. don't get people confused will ya?"}
+                      : "No description yet."}
                   </p>
                 </div>
 

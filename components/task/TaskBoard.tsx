@@ -24,26 +24,24 @@ const KanbanColumn = ({ status, label, tasks, onViewTask }: ColumnProps) => (
   <div
     role="region"
     aria-label={`${label} column, ${tasks.length} ${tasks.length === 1 ? "task" : "tasks"}`}
-    className="kanban-column flex flex-col gap-4"
+    className="kanban-column flex flex-col gap-3"
   >
-    <div className="flex items-center justify-between px-1">
-      <div className="flex items-center gap-2">
-        <h3 className="font-black text-sm uppercase tracking-widest text-[#678383]">
-          {label}
-        </h3>
+    <div className="flex items-baseline justify-between px-1">
+      <h3 className="font-bold text-xs uppercase tracking-widest text-[#678383] dark:text-zinc-400">
+        {label}
         <span
           aria-hidden="true"
-          className="bg-[#dde4e4] dark:bg-zinc-800 text-[#121717] dark:text-white text-[10px] font-bold px-1.5 py-0.5 rounded"
+          className="ml-2 tabular-nums text-[#121717] dark:text-zinc-200"
         >
           {tasks.length}
         </span>
-      </div>
+      </h3>
       <button
         type="button"
         aria-label={`Add task to ${label}`}
-        className="material-symbols-outlined text-[#678383] hover:text-primary2"
+        className="text-[#678383] hover:text-primary2 transition-colors"
       >
-        <CopyPlus />
+        <CopyPlus className="size-4" />
       </button>
     </div>
     <Droppable droppableId={status}>
@@ -51,7 +49,7 @@ const KanbanColumn = ({ status, label, tasks, onViewTask }: ColumnProps) => (
         <div
           ref={provided.innerRef}
           {...provided.droppableProps}
-          className={`flex flex-col gap-4 flex-1 min-h-[200px] rounded-xl p-2 -m-2 transition-colors ${
+          className={`flex flex-col gap-4 flex-1 min-h-50 rounded-xl p-2 -m-2 transition-colors ${
             snapshot.isDraggingOver
               ? "bg-primary2/5 ring-2 ring-primary2/40 ring-dashed"
               : "bg-transparent ring-2 ring-transparent"
@@ -67,8 +65,8 @@ const KanbanColumn = ({ status, label, tasks, onViewTask }: ColumnProps) => (
                   className={snapshot.isDragging ? "opacity-50" : "opacity-100"}
                 >
                   <TaskCard
+                    task={task}
                     onViewTask={() => onViewTask(task.id)}
-                    title={task.title}
                   />
                 </div>
               )}
