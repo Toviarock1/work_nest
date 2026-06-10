@@ -71,18 +71,26 @@ export default function ProjectsPage() {
     enabled: !!projectId,
   });
 
+  // Errors for these three are handled inside addNewTaskHandler's try/catch and
+  // by updateTaskMutation's own onError. The no-op onError stops the global
+  // mutationCache toast from double-firing alongside the catch.
   const createTaskMutation = useMutation({
     mutationFn: createTask,
+    onError: () => {},
   });
 
   const assignMutation = useMutation({
     mutationFn: assignTask,
+    onError: () => {},
   });
 
   const updateTaskMutation = useMutation({
     mutationFn: updateTask,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["project-todos", projectId] });
+    },
+    onError: (err: AxiosError<{ message?: string }>) => {
+      toast.error(err.response?.data?.message || "Couldn't update task");
     },
   });
 

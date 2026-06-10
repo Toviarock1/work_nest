@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import Cookies from "js-cookie";
 import type { AuthUser } from "@/types";
+import { disconnectSocket } from "@/lib/socket";
 
 interface AuthState {
   user: AuthUser | null;
@@ -16,6 +17,7 @@ export const useAuthStore = create<AuthState>()(
     logOut: () => {
       localStorage.removeItem("accessToken");
       Cookies.remove("accessToken", { path: "/" });
+      disconnectSocket();
       set({ user: null });
       window.location.href = "/login";
     },

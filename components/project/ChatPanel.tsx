@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchChatHistory, sendMessage } from "@/services/message.service";
 import { useChatSocket } from "@/hooks/useChatSocket";
 import { useForm } from "react-hook-form";
@@ -18,6 +19,7 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
   const { register, handleSubmit, reset } = useForm();
   const messagesRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
 
   const scrollbottom = () => {
     messagesRef.current?.scrollIntoView({ behavior: "instant" });
@@ -65,6 +67,14 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
   // 3. Send Message Mutation
   const mutation = useMutation({
     mutationFn: sendMessage,
+    // Belt + suspenders: the socket usually pushes the new message, but if the
+    // socket is offline this keeps the chat list correct.
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["chat-history", projectId] });
+    },
+    onError: (err: AxiosError<{ message?: string }>) => {
+      toast.error(err?.response?.data?.message || "Couldn't send message");
+    },
   });
 
   const fileMutation = useMutation({
@@ -72,15 +82,20 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
       uploadChatFile({ projectId, file }),
     onSuccess: () => {
       toast.success("File shared!");
+      queryClient.invalidateQueries({ queryKey: ["file-history", projectId] });
+    },
+    onError: (err: AxiosError<{ message?: string }>) => {
+      toast.error(err?.response?.data?.message || "Couldn't upload file");
     },
   });
   const deleteFileMutation = useMutation({
     mutationFn: (fileId: string) => deleteFile(fileId),
     onSuccess: () => {
       toast.success("File deleted!");
+      queryClient.invalidateQueries({ queryKey: ["file-history", projectId] });
     },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
+    onError: (err: AxiosError<{ message?: string }>) => {
+      toast.error(err?.response?.data?.message || "Couldn't delete file");
     },
   });
 

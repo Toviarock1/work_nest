@@ -1,5 +1,6 @@
 import axios from "axios";
 import { env } from "./env";
+import { disconnectSocket } from "./socket";
 
 const TOKEN_COOKIE = "accessToken";
 
@@ -48,6 +49,9 @@ axiosInstance.interceptors.response.use(
       } catch {
         /* localStorage blocked, ignore */
       }
+      // Tear down the realtime connection so the stale token can't keep
+      // receiving project events.
+      disconnectSocket();
       // Avoid a loop if we're already on /login.
       if (!window.location.pathname.startsWith("/login")) {
         window.location.assign("/login");

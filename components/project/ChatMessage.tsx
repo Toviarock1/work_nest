@@ -57,12 +57,15 @@ const ChatMessage = ({
                 width={500}
                 height={500}
                 className="rounded-xl border border-[#dde4e4] dark:border-gray-800 max-w-110 cursor-pointer hover:shadow-md transition-all"
-                onClick={() => window.open(url, "_blank")}
+                onClick={() =>
+                  window.open(url, "_blank", "noopener,noreferrer")
+                }
               />
             ) : (
               <a
                 href={url}
                 target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg w-fit"
               >
                 <Paperclip size={16} className="text-primary2" />
