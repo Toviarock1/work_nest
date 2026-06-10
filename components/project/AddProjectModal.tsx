@@ -1,4 +1,5 @@
 import { X, Mail, UserPlus } from "lucide-react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 interface FormData {
@@ -24,11 +25,27 @@ const AddProjectMemberModal = ({
     formState: { errors },
   } = useForm<FormData>();
 
+  useEffect(() => {
+    if (!show) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [show, close]);
+
   return (
     show && (
       <section className="bg-background-light dark:bg-background-dark font-display text-[#121717] dark:text-white transition-colors duration-200">
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-900/40 backdrop-blur-md px-4">
-          <div className="bg-white dark:bg-zinc-950 w-full max-w-lg rounded-2xl shadow-2xl border border-[#dde4e4] dark:border-zinc-800 overflow-hidden">
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm px-4"
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) close();
+          }}
+        >
+          <div className="bg-white dark:bg-zinc-900 w-full max-w-lg rounded-2xl shadow-2xl border border-[#dde4e4] dark:border-zinc-800 overflow-hidden">
             <div className="px-6 py-5 border-b border-[#dde4e4] dark:border-zinc-800 flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-black tracking-tight">
@@ -63,7 +80,7 @@ const AddProjectMemberModal = ({
                       <Mail />
                     </span>
                     <input
-                      className="w-full h-11 pl-10 pr-4 bg-background-light dark:bg-zinc-900 border-none rounded-xl text-sm placeholder:text-[#678383] focus:ring-2 focus:ring-primary2/20"
+                      className="w-full h-11 pl-10 pr-4 bg-background-light dark:bg-zinc-800 border-none rounded-xl text-sm placeholder:text-[#678383] focus:ring-2 focus:ring-primary2/20"
                       id="email"
                       placeholder="jane@example.com"
                       type="email"
@@ -84,7 +101,7 @@ const AddProjectMemberModal = ({
                   Role
                 </label>
                 <select
-                  className="w-full h-11 px-4 bg-background-light dark:bg-zinc-900 border-none rounded-xl text-sm font-bold text-[#121717] dark:text-white focus:ring-2 focus:ring-primary2/20 appearance-none"
+                  className="w-full h-11 px-4 bg-background-light dark:bg-zinc-800 border-none rounded-xl text-sm font-bold text-[#121717] dark:text-white focus:ring-2 focus:ring-primary2/20 appearance-none"
                   id="role"
                 >
                   <option value="viewer">Viewer</option>
@@ -101,7 +118,7 @@ const AddProjectMemberModal = ({
                 Personal Message (Optional)
               </label>
               <textarea
-                className="w-full p-4 bg-background-light dark:bg-zinc-900 border-none rounded-xl text-sm placeholder:text-[#678383] focus:ring-2 focus:ring-primary2/20 h-24 resize-none"
+                className="w-full p-4 bg-background-light dark:bg-zinc-800 border-none rounded-xl text-sm placeholder:text-[#678383] focus:ring-2 focus:ring-primary2/20 h-24 resize-none"
                 id="message"
                 placeholder="Hey, I'm adding you to the new redesign project!"
               ></textarea>
@@ -170,7 +187,7 @@ const AddProjectMemberModal = ({
               </div>
             </div> */}
             </div>
-            <div className="p-6 bg-background-light dark:bg-zinc-900/50 flex items-center justify-end gap-3">
+            <div className="p-6 bg-background-light dark:bg-zinc-800/50 flex items-center justify-end gap-3">
               <button
                 disabled={isLoading}
                 onClick={close}

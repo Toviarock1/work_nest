@@ -23,15 +23,16 @@ export default function UserAvatar({
     xl: "w-[250px] h-[200px] text-[150px]",
   };
 
-  // 3. Optional: Generate a consistent background color based on the name
+  // Generate a consistent background color based on the name.
+  // Use 600 in light mode for AA contrast on white, 500 in dark mode so the chip pops on zinc-900.
   const colors = [
-    "bg-red-500",
-    "bg-blue-500",
-    "bg-green-500",
-    "bg-yellow-600",
-    "bg-purple-500",
-    "bg-pink-500",
-    "bg-teal-500",
+    "bg-red-600 dark:bg-red-500",
+    "bg-blue-600 dark:bg-blue-500",
+    "bg-emerald-600 dark:bg-emerald-500",
+    "bg-amber-600 dark:bg-amber-500",
+    "bg-purple-600 dark:bg-purple-500",
+    "bg-pink-600 dark:bg-pink-500",
+    "bg-teal-600 dark:bg-teal-500",
   ];
   // Simple "hash" to pick the same color for the same name every time
   const colorIndex = name ? name.length % colors.length : 0;
