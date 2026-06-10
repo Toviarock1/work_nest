@@ -35,7 +35,7 @@ export const formatTime = (dateString: string | Date) => {
   });
 };
 
-export const getMessageDateLabel = (dateString: string) => {
+export const getMessageDateLabel = (dateString: string | Date) => {
   const date = new Date(dateString);
   const now = new Date();
 
@@ -65,14 +65,17 @@ export const getMessageDateLabel = (dateString: string) => {
   });
 };
 
-// Function to group messages
-export const groupMessagesByDate = (messages: any[]) => {
-  if (!messages) return {};
+// Group any list of items that carry a `createdAt` (messages, files, etc.)
+// by the human-readable date label used in the chat feed.
+export const groupMessagesByDate = <T extends { createdAt: string | Date }>(
+  items: T[],
+): Record<string, T[]> => {
+  if (!items) return {};
 
-  return messages.reduce((groups: any, message) => {
-    const dateLabel = getMessageDateLabel(message.createdAt);
+  return items.reduce<Record<string, T[]>>((groups, item) => {
+    const dateLabel = getMessageDateLabel(item.createdAt);
     if (!groups[dateLabel]) groups[dateLabel] = [];
-    groups[dateLabel].push(message);
+    groups[dateLabel].push(item);
     return groups;
   }, {});
 };

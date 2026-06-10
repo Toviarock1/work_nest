@@ -8,8 +8,16 @@ import {
 import Loader from "../Loader";
 import { formatDate } from "@/utils/formatData";
 import UserAvatar from "./../UserAvatar";
+import type { ProjectMembersType } from "@/types";
 
-const ProjectMembers = ({ data, isLoading, onRemove }: any) => {
+interface ProjectMembersProps {
+  data: ProjectMembersType[] | undefined;
+  isLoading: boolean;
+  onRemove: (email: string) => void;
+  type?: "add" | "remove";
+}
+
+const ProjectMembers = ({ data, isLoading, onRemove }: ProjectMembersProps) => {
   return (
     <div className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col">
       <div className="flex-1 p-8 bg-background-light dark:bg-background-dark">
@@ -39,7 +47,7 @@ const ProjectMembers = ({ data, isLoading, onRemove }: any) => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#dde4e4] dark:divide-zinc-800">
-                  {data.map((member: any) => (
+                  {data?.map((member) => (
                     <tr
                       className="hover:bg-background-light dark:hover:bg-zinc-900/50 transition-colors"
                       key={member.id}
@@ -73,6 +81,7 @@ const ProjectMembers = ({ data, isLoading, onRemove }: any) => {
                       <td className="px-6 py-4 text-right dropdown dropdown-end">
                         <button
                           tabIndex={0}
+                          aria-label={`Member options for ${member.user.name}`}
                           className="material-symbols-outlined text-[#678383] hover:text-primary transition-colors"
                         >
                           <EllipsisVertical />

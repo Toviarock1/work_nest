@@ -14,9 +14,14 @@ import {
   fetchFileHistory,
   uploadChatFile,
 } from "@/services/file.service";
+import type { Message, GetFileHistorry } from "@/types";
+
+type FeedItem =
+  | (Message & { feedType: "TEXT" })
+  | (GetFileHistorry & { feedType: "FILE" });
 
 export default function ChatPanel({ projectId }: { projectId: string }) {
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset } = useForm<{ content: string }>();
   const messagesRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
@@ -41,24 +46,21 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
     queryFn: () => fetchFileHistory(projectId),
   });
 
-  // Inside your ChatPanel component
   const unifiedFeed = useMemo(() => {
-    const msgList = messages?.data || [];
-    const fileList = projectFiles?.data || [];
+    const msgList: Message[] = messages?.data || [];
+    const fileList: GetFileHistorry[] = projectFiles?.data || [];
 
-    const combined = [
-      ...msgList.map((m: any) => ({ ...m, feedType: "TEXT" })),
-      ...fileList.map((f: any) => ({ ...f, feedType: "FILE" })),
+    const combined: FeedItem[] = [
+      ...msgList.map((m) => ({ ...m, feedType: "TEXT" as const })),
+      ...fileList.map((f) => ({ ...f, feedType: "FILE" as const })),
     ];
 
-    // Sort by the 'createdAt' timestamp from your DB
-    const sorted = combined.sort(
+    combined.sort(
       (a, b) =>
         new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
     );
 
-    // Group the sorted list by date using your existing utility
-    return groupMessagesByDate(sorted);
+    return groupMessagesByDate(combined);
   }, [messages?.data, projectFiles?.data]);
 
   // 2. Real-time Listener
@@ -107,7 +109,7 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
     }
   };
 
-  const onSend = (data: any) => {
+  const onSend = (data: { content: string }) => {
     if (!data.content.trim()) return;
     mutation.mutate(
       { projectId, content: data.content },
@@ -144,107 +146,15 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
   return (
     <>
       <div className="flex-1 overflow-y-auto p-6 space-y-8">
-        {/* <!-- Date Divider --> */}
-        <div className="relative flex items-center py-4">
-          <div className="grow border-t border-[#dde4e4] dark:border-gray-800"></div>
-          <span className="shrink mx-4 text-[10px] font-bold uppercase tracking-widest text-[#678383]">
-            Today, October 24
-          </span>
-          <div className="grow border-t border-[#dde4e4] dark:border-gray-800"></div>
-        </div>
-        {/* <!-- Single Message Component (Sarah) --> */}
-        <div className="flex gap-4 group">
-          <div
-            className="bg-center bg-no-repeat aspect-square bg-cover rounded-xl size-10 shrink-0 shadow-sm"
-            data-alt="Sarah Chen Avatar"
-            style={{
-              backgroundImage:
-                "url(https://lh3.googleusercontent.com/aida-public/AB6AXuAoTc44Y_1bc8pi3HWobJaorBIfZTxqVdTqDiaJ2vJQ9Jf5xcdLMkVdE6mDBmrV4iYLHAmBqTj9zQfHq8Z09PZdIFx0ne3w0A-Uc-y4bqDfHHG_VAbli9y5FBE4Xc9UH9Po34P-lFdRx79U5wm_WdZb1Evvmp0dqc46FX4t0vIpR8YWq9FvYpozuBrcU6GPOlBrp6yuDNu5weqTWAIJAr51oInmNK4N6JZB3TKL1oOTvt0H4B7PCCWQyGws2Yy5e1Upx0yVEOWDsiRj)",
-            }}
-          ></div>
-          <div className="flex flex-col gap-1.5 flex-1">
-            <div className="flex items-baseline gap-2">
-              <p className="text-sm font-bold text-[#121717] dark:text-white">
-                Sarah Chen
-              </p>
-              <p className="text-[11px] text-[#678383] font-medium">10:24 AM</p>
-            </div>
-            <div className="text-[15px] leading-relaxed text-[#121717] dark:text-gray-300">
-              Hey <span className="text-primary2 font-bold">@Team</span>, check
-              out the latest wireframes for the landing page. I&apos;ve focused
-              on mobile responsiveness first. What do you think about the hero
-              section layout?
-            </div>
-            {/* <!-- Attachment Thumbnail --> */}
-            <div className="mt-2 relative group/img cursor-pointer">
-              <div
-                className="bg-center bg-no-repeat aspect-video bg-cover rounded-xl border border-[#dde4e4] dark:border-gray-800 w-full max-w-110 shadow-sm hover:shadow-md transition-shadow"
-                data-alt="Wireframe mobile design mockup"
-                style={{
-                  backgroundImage:
-                    "url(https://lh3.googleusercontent.com/aida-public/AB6AXuCeTQXNjvMnA5LZrev32wvusFbtwCdQmjj_KYOnEURLSN1TIqq21XGpwbFfa74ODcwFDq20OYz0nCd2XHstexU6piAY9m3_oJKomfeFLWYL0Oj5ddaOL2Cx7maWm3Z-t5cj13Z-vi7spxZz7QBRukRjZRaiENz4UlLb9nOg8pz5wtgYq6ys9ynW6gIfmSkIMibJFLbPVUzRnnRc-mRXB-IiFbJChGXfPesm6RIUEGBf_H7VC0k4fNL9sPzazinzLpqxvcxb2FJjV3tu)",
-                }}
-              ></div>
-              <div className="absolute inset-0 bg-black/0 group-hover/img:bg-black/10 rounded-xl transition-colors"></div>
-              <div className="mt-2 flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary2 text-sm">
-                  image
-                </span>
-                <span className="text-[11px] font-bold text-[#678383] hover:underline">
-                  mobile-hero-v2.png
-                </span>
-                <span className="text-[11px] text-[#678383]">2.4 MB</span>
-              </div>
-            </div>
+        {Object.keys(unifiedFeed).length === 0 ? (
+          <div className="h-full flex flex-col items-center justify-center text-center text-[#678383] gap-1">
+            <p className="text-sm font-bold">No messages yet</p>
+            <p className="text-xs">
+              Say hi to your team to get the thread going.
+            </p>
           </div>
-          {/* <div className="opacity-0 group-hover:opacity-100 flex items-center gap-1 self-start pt-1 transition-opacity">
-            <button className="size-8 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500">
-              <span className="material-symbols-outlined text-lg">mood</span>
-            </button>
-            <button className="size-8 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500">
-              <span className="material-symbols-outlined text-lg">reply</span>
-            </button>
-          </div> */}
-        </div>
-        {/* <!-- Single Message Component (Mark) --> */}
-        <div className="flex gap-4 group">
-          <div
-            className="bg-center bg-no-repeat aspect-square bg-cover rounded-xl size-10 shrink-0 shadow-sm"
-            data-alt="Mark Wilson Avatar"
-            style={{
-              backgroundImage:
-                "url(https://lh3.googleusercontent.com/aida-public/AB6AXuAwMxCrMV5HlDzvJtdK54QZhGnsu-X0fzdTyvSiDmORfMTCqXsq2K05A_MABOgcj9DWE98s-ZRbs4Gb1AijIhtiEoW-zz9veUOTGK9pYpbppewT7H-5anq1eFHB6KqF9D0ZuzM7scpHA4JRNmGqYqYhlfe3KSw9faoQ8pm1QQom3MqdyB8f0Sd_ZEuifrbaYxkkvl4ThQQd5ptPHid6fOOyeqdr3HSGQh9u888bhA4M-pHWY0VIuUMQwjrF4jCrTsSjE-TBYDXUCCmB)",
-            }}
-          ></div>
-          <div className="flex flex-col gap-1.5 flex-1">
-            <div className="flex items-baseline gap-2">
-              <p className="text-sm font-bold text-[#121717] dark:text-white">
-                Mark Wilson
-              </p>
-              <p className="text-[11px] text-[#678383] font-medium">10:42 AM</p>
-            </div>
-            <div className="text-[15px] leading-relaxed text-[#121717] dark:text-gray-300">
-              Looks sharp, Sarah. I like the simplified navigation on mobile.
-              The CTA stands out much better than the previous version. <br />
-              <br />
-              Let&apos;s make sure the background patterns don&apos;t interfere
-              with the text legibility on smaller screens.
-            </div>
-            <div className="flex gap-2 mt-1">
-              <div className="px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-800 border border-[#dde4e4] dark:border-gray-700 flex items-center gap-1.5 cursor-pointer hover:bg-primary2/5 hover:border-primary2/30 transition-colors">
-                <span className="text-xs">🔥</span>
-                <span className="text-[10px] font-bold text-primary2">2</span>
-              </div>
-              <div className="px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-800 border border-[#dde4e4] dark:border-gray-700 flex items-center gap-1.5 cursor-pointer hover:bg-primary2/5 hover:border-primary2/30 transition-colors">
-                <span className="text-xs">🙌</span>
-                <span className="text-[10px] font-bold text-primary2">1</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        {messages &&
-          projectFiles &&
-          Object.entries(unifiedFeed).map(([date, items]: any) => (
+        ) : (
+          Object.entries(unifiedFeed).map(([date, items]) => (
             <div key={date}>
               <div className="relative flex items-center py-4">
                 <div className="grow border-t border-[#dde4e4] dark:border-gray-800"></div>
@@ -253,79 +163,27 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
                 </span>
                 <div className="grow border-t border-[#dde4e4] dark:border-gray-800"></div>
               </div>
-              {items?.map((msg: any, index: number) => (
-                <div key={index}>
+              {items?.map((msg) => (
+                <div key={`${msg.feedType}-${msg.id}`}>
                   <ChatMessage
                     name={
-                      msg?.feedType == "TEXT"
-                        ? msg?.sender?.name
-                        : msg?.uploader?.name
+                      msg.feedType === "TEXT"
+                        ? msg.sender?.name
+                        : msg.uploader?.name
                     }
-                    content={msg.content}
+                    content={msg.feedType === "TEXT" ? msg.content : msg.name}
                     time={formatTime(msg.createdAt)}
-                    id={msg?.feedType == "TEXT" ? msg.senderId : msg.uploaderId}
+                    id={msg.feedType === "TEXT" ? msg.senderId : msg.uploaderId}
                     feedType={msg.feedType}
-                    url={msg?.url}
+                    url={msg.feedType === "FILE" ? msg.url : undefined}
                     onDelete={() => deleteFileMutation.mutate(msg.id)}
                   />
                   <div ref={messagesRef}></div>
                 </div>
               ))}
             </div>
-          ))}
-
-        {/* <!-- System Notification --> */}
-        {/* <div className="flex items-center gap-3 px-4 py-2 bg-background-light dark:bg-gray-800/50 rounded-lg max-w-fit mx-auto border border-[#dde4e4] dark:border-gray-700">
-          <span className="material-symbols-outlined text-primary2 text-sm">
-            person_add
-          </span>
-          <p className="text-[11px] font-bold text-[#678383]">
-            James Doe joined the channel via invitation from Sarah Chen.
-          </p>
-        </div> */}
-        {/* <!-- Another Message --> */}
-        {/* <div className="flex gap-4 group">
-          <div
-            className="bg-center bg-no-repeat aspect-square bg-cover rounded-xl size-10 flex-shrink-0 shadow-sm"
-            data-alt="James Doe Avatar"
-            style={{
-              backgroundImage:
-                "url(https://lh3.googleusercontent.com/aida-public/AB6AXuBpYh56FJXhJyt_9LgbDqrRWCRyaRorxDWbHceFme7sz2yR9XE8h5FccIN3OSPG8s-uBPxCQAKEfpBkK_Kt2XkwwVuMU3Fx7AGea2nVKmUENx5k0STfdmUwQL5fY1V3KksL0MBwUloovQn2rZ7K7QdMoRNk3PSGpSLkKq8qG_foeA0TKldngPQGqD3ihEQqfD1Yn2BAGetLZGOk1k9htw39TtkQobcxEmQpfdY9ra_uUTINuWyEPL7Gn-FI3v9CrNDIhvedVUuJ5GQK)",
-            }}
-          ></div>
-          <div className="flex flex-col gap-1.5 flex-1">
-            <div className="flex items-baseline gap-2">
-              <p className="text-sm font-bold text-[#121717] dark:text-white">
-                James Doe
-              </p>
-              <p className="text-[11px] text-[#678383] font-medium">11:05 AM</p>
-            </div>
-            <div className="text-[15px] leading-relaxed text-[#121717] dark:text-gray-300">
-              Thanks for the add! Catching up on the threads now. Sarah, the
-              wireframes look great.
-            </div>
-          </div>
-        </div> */}
-        {/* daisyui */}
-        {/* <div className="chat chat-end">
-          <div className="chat-image avatar">
-            <div className="bg-center bg-no-repeat aspect-square bg-cover rounded-xl size-10 flex-shrink-0 shadow-sm">
-              <img
-                alt="Tailwind CSS chat bubble component"
-                src="https://img.daisyui.com/images/profile/demo/anakeen@192.webp"
-              />
-            </div>
-          </div>
-          <div className="chat-header text-sm font-bold text-[#121717] dark:text-white">
-            Anakin
-            <time className="text-[11px] text-[#678383] font-medium">
-              12:46
-            </time>
-          </div>
-          <div className=" text-[15px] leading-relaxed text-[#121717] dark:text-gray-300">
-            I hate you!
-          </div>
-        </div> */}
+          ))
+        )}
       </div>
       {/* <!-- Message Input Bar (Fixed Bottom) --> */}
       <div className="px-6 pb-6 pt-2 bg-white dark:bg-background-dark border-t border-transparent">

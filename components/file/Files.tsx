@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AxiosError } from "axios";
 import { deleteFile, fetchFileHistory } from "@/services/file.service";
 import { GetFileHistorry } from "@/types";
 import { formatDate } from "@/utils/formatData";
@@ -25,9 +26,9 @@ const FilesView = ({ projectId }: { projectId: string }) => {
       setDeleteLoading(false);
       toast.success("File deleted!");
     },
-    onError: (err: any) => {
+    onError: (err: AxiosError<{ message?: string }>) => {
       setDeleteLoading(false);
-      toast.error(err?.response?.data?.message);
+      toast.error(err?.response?.data?.message || "Couldn't delete file");
     },
   });
 

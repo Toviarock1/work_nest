@@ -12,7 +12,6 @@ export default function AppError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // TODO: send to structured logger / Sentry once 1.5 lands.
     console.error("App error boundary:", error);
   }, [error]);
 

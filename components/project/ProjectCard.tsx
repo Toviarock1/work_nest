@@ -7,6 +7,13 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import UserAvatar from "../UserAvatar";
 
+// Hoisted: identity stays stable across renders so the dropdown trigger
+// isn't recreated each time.
+const stopPropagation = (e: React.MouseEvent) => {
+  e.preventDefault();
+  e.stopPropagation();
+};
+
 interface ProjectCardProps {
   id: string;
   name: string;
@@ -49,11 +56,6 @@ const ProjectCard = ({
     },
   });
 
-  const handleOptions = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
   const onRemove = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     e.stopPropagation();
@@ -67,11 +69,11 @@ const ProjectCard = ({
   return (
     <div className="bg-white dark:bg-background-dark rounded-xl border border-[#f1f4f4] dark:border-[#2d3238] shadow-soft hover:shadow-xl hover:-translate-y-1 transition-all duration-300 p-6 group">
       <div className="flex justify-end items-start mb-4">
-        <div className="dropdown" onClick={handleOptions}>
+        <div className="dropdown" onClick={stopPropagation}>
           <button
             tabIndex={0}
             className="p-1 text-[#678383] hover:bg-[#f1f4f4] dark:hover:bg-[#2d3238] rounded"
-            onClick={handleOptions}
+            onClick={stopPropagation}
             aria-label="Project options"
           >
             <EllipsisVertical className="size-5" />

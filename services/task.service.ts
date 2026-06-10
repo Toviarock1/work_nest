@@ -15,11 +15,13 @@ export const createTask = async (payload: createTaskPayload) => {
   return response.data;
 };
 
+import type { TaskStatus } from "@/types";
+
 interface UpdateTaskPayload {
   taskId: string;
   title?: string;
   description?: string;
-  status?: "todo" | "in_progress" | "done";
+  status?: TaskStatus;
 }
 export const updateTask = async (payload: UpdateTaskPayload) => {
   const { taskId, ...body } = payload;

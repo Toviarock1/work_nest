@@ -41,9 +41,10 @@ export default function SignInPage() {
       const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
       document.cookie = `accessToken=${res.data.token}; path=/; max-age=3600; SameSite=Lax${secure}`;
       router.push("/dashboard");
-    } catch (error: any) {
+    } catch (error) {
+      const err = error as { response?: { data?: { message?: string } } };
       logger.error("Login failed", error);
-      toast.error(error.response?.data?.message || "Invalid email/password");
+      toast.error(err.response?.data?.message || "Invalid email/password");
     } finally {
       setLoading(false);
     }

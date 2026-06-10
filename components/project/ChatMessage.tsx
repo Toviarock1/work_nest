@@ -17,7 +17,7 @@ const ChatMessage = ({
   time: string;
   content: string;
   feedType: string;
-  url: string;
+  url?: string;
   onDelete: () => void;
 }) => {
   const userId = useAuthStore((state) => state.user?.id);
@@ -50,7 +50,7 @@ const ChatMessage = ({
                 <Trash2 size={14} />
               </button>
             )}
-            {url.match(/\.(jpeg|jpg|gif|png)$/i) ? (
+            {url && url.match(/\.(jpeg|jpg|gif|png)$/i) ? (
               <Image
                 src={url}
                 alt={name || "image"}

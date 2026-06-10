@@ -45,13 +45,15 @@ export interface ProjectsType {
   };
 }
 
+export type TaskStatus = "todo" | "in_progress" | "done";
+
 export interface TasksType {
   assignedToId: string | null;
   createdAt: string;
   description: string | null;
   id: string;
   projectId: string;
-  status: string;
+  status: TaskStatus;
   title: string;
   assignedTo: {
     name: string;
