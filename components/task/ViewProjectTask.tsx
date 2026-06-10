@@ -64,6 +64,7 @@ const ViewProjectTask = ({
   const assigneePickerRef = useRef<HTMLDivElement>(null);
   const statusPickerRef = useRef<HTMLDivElement>(null);
   const [assigneeOpen, setAssigneeOpen] = useState(false);
+  const [assigneeQuery, setAssigneeQuery] = useState("");
   const [statusOpen, setStatusOpen] = useState(false);
 
   const [editingTitle, setEditingTitle] = useState(false);
@@ -298,7 +299,10 @@ const ViewProjectTask = ({
                     <button
                       type="button"
                       disabled={isAssigning}
-                      onClick={() => setAssigneeOpen((p) => !p)}
+                      onClick={() => {
+                        setAssigneeOpen((p) => !p);
+                        setAssigneeQuery("");
+                      }}
                       className="flex items-center gap-3 w-full rounded-lg border border-transparent hover:border-[#dde4e4] dark:hover:border-zinc-700 hover:bg-background-light dark:hover:bg-zinc-800 px-2 py-1 -mx-2 transition-colors disabled:opacity-60"
                     >
                       <UserAvatar
@@ -311,45 +315,78 @@ const ViewProjectTask = ({
                       </span>
                       <ChevronDown className="size-4 text-[#6A717B] dark:text-zinc-400" />
                     </button>
-                    {assigneeOpen && (
-                      <div className="absolute z-10 mt-2 w-64 max-h-72 overflow-y-auto rounded-lg border border-[#dde4e4] dark:border-zinc-700 bg-white dark:bg-zinc-900 soft-shadow py-1">
-                        {members?.data?.projectMembers?.length ? (
-                          members.data.projectMembers.map(
-                            (member: ProjectMembersType) => {
-                              const selected =
-                                data.assignedTo?.email === member.user.email;
-                              return (
-                                <button
-                                  type="button"
-                                  key={member.id}
-                                  disabled={isAssigning || selected}
-                                  onClick={() =>
-                                    assignMutate({
-                                      taskId: data.id,
-                                      projectId,
-                                      assigneeEmail: member.user.email,
-                                    })
+                    {assigneeOpen &&
+                      (() => {
+                        const all = members?.data?.projectMembers ?? [];
+                        const q = assigneeQuery.trim().toLowerCase();
+                        const filtered = q
+                          ? all.filter(
+                              (m: ProjectMembersType) =>
+                                m.user.name?.toLowerCase().includes(q) ||
+                                m.user.email?.toLowerCase().includes(q),
+                            )
+                          : all;
+                        return (
+                          <div className="absolute z-10 mt-2 w-64 max-h-80 overflow-hidden rounded-lg border border-[#dde4e4] dark:border-zinc-700 bg-white dark:bg-zinc-900 soft-shadow flex flex-col">
+                            {all.length > 5 && (
+                              <div className="p-2 border-b border-[#f1f4f4] dark:border-zinc-800">
+                                <input
+                                  autoFocus
+                                  type="text"
+                                  value={assigneeQuery}
+                                  onChange={(e) =>
+                                    setAssigneeQuery(e.target.value)
                                   }
-                                  className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-background-light dark:hover:bg-zinc-800 disabled:opacity-60"
-                                >
-                                  <UserAvatar customName={member.user.name} />
-                                  <span className="text-sm font-medium dark:text-zinc-200 flex-1 truncate">
-                                    {member.user.name}
-                                  </span>
-                                  {selected && (
-                                    <Check className="size-4 text-primary2" />
-                                  )}
-                                </button>
-                              );
-                            },
-                          )
-                        ) : (
-                          <p className="px-3 py-2 text-xs text-[#6A717B] dark:text-zinc-400">
-                            No members available
-                          </p>
-                        )}
-                      </div>
-                    )}
+                                  placeholder="Search members…"
+                                  className="w-full px-2 py-1.5 text-sm rounded-md bg-background-light dark:bg-zinc-800 border border-transparent focus:border-primary2 focus:ring-1 focus:ring-primary2 outline-none dark:text-zinc-100 dark:placeholder:text-zinc-500"
+                                />
+                              </div>
+                            )}
+                            <div className="overflow-y-auto py-1 flex-1">
+                              {all.length === 0 ? (
+                                <p className="px-3 py-2 text-xs text-[#6A717B] dark:text-zinc-400">
+                                  No members available
+                                </p>
+                              ) : filtered.length === 0 ? (
+                                <p className="px-3 py-2 text-xs text-[#6A717B] dark:text-zinc-400">
+                                  No matches for &ldquo;{assigneeQuery}&rdquo;
+                                </p>
+                              ) : (
+                                filtered.map((member: ProjectMembersType) => {
+                                  const selected =
+                                    data.assignedTo?.email ===
+                                    member.user.email;
+                                  return (
+                                    <button
+                                      type="button"
+                                      key={member.id}
+                                      disabled={isAssigning || selected}
+                                      onClick={() =>
+                                        assignMutate({
+                                          taskId: data.id,
+                                          projectId,
+                                          assigneeEmail: member.user.email,
+                                        })
+                                      }
+                                      className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-background-light dark:hover:bg-zinc-800 disabled:opacity-60"
+                                    >
+                                      <UserAvatar
+                                        customName={member.user.name}
+                                      />
+                                      <span className="text-sm font-medium dark:text-zinc-200 flex-1 truncate">
+                                        {member.user.name}
+                                      </span>
+                                      {selected && (
+                                        <Check className="size-4 text-primary2" />
+                                      )}
+                                    </button>
+                                  );
+                                })
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })()}
                   </div>
                 ) : (
                   <div className="flex items-center gap-3">

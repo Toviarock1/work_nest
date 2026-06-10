@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskSkeleton from "@/components/skeleton/TaskSkeleton";
 import QueryError from "@/components/ui/QueryError";
 import AddTaskModal from "@/components/task/AddTaskModal";
@@ -47,6 +47,32 @@ export default function ProjectsPage() {
   const projectId = params.projectId as string;
 
   useProjectSocket(projectId);
+
+  // Press `n` to open the New Task modal while on the Tasks tab. Ignored when
+  // the user is typing in a form field or any modal is already open.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() !== "n") return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName;
+      if (
+        tag === "INPUT" ||
+        tag === "TEXTAREA" ||
+        target?.isContentEditable ||
+        showTaskModal ||
+        showProjectMemberModal ||
+        viewTask ||
+        currentPath !== "tasks"
+      ) {
+        return;
+      }
+      e.preventDefault();
+      setShowTaskModal(true);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [currentPath, showTaskModal, showProjectMemberModal, viewTask]);
 
   const {
     data: todos,
@@ -125,15 +151,48 @@ export default function ProjectsPage() {
   );
   // console.log(todosData);
 
+  const STATUS_LABELS: Record<"todo" | "in_progress" | "done", string> = {
+    todo: "To Do",
+    in_progress: "In Progress",
+    done: "Done",
+  };
+
   const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
     if (!destination) return;
     if (destination.droppableId === source.droppableId) return;
 
-    updateTaskMutation.mutate({
-      taskId: draggableId,
-      status: destination.droppableId as "todo" | "in_progress" | "done",
-    });
+    const fromStatus = source.droppableId as "todo" | "in_progress" | "done";
+    const toStatus = destination.droppableId as "todo" | "in_progress" | "done";
+
+    updateTaskMutation.mutate(
+      { taskId: draggableId, status: toStatus },
+      {
+        onSuccess: () => {
+          toast.info(
+            ({ closeToast }) => (
+              <div className="flex items-center justify-between gap-3 w-full">
+                <span>Moved to {STATUS_LABELS[toStatus]}</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    updateTaskMutation.mutate({
+                      taskId: draggableId,
+                      status: fromStatus,
+                    });
+                    closeToast?.();
+                  }}
+                  className="font-bold text-primary2 hover:underline"
+                >
+                  Undo
+                </button>
+              </div>
+            ),
+            { autoClose: 5000 },
+          );
+        },
+      },
+    );
   };
 
   const addNewTaskHandler = async (data: {
@@ -246,44 +305,59 @@ export default function ProjectsPage() {
                   )}
                 </div>
               </div>
-              {/* <!-- Tabs --> */}
+              {/* Tabs */}
               <div className="flex gap-8">
-                <button
-                  onClick={() => setCurrentPath("tasks")}
-                  className={` ${currentPath === "tasks" && "border-primary2 text-primary2 border-b-2"} flex cursor-pointer items-center justify-center pb-3 px-1 font-bold text-sm hover:text-primary2 text-[#678383] transition-colors`}
-                >
-                  <span className="material-symbols-outlined text-[20px] mr-2">
-                    <BadgeCheck />
-                  </span>
-                  Tasks
-                </button>
-                <button
-                  onClick={() => setCurrentPath("messages")}
-                  className={` ${currentPath === "messages" && "border-primary2 text-primary2 border-b-2"} flex cursor-pointer items-center justify-center pb-3 px-1 font-bold text-sm hover:text-primary2 text-[#678383] transition-colors`}
-                >
-                  <span className="material-symbols-outlined text-[20px] mr-2">
-                    <MessagesSquare />
-                  </span>
-                  Messages
-                </button>
-                <button
-                  onClick={() => setCurrentPath("files")}
-                  className={` ${currentPath === "files" && "border-primary2 text-primary2 border-b-2"} flex cursor-pointer items-center justify-center pb-3 px-1 font-bold text-sm hover:text-primary2 text-[#678383] transition-colors`}
-                >
-                  <span className="material-symbols-outlined text-[20px] mr-2">
-                    <Folder />
-                  </span>
-                  Files
-                </button>
-                <button
-                  onClick={() => setCurrentPath("members")}
-                  className={` ${currentPath === "members" && "border-primary2 text-primary2 border-b-2"} flex cursor-pointer items-center justify-center pb-3 px-1 font-bold text-sm hover:text-primary2 text-[#678383] transition-colors`}
-                >
-                  <span className="material-symbols-outlined text-[20px] mr-2">
-                    <Users />
-                  </span>
-                  Members
-                </button>
+                {(
+                  [
+                    {
+                      key: "tasks",
+                      label: "Tasks",
+                      icon: <BadgeCheck />,
+                      count: todos?.data?.tasks?.length,
+                    },
+                    {
+                      key: "messages",
+                      label: "Messages",
+                      icon: <MessagesSquare />,
+                      count: undefined,
+                    },
+                    {
+                      key: "files",
+                      label: "Files",
+                      icon: <Folder />,
+                      count: undefined,
+                    },
+                    {
+                      key: "members",
+                      label: "Members",
+                      icon: <Users />,
+                      count: members?.data?.projectMembers?.length,
+                    },
+                  ] as const
+                ).map((tab) => {
+                  const isActive = currentPath === tab.key;
+                  return (
+                    <button
+                      key={tab.key}
+                      onClick={() => setCurrentPath(tab.key)}
+                      className={`${isActive ? "border-primary2 text-primary2 border-b-2" : "text-[#678383]"} flex cursor-pointer items-center justify-center pb-3 px-1 font-bold text-sm hover:text-primary2 transition-colors`}
+                    >
+                      <span className="text-[20px] mr-2">{tab.icon}</span>
+                      {tab.label}
+                      {typeof tab.count === "number" && (
+                        <span
+                          className={`ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded tabular-nums ${
+                            isActive
+                              ? "bg-primary2/10 text-primary2"
+                              : "bg-[#dde4e4] dark:bg-zinc-800 text-[#121717] dark:text-zinc-300"
+                          }`}
+                        >
+                          {tab.count}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             </div>
             {/* <!-- Kanban Board Section --> */}

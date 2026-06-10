@@ -47,11 +47,15 @@ const KanbanColumn = ({ status, label, tasks, onViewTask }: ColumnProps) => (
       </button>
     </div>
     <Droppable droppableId={status}>
-      {(provided) => (
+      {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
           {...provided.droppableProps}
-          className="flex flex-col gap-4"
+          className={`flex flex-col gap-4 flex-1 min-h-[200px] rounded-xl p-2 -m-2 transition-colors ${
+            snapshot.isDraggingOver
+              ? "bg-primary2/5 ring-2 ring-primary2/40 ring-dashed"
+              : "bg-transparent ring-2 ring-transparent"
+          }`}
         >
           {tasks?.map((task, index) => (
             <Draggable key={task.id} draggableId={task.id} index={index}>
@@ -71,6 +75,11 @@ const KanbanColumn = ({ status, label, tasks, onViewTask }: ColumnProps) => (
             </Draggable>
           ))}
           {provided.placeholder}
+          {tasks.length === 0 && !snapshot.isDraggingOver && (
+            <div className="flex items-center justify-center text-xs text-[#678383] py-6 border-2 border-dashed border-[#dde4e4] dark:border-zinc-800 rounded-lg">
+              Drop tasks here
+            </div>
+          )}
         </div>
       )}
     </Droppable>
@@ -143,7 +152,7 @@ const TaskBoard = ({
             </p>
           </div>
         ) : (
-          <div className="flex gap-6">
+          <div className="flex gap-6 flex-1 items-stretch">
             <KanbanColumn
               status="todo"
               label="To Do"
