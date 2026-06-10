@@ -75,7 +75,7 @@ const AddTaskModal = ({
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-screen max-w-xl flex flex-col bg-white dark:bg-zinc-900 shadow-2xl h-full border-l border-slate-200 dark:border-zinc-800"
+        className="w-screen max-w-xl flex flex-col bg-white dark:bg-zinc-900 shadow-2xl h-full border-l border-slate-200 dark:border-zinc-800 animate-[slideInRight_200ms_ease-out]"
       >
         <div className="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 p-6">
           <div>

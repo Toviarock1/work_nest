@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { SendHorizontal, Paperclip } from "lucide-react";
 import ChatMessage from "./ChatMessage";
 import QueryError from "@/components/ui/QueryError";
+import ChatSkeleton from "@/components/skeleton/ChatSkeleton";
 import { formatTime, groupMessagesByDate } from "@/utils/formatData";
 import { toast } from "react-toastify";
 import {
@@ -129,8 +130,7 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
     scrollbottom();
   }, [messages]);
 
-  if (isLoading)
-    return <div className="p-4 text-center">Loading messages...</div>;
+  if (isLoading) return <ChatSkeleton />;
 
   if (isError)
     return (

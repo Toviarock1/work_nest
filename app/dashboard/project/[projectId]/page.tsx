@@ -108,10 +108,51 @@ export default function ProjectsPage() {
 
   const updateTaskMutation = useMutation({
     mutationFn: updateTask,
+    // Optimistic: update the cached task list immediately so cards don't
+    // snap back during the network round trip. We snapshot the previous
+    // state and roll back inside onError if the request fails.
+    onMutate: async (variables) => {
+      const key = ["project-todos", projectId];
+      await queryClient.cancelQueries({ queryKey: key });
+      const previous = queryClient.getQueryData(key);
+      queryClient.setQueryData(key, (old: unknown) => {
+        if (!old || typeof old !== "object") return old;
+        const root = old as { data?: { tasks?: TasksType[] } };
+        const tasks = root.data?.tasks;
+        if (!Array.isArray(tasks)) return old;
+        return {
+          ...root,
+          data: {
+            ...root.data,
+            tasks: tasks.map((t) =>
+              t.id === variables.taskId
+                ? {
+                    ...t,
+                    ...(variables.status !== undefined && {
+                      status: variables.status,
+                    }),
+                    ...(variables.title !== undefined && {
+                      title: variables.title,
+                    }),
+                    ...(variables.description !== undefined && {
+                      description: variables.description,
+                    }),
+                  }
+                : t,
+            ),
+          },
+        };
+      });
+      return { previous };
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["project-todos", projectId] });
     },
-    onError: (err: AxiosError<{ message?: string }>) => {
+    onError: (err: AxiosError<{ message?: string }>, _vars, ctx) => {
+      // Roll back to the snapshot we took before the optimistic write.
+      if (ctx?.previous !== undefined) {
+        queryClient.setQueryData(["project-todos", projectId], ctx.previous);
+      }
       toast.error(err.response?.data?.message || "Couldn't update task");
     },
   });

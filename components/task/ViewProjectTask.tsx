@@ -168,7 +168,7 @@ const ViewProjectTask = ({
         if (e.target === e.currentTarget) close();
       }}
     >
-      <div className="w-full max-w-2xl bg-white dark:bg-zinc-900 h-full soft-shadow flex flex-col border-l border-[#dde4e4] dark:border-zinc-800">
+      <div className="w-full max-w-2xl bg-white dark:bg-zinc-900 h-full soft-shadow flex flex-col border-l border-[#dde4e4] dark:border-zinc-800 animate-[slideInRight_200ms_ease-out]">
         {/* Header */}
         <div className="px-8 py-6 border-b border-[#dde4e4] dark:border-zinc-800 flex items-center justify-between">
           <div className="flex items-center gap-2 text-sm font-medium text-[#6A717B] dark:text-zinc-400">
