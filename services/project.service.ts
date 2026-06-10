@@ -12,8 +12,19 @@ export const createProject = async (payload: createProjectPayload) => {
 };
 
 export const fetchMyProjects = async () => {
-  const response = await axiosInstance.get("/project");
-  return response.data;
+  try {
+    const response = await axiosInstance.get("/project");
+    return response.data;
+  } catch (error) {
+    // Older backend versions return 404 when the user has no projects yet.
+    // Treat that as the natural empty state instead of an error.
+    const status = (error as { response?: { status?: number } })?.response
+      ?.status;
+    if (status === 404) {
+      return { data: [] };
+    }
+    throw error;
+  }
 };
 
 export const fetchProjectMembers = async (id: string) => {

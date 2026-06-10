@@ -258,6 +258,13 @@ export default function DashboardPage() {
             <Plus className="size-5" />
             Create your first project
           </button>
+          <p className="text-xs text-[#678383] mt-5">
+            Already part of a team?{" "}
+            <span className="font-semibold text-[#121717] dark:text-white">
+              Ask the owner to invite you
+            </span>{" "}
+            — projects you&rsquo;re added to will show up here automatically.
+          </p>
         </div>
       )}
 

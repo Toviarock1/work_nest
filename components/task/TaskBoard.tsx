@@ -4,9 +4,12 @@ import {
   Droppable,
   type DropResult,
 } from "@hello-pangea/dnd";
-import { CopyPlus } from "lucide-react";
+import { CopyPlus, MousePointerClick, X } from "lucide-react";
+import { useState } from "react";
 import { TasksType } from "@/types";
 import TaskCard from "./TaskCard";
+
+const TIP_KEY = "worknest:board:tipDismissed";
 
 type Status = "todo" | "in_progress" | "done";
 
@@ -88,29 +91,82 @@ const TaskBoard = ({
   done,
   onDragEnd,
   onViewTask,
-}: TaskBoardProps) => (
-  <DragDropContext onDragEnd={onDragEnd}>
-    <div className="flex-1 p-8 overflow-x-auto overflow-y-visible custom-scrollbar flex gap-6 bg-background-light dark:bg-background-dark">
-      <KanbanColumn
-        status="todo"
-        label="To Do"
-        tasks={todos}
-        onViewTask={onViewTask}
-      />
-      <KanbanColumn
-        status="in_progress"
-        label="In Progress"
-        tasks={inProgress}
-        onViewTask={onViewTask}
-      />
-      <KanbanColumn
-        status="done"
-        label="Done"
-        tasks={done}
-        onViewTask={onViewTask}
-      />
-    </div>
-  </DragDropContext>
-);
+}: TaskBoardProps) => {
+  const isEmpty = todos.length + inProgress.length + done.length === 0;
+  // Lazy initializer — runs once during the first render. Guarded for SSR.
+  const [tipDismissed, setTipDismissed] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return localStorage.getItem(TIP_KEY) === "1";
+  });
+
+  const dismissTip = () => {
+    localStorage.setItem(TIP_KEY, "1");
+    setTipDismissed(true);
+  };
+
+  return (
+    <DragDropContext onDragEnd={onDragEnd}>
+      <div className="flex-1 p-8 overflow-x-auto overflow-y-visible custom-scrollbar flex flex-col gap-4 bg-background-light dark:bg-background-dark">
+        {!tipDismissed && !isEmpty && (
+          <div className="flex items-start gap-3 px-4 py-3 rounded-xl bg-primary2/5 border border-primary2/20 text-sm dark:bg-primary2/10">
+            <MousePointerClick className="size-5 text-primary2 mt-0.5 shrink-0" />
+            <div className="flex-1 text-[#121717] dark:text-zinc-200">
+              <strong className="font-bold">Quick tip:</strong> click a card to
+              open it, drag between columns to change status, and press{" "}
+              <kbd className="px-1.5 py-0.5 text-[10px] font-bold rounded bg-white dark:bg-zinc-800 border border-[#dde4e4] dark:border-zinc-700">
+                Esc
+              </kbd>{" "}
+              to close any panel.
+            </div>
+            <button
+              type="button"
+              onClick={dismissTip}
+              aria-label="Dismiss tip"
+              className="p-1 -m-1 text-[#678383] hover:text-[#121717] dark:hover:text-white"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
+        )}
+        {isEmpty ? (
+          <div className="flex-1 flex flex-col items-center justify-center text-center py-16">
+            <div className="size-14 rounded-full bg-primary2/10 flex items-center justify-center text-primary2 mb-4">
+              <CopyPlus className="size-6" />
+            </div>
+            <h3 className="text-lg font-bold mb-1 dark:text-zinc-100">
+              No tasks yet
+            </h3>
+            <p className="text-sm text-[#678383] max-w-sm">
+              Click <strong>+ Add Task</strong> at the top of the page to create
+              your first one. You can drag cards between columns to track
+              progress.
+            </p>
+          </div>
+        ) : (
+          <div className="flex gap-6">
+            <KanbanColumn
+              status="todo"
+              label="To Do"
+              tasks={todos}
+              onViewTask={onViewTask}
+            />
+            <KanbanColumn
+              status="in_progress"
+              label="In Progress"
+              tasks={inProgress}
+              onViewTask={onViewTask}
+            />
+            <KanbanColumn
+              status="done"
+              label="Done"
+              tasks={done}
+              onViewTask={onViewTask}
+            />
+          </div>
+        )}
+      </div>
+    </DragDropContext>
+  );
+};
 
 export default TaskBoard;

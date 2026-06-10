@@ -40,6 +40,10 @@ export default function SignInPage() {
       setUser(res.data);
       const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
       document.cookie = `accessToken=${res.data.token}; path=/; max-age=3600; SameSite=Lax${secure}`;
+      const firstName = res.data.name?.split(" ")[0];
+      toast.success(
+        firstName ? `Welcome back, ${firstName}!` : "Welcome back!",
+      );
       router.push("/dashboard");
     } catch (error) {
       const err = error as { response?: { data?: { message?: string } } };
