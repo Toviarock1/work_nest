@@ -8,6 +8,8 @@ import FilesView from "@/components/file/Files";
 import { type DropResult } from "@hello-pangea/dnd";
 import { AxiosError } from "axios";
 import { useProjectSocket } from "@/hooks/useProjectSocket";
+import { useProjectAwareness } from "@/hooks/useProjectAwareness";
+import { useAuthStore } from "@/store/useAuthStore";
 import {
   createTask,
   fetchMyProjectsTask,
@@ -49,6 +51,12 @@ export default function ProjectsPage() {
   const projectId = params.projectId as string;
 
   useProjectSocket(projectId);
+  const currentUserId = useAuthStore((s) => s.user?.id);
+  const { unreadMessages } = useProjectAwareness({
+    projectId,
+    currentUserId,
+    isMessagesTabActive: currentPath === "messages",
+  });
 
   // Press `n` to open the New Task modal while on the Tasks tab. Ignored when
   // the user is typing in a form field or any modal is already open.
@@ -355,34 +363,41 @@ export default function ProjectsPage() {
               </div>
               {/* Tabs */}
               <div className="flex gap-8">
-                {(
-                  [
-                    {
-                      key: "tasks",
-                      label: "Tasks",
-                      icon: <BadgeCheck />,
-                      count: todos?.data?.tasks?.length,
-                    },
-                    {
-                      key: "messages",
-                      label: "Messages",
-                      icon: <MessagesSquare />,
-                      count: undefined,
-                    },
-                    {
-                      key: "files",
-                      label: "Files",
-                      icon: <Folder />,
-                      count: undefined,
-                    },
-                    {
-                      key: "members",
-                      label: "Members",
-                      icon: <Users />,
-                      count: members?.data?.projectMembers?.length,
-                    },
-                  ] as const
-                ).map((tab) => {
+                {[
+                  {
+                    key: "tasks" as const,
+                    label: "Tasks",
+                    icon: <BadgeCheck />,
+                    count: todos?.data?.tasks?.length as number | undefined,
+                    isUnread: false,
+                  },
+                  {
+                    key: "messages" as const,
+                    label: "Messages",
+                    icon: <MessagesSquare />,
+                    count:
+                      unreadMessages > 0
+                        ? unreadMessages
+                        : (undefined as number | undefined),
+                    isUnread: unreadMessages > 0,
+                  },
+                  {
+                    key: "files" as const,
+                    label: "Files",
+                    icon: <Folder />,
+                    count: undefined as number | undefined,
+                    isUnread: false,
+                  },
+                  {
+                    key: "members" as const,
+                    label: "Members",
+                    icon: <Users />,
+                    count: members?.data?.projectMembers?.length as
+                      | number
+                      | undefined,
+                    isUnread: false,
+                  },
+                ].map((tab) => {
                   const isActive = currentPath === tab.key;
                   return (
                     <button
@@ -395,9 +410,11 @@ export default function ProjectsPage() {
                       {typeof tab.count === "number" && (
                         <span
                           className={`ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded tabular-nums ${
-                            isActive
-                              ? "bg-primary2/10 text-primary2"
-                              : "bg-[#dde4e4] dark:bg-zinc-800 text-[#121717] dark:text-zinc-300"
+                            tab.isUnread
+                              ? "bg-primary2 text-white animate-pulse"
+                              : isActive
+                                ? "bg-primary2/10 text-primary2"
+                                : "bg-[#dde4e4] dark:bg-zinc-800 text-[#121717] dark:text-zinc-300"
                           }`}
                         >
                           {tab.count}
