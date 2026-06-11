@@ -399,18 +399,25 @@ const ViewProjectTask = ({
                   </div>
                 )}
               </div>
-              {/* Created date */}
+              {/* Dates */}
               <div className="flex flex-col gap-1.5">
                 <span className="text-[10px] uppercase font-bold text-[#6A717B] dark:text-zinc-400 tracking-wider">
-                  Created Date
+                  Dates
                 </span>
                 <div className="flex items-center gap-3">
                   <div className="size-9 rounded-lg bg-background-light dark:bg-zinc-800 flex items-center justify-center text-[#6A717B] dark:text-zinc-400">
                     <Calendar className="size-5" />
                   </div>
-                  <span className="text-sm font-semibold dark:text-zinc-200">
-                    {formatDate(data.createdAt)}
-                  </span>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-semibold dark:text-zinc-200">
+                      {formatDate(data.createdAt)}
+                    </span>
+                    {data.updatedAt && data.updatedAt !== data.createdAt && (
+                      <span className="text-[11px] text-[#6A717B] dark:text-zinc-400">
+                        Updated {formatDate(data.updatedAt)}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

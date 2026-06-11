@@ -50,6 +50,7 @@ export type TaskStatus = "todo" | "in_progress" | "done";
 export interface TasksType {
   assignedToId: string | null;
   createdAt: string;
+  updatedAt?: string;
   description: string | null;
   id: string;
   projectId: string;

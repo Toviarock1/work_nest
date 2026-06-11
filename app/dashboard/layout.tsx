@@ -2,6 +2,7 @@
 
 import AuthGuard from "@/components/auth/AuthGuard";
 import DesktopOnlyGuard from "@/components/ui/DesktopOnlyGuard";
+import SearchPalette from "@/components/ui/SearchPalette";
 import UserAvatar from "@/components/UserAvatar";
 import { fetchMyProjectsTask } from "@/services/task.service";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -138,21 +139,26 @@ export default function DashboardLayout({
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  {/* <div className="relative hidden md:block">
-                  <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#678383] text-xl">
-                    <Search />
-                  </span>
-                  <input
-                    className="pl-10 pr-4 py-2 bg-[#f1f4f4] dark:bg-[#2d3238] border-none rounded-lg text-sm w-64 focus:ring-1 focus:ring-primary2"
-                    placeholder="Global search..."
-                    type="text"
-                  />
-                </div> */}
-                  {/* <button className="p-2 rounded-lg bg-[#f1f4f4] dark:bg-[#2d3238] text-[#121717] dark:text-white">
-                  <span className="material-symbols-outlined text-xl">
-                    <Bell />
-                  </span>
-                </button> */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      // Dispatch a synthetic Cmd+K so the palette opens via its own listener.
+                      window.dispatchEvent(
+                        new KeyboardEvent("keydown", {
+                          key: "k",
+                          metaKey: true,
+                          ctrlKey: true,
+                        }),
+                      );
+                    }}
+                    aria-label="Open search"
+                    className="hidden md:flex items-center gap-2 px-3 h-9 rounded-lg bg-[#f1f4f4] dark:bg-[#2d3238] text-sm text-[#678383] hover:text-[#121717] dark:hover:text-white transition-colors"
+                  >
+                    <span>Search projects…</span>
+                    <kbd className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white dark:bg-zinc-700">
+                      ⌘K
+                    </kbd>
+                  </button>
                   <button
                     onClick={() => router.push("/dashboard/settings")}
                     className="p-2 rounded-lg bg-[#f1f4f4] dark:bg-[#2d3238] text-[#121717] dark:text-white"
@@ -171,6 +177,7 @@ export default function DashboardLayout({
               <div className="p-8 max-w-7xl mx-auto w-full">{children}</div>
             </main>
           </div>
+          <SearchPalette />
         </section>
       </DesktopOnlyGuard>
     </AuthGuard>
