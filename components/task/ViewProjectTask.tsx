@@ -15,6 +15,7 @@ import {
   Pencil,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import socket from "@/lib/socket";
 import { toast } from "react-toastify";
 import BtnLoader from "../BtnLoader";
 import UserAvatar from "../UserAvatar";
@@ -84,6 +85,16 @@ const ViewProjectTask = ({
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [show, close]);
+
+  // Broadcast which task is being viewed so other members of the project see
+  // a live indicator on the card.
+  useEffect(() => {
+    if (!show || !data?.id || !projectId) return;
+    socket.emit("task:viewing", { projectId, taskId: data.id });
+    return () => {
+      socket.emit("task:viewing", { projectId, taskId: null });
+    };
+  }, [show, data?.id, projectId]);
 
   // click-outside for both pickers
   useEffect(() => {
@@ -486,7 +497,7 @@ const ViewProjectTask = ({
                 </div>
               ) : (
                 <p className={data.description ? "" : "italic opacity-70"}>
-                  {data.description || "c'mon add some description"}
+                  {data.description || "No description yet."}
                 </p>
               )}
             </div>

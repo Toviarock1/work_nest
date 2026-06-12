@@ -38,7 +38,9 @@ import {
 } from "@/services/project.service";
 import AddProjectMemberModal from "@/components/project/AddProjectModal";
 import ChatPanel from "@/components/project/ChatPanel";
+import PresenceStack from "@/components/project/PresenceStack";
 import ViewProjectTask from "@/components/task/ViewProjectTask";
+import { useProjectPresence } from "@/hooks/useProjectPresence";
 
 export default function ProjectsPage() {
   const [showTaskModal, setShowTaskModal] = useState(false);
@@ -52,11 +54,13 @@ export default function ProjectsPage() {
 
   useProjectSocket(projectId);
   const currentUserId = useAuthStore((s) => s.user?.id);
+
   const { unreadMessages } = useProjectAwareness({
     projectId,
     currentUserId,
     isMessagesTabActive: currentPath === "messages",
   });
+  const { users: presentUsers, taskViewers } = useProjectPresence(projectId);
 
   // Press `n` to open the New Task modal while on the Tasks tab. Ignored when
   // the user is typing in a form field or any modal is already open.
@@ -100,6 +104,21 @@ export default function ProjectsPage() {
     queryFn: () => fetchProjectMembers(projectId),
     enabled: !!projectId,
   });
+
+  // Keep the browser tab title in sync with the current project. Restore the
+  // previous title on unmount so a return to /dashboard doesn't carry a stale name.
+  useEffect(() => {
+    const previous = document.title;
+    return () => {
+      document.title = previous;
+    };
+  }, []);
+
+  useEffect(() => {
+    const name = (todos as { data?: { name?: string } } | undefined)?.data
+      ?.name;
+    if (name) document.title = `${name} · WorkNest`;
+  }, [todos]);
 
   // Errors for these three are handled inside addNewTaskHandler's try/catch and
   // by updateTaskMutation's own onError. The no-op onError stops the global
@@ -330,13 +349,11 @@ export default function ProjectsPage() {
                   </p>
                 </div>
 
-                <div className="flex gap-3">
-                  {/* <button className="flex items-center px-4 h-10 rounded-lg border border-[#dde4e4] dark:border-zinc-700 text-[#121717] dark:text-white text-sm font-bold hover:bg-background-light dark:hover:bg-zinc-900">
-                    <span className="material-symbols-outlined text-[20px] mr-2">
-                      <ListFilter />
-                    </span>
-                    <span>Filter</span>
-                  </button> */}
+                <div className="flex items-center gap-4">
+                  <PresenceStack
+                    users={presentUsers}
+                    currentUserId={currentUserId}
+                  />
                   {currentPath === "tasks" && (
                     <button
                       onClick={() => setShowTaskModal(true)}
@@ -433,6 +450,7 @@ export default function ProjectsPage() {
                 done={doneData ?? []}
                 onDragEnd={onDragEnd}
                 onViewTask={viewTaskHandler}
+                taskViewers={taskViewers}
               />
             )}
             {currentPath === "members" && (

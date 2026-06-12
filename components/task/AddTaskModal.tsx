@@ -107,7 +107,7 @@ const AddTaskModal = ({
               placeholder="e.g., Design Homepage Hero Section"
               type="text"
               {...register("title", {
-                required: "Title is required",
+                required: "Give this task a short title",
                 minLength: {
                   value: 3,
                   message: "Title must be at least 3 characters",

@@ -1,7 +1,8 @@
-import { Calendar } from "lucide-react";
+import { Calendar, Eye } from "lucide-react";
 import { TasksType } from "@/types";
 import { formatDate } from "@/utils/formatData";
 import UserAvatar from "../UserAvatar";
+import type { PresenceUser } from "@/hooks/useProjectPresence";
 
 const STATUS_PILL: Record<
   "todo" | "in_progress" | "done",
@@ -27,19 +28,38 @@ const TaskCard = ({
   task,
   onViewTask,
   showStatusPill = false,
+  viewers,
 }: {
   task: TasksType;
   onViewTask: () => void;
   /** Show a status pill — useful when a card appears outside its native column. */
   showStatusPill?: boolean;
+  /** Other users currently viewing this task. */
+  viewers?: PresenceUser[];
 }) => {
   const status = STATUS_PILL[task.status as keyof typeof STATUS_PILL];
 
+  const watchers = viewers ?? [];
+  const watcherTitle =
+    watchers.length > 0
+      ? `Viewing now: ${watchers.map((v) => v.name ?? "Member").join(", ")}`
+      : undefined;
+
   return (
     <div
-      className="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-[#dde4e4] dark:border-zinc-800 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all group cursor-grab active:cursor-grabbing"
+      className="relative bg-white dark:bg-zinc-900 p-4 rounded-xl border border-[#dde4e4] dark:border-zinc-800 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all group cursor-grab active:cursor-grabbing"
       onClick={onViewTask}
     >
+      {watchers.length > 0 && (
+        <div
+          title={watcherTitle}
+          aria-label={watcherTitle}
+          className="absolute -top-1 -right-1 flex items-center gap-1 pl-1.5 pr-2 py-0.5 rounded-full bg-primary2 text-white text-[10px] font-bold shadow ring-2 ring-white dark:ring-zinc-900 animate-pulse"
+        >
+          <Eye className="size-3" />
+          {watchers.length}
+        </div>
+      )}
       {showStatusPill && status && (
         <div className="mb-2">
           <span

@@ -84,7 +84,9 @@ const AddProjectMemberModal = ({
                       id="email"
                       placeholder="jane@example.com"
                       type="email"
-                      {...register("email", { required: "Email required" })}
+                      {...register("email", {
+                        required: "Enter the member's email address",
+                      })}
                     />
                   </div>
                   {errors.email && (

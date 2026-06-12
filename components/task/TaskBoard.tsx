@@ -8,6 +8,7 @@ import { CopyPlus, MousePointerClick, X } from "lucide-react";
 import { useState } from "react";
 import { TasksType } from "@/types";
 import TaskCard from "./TaskCard";
+import type { PresenceUser } from "@/hooks/useProjectPresence";
 
 const TIP_KEY = "worknest:board:tipDismissed";
 
@@ -18,9 +19,16 @@ interface ColumnProps {
   label: string;
   tasks: TasksType[];
   onViewTask: (taskId: string) => void;
+  taskViewers?: Record<string, PresenceUser[]>;
 }
 
-const KanbanColumn = ({ status, label, tasks, onViewTask }: ColumnProps) => (
+const KanbanColumn = ({
+  status,
+  label,
+  tasks,
+  onViewTask,
+  taskViewers,
+}: ColumnProps) => (
   <div
     role="region"
     aria-label={`${label} column, ${tasks.length} ${tasks.length === 1 ? "task" : "tasks"}`}
@@ -67,6 +75,7 @@ const KanbanColumn = ({ status, label, tasks, onViewTask }: ColumnProps) => (
                   <TaskCard
                     task={task}
                     onViewTask={() => onViewTask(task.id)}
+                    viewers={taskViewers?.[task.id]}
                   />
                 </div>
               )}
@@ -90,6 +99,7 @@ interface TaskBoardProps {
   done: TasksType[];
   onDragEnd: (result: DropResult) => void;
   onViewTask: (taskId: string) => void;
+  taskViewers?: Record<string, PresenceUser[]>;
 }
 
 const TaskBoard = ({
@@ -98,6 +108,7 @@ const TaskBoard = ({
   done,
   onDragEnd,
   onViewTask,
+  taskViewers,
 }: TaskBoardProps) => {
   const isEmpty = todos.length + inProgress.length + done.length === 0;
   // Lazy initializer — runs once during the first render. Guarded for SSR.
@@ -156,18 +167,21 @@ const TaskBoard = ({
               label="To Do"
               tasks={todos}
               onViewTask={onViewTask}
+              taskViewers={taskViewers}
             />
             <KanbanColumn
               status="in_progress"
               label="In Progress"
               tasks={inProgress}
               onViewTask={onViewTask}
+              taskViewers={taskViewers}
             />
             <KanbanColumn
               status="done"
               label="Done"
               tasks={done}
               onViewTask={onViewTask}
+              taskViewers={taskViewers}
             />
           </div>
         )}

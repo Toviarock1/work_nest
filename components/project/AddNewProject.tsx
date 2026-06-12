@@ -76,7 +76,7 @@ const AddNewProject = ({
                   placeholder="e.g. Q4 Marketing Campaign"
                   type="text"
                   {...register("name", {
-                    required: "Project name is required",
+                    required: "Give your project a name",
                   })}
                 />
                 {errors.name && (
@@ -94,7 +94,8 @@ const AddNewProject = ({
                   placeholder="Briefly describe the goals and key deliverables..."
                   rows={3}
                   {...register("description", {
-                    required: "Description is required",
+                    required:
+                      "Add a short description so the team knows what this is",
                   })}
                 />
                 {errors.description && (
