@@ -2,6 +2,8 @@ import Image from "next/image";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Paperclip, Trash2 } from "lucide-react";
 import UserAvatar from "./../UserAvatar";
+import MentionText from "../ui/MentionText";
+import type { ProjectMembersType } from "@/types";
 
 const ChatMessage = ({
   name,
@@ -11,6 +13,7 @@ const ChatMessage = ({
   feedType,
   url,
   onDelete,
+  members = [],
 }: {
   id: string;
   name: string;
@@ -19,6 +22,7 @@ const ChatMessage = ({
   feedType: string;
   url?: string;
   onDelete: () => void;
+  members?: ProjectMembersType[];
 }) => {
   const userId = useAuthStore((state) => state.user?.id);
 
@@ -38,7 +42,11 @@ const ChatMessage = ({
         </div>
         {feedType === "TEXT" ? (
           <div className="chat-bubble text-[15px] leading-relaxed text-[#121717] dark:text-gray-300">
-            {content}
+            <MentionText
+              text={content}
+              members={members}
+              currentUserId={userId}
+            />
           </div>
         ) : (
           <div className="mt-2">

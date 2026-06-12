@@ -1,15 +1,17 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AxiosError } from "axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchChatHistory, sendMessage } from "@/services/message.service";
+import { fetchProjectMembers } from "@/services/project.service";
 import { useChatSocket } from "@/hooks/useChatSocket";
-import { useForm } from "react-hook-form";
 import { SendHorizontal, Paperclip } from "lucide-react";
 import ChatMessage from "./ChatMessage";
 import QueryError from "@/components/ui/QueryError";
 import ChatSkeleton from "@/components/skeleton/ChatSkeleton";
+import MentionTextarea from "@/components/ui/MentionTextarea";
 import { formatTime, groupMessagesByDate } from "@/utils/formatData";
 import { toast } from "react-toastify";
+import type { ProjectMembersType } from "@/types";
 import {
   deleteFile,
   fetchFileHistory,
@@ -22,7 +24,7 @@ type FeedItem =
   | (GetFileHistorry & { feedType: "FILE" });
 
 export default function ChatPanel({ projectId }: { projectId: string }) {
-  const { register, handleSubmit, reset } = useForm<{ content: string }>();
+  const [draft, setDraft] = useState("");
   const messagesRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
@@ -110,17 +112,25 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
     }
   };
 
-  const onSend = (data: { content: string }) => {
-    if (!data.content.trim()) return;
+  const onSend = () => {
+    const content = draft.trim();
+    if (!content) return;
     mutation.mutate(
-      { projectId, content: data.content },
+      { projectId, content },
       {
         onSuccess: () => {
-          reset({ content: "" });
+          setDraft("");
         },
       },
     );
   };
+
+  const { data: membersData } = useQuery({
+    queryKey: ["project-members", projectId],
+    queryFn: () => fetchProjectMembers(projectId),
+    enabled: !!projectId,
+  });
+  const members: ProjectMembersType[] = membersData?.data?.projectMembers ?? [];
 
   const handlePaperclipClick = () => {
     fileInputRef.current?.click();
@@ -177,6 +187,7 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
                     feedType={msg.feedType}
                     url={msg.feedType === "FILE" ? msg.url : undefined}
                     onDelete={() => deleteFileMutation.mutate(msg.id)}
+                    members={members}
                   />
                   <div ref={messagesRef}></div>
                 </div>
@@ -189,11 +200,15 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
       <div className="px-6 pb-6 pt-2 bg-white dark:bg-background-dark border-t border-transparent">
         <div className="relative bg-white dark:bg-gray-800 border border-[#dde4e4] dark:border-gray-700 rounded-xl shadow-lg focus-within:border-primary2/50 focus-within:ring-4 focus-within:ring-primary2/5 transition-all">
           <div className="flex flex-col p-2">
-            <textarea
+            <MentionTextarea
+              value={draft}
+              onChange={setDraft}
+              members={members}
+              rows={2}
+              placeholder="Type a message… @ to mention"
+              onSubmit={onSend}
               className="w-full border-none focus:ring-0 bg-transparent text-[15px] outline-none resize-none min-h-11 max-h-40 placeholder:text-gray-400 font-medium"
-              placeholder="Type a message..."
-              {...register("content", { required: true })}
-            ></textarea>
+            />
             <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100 dark:border-gray-700">
               <div className="flex items-center gap-1">
                 {/* <button className="p-1.5 text-gray-500 hover:text-primary2 hover:bg-[#f1f4f4] dark:hover:bg-gray-700 rounded-lg transition-colors">
@@ -234,7 +249,7 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
               </div>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={handleSubmit(onSend)}
+                  onClick={onSend}
                   className="flex items-center gap-2 bg-primary2 hover:bg-[#155351] text-white px-4 py-1.5 rounded-lg text-sm font-bold transition-all"
                 >
                   <span>Send</span>

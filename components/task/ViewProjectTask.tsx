@@ -504,7 +504,7 @@ const ViewProjectTask = ({
             </div>
           </section>
 
-          <TaskCommentThread taskId={data.id} />
+          <TaskCommentThread taskId={data.id} projectId={projectId} />
         </div>
 
         {/* Footer */}

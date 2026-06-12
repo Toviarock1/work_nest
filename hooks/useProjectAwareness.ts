@@ -16,6 +16,13 @@ interface NewMessagePayload {
   senderId?: string;
 }
 
+interface MentionPayload {
+  source: "message" | "comment";
+  projectId: string;
+  excerpt?: string;
+  from?: { id?: string; name?: string | null };
+}
+
 interface Options {
   projectId: string;
   /** Logged-in user's id — used to scope assignment toasts and skip self-sends. */
@@ -65,12 +72,25 @@ export function useProjectAwareness({
       toast.info(`You were assigned to "${title}"`);
     };
 
+    const onMention = (payload: MentionPayload) => {
+      const who = payload.from?.name ?? "Someone";
+      const where = payload.source === "comment" ? "a comment" : "a message";
+      const excerpt = payload.excerpt
+        ? `: "${payload.excerpt.slice(0, 80)}${
+            payload.excerpt.length > 80 ? "…" : ""
+          }"`
+        : "";
+      toast.info(`${who} mentioned you in ${where}${excerpt}`);
+    };
+
     socket.on("new_message", onNewMessage);
     socket.on("task_assigned", onTaskAssigned);
+    socket.on("mention", onMention);
 
     return () => {
       socket.off("new_message", onNewMessage);
       socket.off("task_assigned", onTaskAssigned);
+      socket.off("mention", onMention);
     };
   }, [projectId, currentUserId, isMessagesTabActive]);
 
