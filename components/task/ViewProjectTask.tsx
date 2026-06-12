@@ -19,6 +19,7 @@ import socket from "@/lib/socket";
 import { toast } from "react-toastify";
 import BtnLoader from "../BtnLoader";
 import UserAvatar from "../UserAvatar";
+import TaskCommentThread from "./TaskCommentThread";
 
 type TaskStatus = "todo" | "in_progress" | "done";
 
@@ -502,6 +503,8 @@ const ViewProjectTask = ({
               )}
             </div>
           </section>
+
+          <TaskCommentThread taskId={data.id} />
         </div>
 
         {/* Footer */}

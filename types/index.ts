@@ -101,3 +101,17 @@ export interface AssignTaskPayload {
   projectId: string;
   assigneeEmail: string;
 }
+
+export interface TaskComment {
+  id: string;
+  content: string;
+  taskId: string;
+  authorId: string;
+  createdAt: string;
+  updatedAt?: string;
+  author: {
+    id: string;
+    name: string | null;
+    email: string;
+  };
+}
