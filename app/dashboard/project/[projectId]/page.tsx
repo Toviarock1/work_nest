@@ -210,15 +210,15 @@ export default function ProjectsPage() {
     },
   });
 
-  const todosData = todos?.data?.tasks?.filter(
-    (task: TasksType) => task.status === "todo",
+  // Board shows top-level tasks only; subtasks live inside the parent's panel.
+  const boardTasks = (todos?.data?.tasks ?? []).filter(
+    (task: TasksType) => !task.parentId,
   );
-  const inProgressData = todos?.data?.tasks?.filter(
-    (task: TasksType) => task.status === "in_progress",
+  const todosData = boardTasks.filter((t: TasksType) => t.status === "todo");
+  const inProgressData = boardTasks.filter(
+    (t: TasksType) => t.status === "in_progress",
   );
-  const doneData = todos?.data?.tasks?.filter(
-    (task: TasksType) => task.status === "done",
-  );
+  const doneData = boardTasks.filter((t: TasksType) => t.status === "done");
   // console.log(todosData);
 
   const STATUS_LABELS: Record<"todo" | "in_progress" | "done", string> = {
@@ -494,6 +494,7 @@ export default function ProjectsPage() {
         )}
         ownerId={todos?.data?.ownerId}
         projectId={projectId}
+        allTasks={todos?.data?.tasks ?? []}
       />
     </section>
   );

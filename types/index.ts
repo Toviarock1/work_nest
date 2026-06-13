@@ -46,6 +46,27 @@ export interface ProjectsType {
 }
 
 export type TaskStatus = "todo" | "in_progress" | "done";
+export type TaskLinkType = "blocks" | "blocked_by" | "related_to";
+
+export interface TaskSubtaskRow {
+  id: string;
+  title: string;
+  status: TaskStatus;
+}
+
+export interface TaskFileRow {
+  id: string;
+  name: string;
+  url: string;
+  size: number;
+}
+
+export interface TaskLinkRow {
+  id: string;
+  type: TaskLinkType;
+  toTask?: { id: string; title: string; status: TaskStatus };
+  fromTask?: { id: string; title: string; status: TaskStatus };
+}
 
 export interface TasksType {
   assignedToId: string | null;
@@ -54,6 +75,7 @@ export interface TasksType {
   description: string | null;
   id: string;
   projectId: string;
+  parentId?: string | null;
   status: TaskStatus;
   title: string;
   assignedTo: {
@@ -61,6 +83,15 @@ export interface TasksType {
     email: string;
     id: string;
   };
+  subtasks?: TaskSubtaskRow[];
+  files?: TaskFileRow[];
+  outgoingLinks?: TaskLinkRow[];
+  incomingLinks?: TaskLinkRow[];
+}
+
+export interface MessageReactionRow {
+  emoji: string;
+  userId: string;
 }
 
 export interface Message {
@@ -72,6 +103,7 @@ export interface Message {
   sender: {
     name: string;
   };
+  reactions?: MessageReactionRow[];
 }
 
 export interface GetFileHistorry {

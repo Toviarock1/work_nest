@@ -3,26 +3,33 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { Paperclip, Trash2 } from "lucide-react";
 import UserAvatar from "./../UserAvatar";
 import MentionText from "../ui/MentionText";
-import type { ProjectMembersType } from "@/types";
+import MessageReactions from "./MessageReactions";
+import type { MessageReactionRow, ProjectMembersType } from "@/types";
 
 const ChatMessage = ({
   name,
   time,
   content,
   id,
+  messageId,
   feedType,
   url,
   onDelete,
   members = [],
+  reactions,
 }: {
   id: string;
   name: string;
   time: string;
   content: string;
+  /** The DB id of the chat row; only present for TEXT messages and used to
+   * scope reactions. */
+  messageId?: string;
   feedType: string;
   url?: string;
   onDelete: () => void;
   members?: ProjectMembersType[];
+  reactions?: MessageReactionRow[];
 }) => {
   const userId = useAuthStore((state) => state.user?.id);
 
@@ -41,13 +48,24 @@ const ChatMessage = ({
           <time className="text-[11px] text-[#678383] font-medium">{time}</time>
         </div>
         {feedType === "TEXT" ? (
-          <div className="chat-bubble text-[15px] leading-relaxed text-[#121717] dark:text-gray-300">
-            <MentionText
-              text={content}
-              members={members}
-              currentUserId={userId}
-            />
-          </div>
+          <>
+            <div className="chat-bubble text-[15px] leading-relaxed text-[#121717] dark:text-gray-300">
+              <MentionText
+                text={content}
+                members={members}
+                currentUserId={userId}
+              />
+            </div>
+            {messageId && (
+              <div className="chat-footer">
+                <MessageReactions
+                  messageId={messageId}
+                  reactions={reactions ?? []}
+                  currentUserId={userId}
+                />
+              </div>
+            )}
+          </>
         ) : (
           <div className="mt-2">
             {userId === id && (

@@ -25,12 +25,18 @@ export function useProjectSocket(projectId: string) {
     socket.on("task_updated", invalidateQuery);
     socket.on("task_deleted", invalidateQuery);
     socket.on("task_assigned", invalidateQuery);
+    socket.on("task_file_added", invalidateQuery);
+    socket.on("task_link_created", invalidateQuery);
+    socket.on("task_link_deleted", invalidateQuery);
 
     return () => {
       socket.off("task_created", invalidateQuery);
       socket.off("task_updated", invalidateQuery);
       socket.off("task_deleted", invalidateQuery);
       socket.off("task_assigned", invalidateQuery);
+      socket.off("task_file_added", invalidateQuery);
+      socket.off("task_link_created", invalidateQuery);
+      socket.off("task_link_deleted", invalidateQuery);
     };
   }, [projectId, invalidateQuery]);
 }

@@ -2,6 +2,8 @@ import axiosInstance from "@/lib/axiosInstance";
 interface UploadChatFilePayload {
   projectId: string;
   file: File;
+  /** When provided, the file is attached to a task instead of the chat feed. */
+  taskId?: string;
 }
 
 export const uploadChatFile = async (payload: UploadChatFilePayload) => {
@@ -9,6 +11,7 @@ export const uploadChatFile = async (payload: UploadChatFilePayload) => {
 
   formData.append("file", payload.file);
   formData.append("projectId", payload.projectId);
+  if (payload.taskId) formData.append("taskId", payload.taskId);
 
   const response = await axiosInstance.post("/file/upload", formData, {
     headers: {

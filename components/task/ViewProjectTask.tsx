@@ -20,6 +20,9 @@ import { toast } from "react-toastify";
 import BtnLoader from "../BtnLoader";
 import UserAvatar from "../UserAvatar";
 import TaskCommentThread from "./TaskCommentThread";
+import TaskSubtasks from "./TaskSubtasks";
+import TaskAttachments from "./TaskAttachments";
+import TaskLinks from "./TaskLinks";
 
 type TaskStatus = "todo" | "in_progress" | "done";
 
@@ -51,6 +54,7 @@ const ViewProjectTask = ({
   data,
   ownerId,
   projectId,
+  allTasks = [],
 }: {
   show: boolean;
   close: () => void;
@@ -58,6 +62,7 @@ const ViewProjectTask = ({
   data: TasksType;
   ownerId: string;
   projectId: string;
+  allTasks?: TasksType[];
 }) => {
   const { user } = useUser();
   const queryClient = useQueryClient();
@@ -503,6 +508,27 @@ const ViewProjectTask = ({
               )}
             </div>
           </section>
+
+          <TaskSubtasks
+            parent={data}
+            subtasks={data.subtasks ?? []}
+            canManage={isOwner}
+          />
+
+          <TaskAttachments
+            taskId={data.id}
+            projectId={projectId}
+            files={data.files ?? []}
+            canManage={isOwner}
+          />
+
+          <TaskLinks
+            task={data}
+            outgoing={data.outgoingLinks ?? []}
+            incoming={data.incomingLinks ?? []}
+            candidates={allTasks}
+            canManage={isOwner}
+          />
 
           <TaskCommentThread taskId={data.id} projectId={projectId} />
         </div>

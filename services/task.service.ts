@@ -7,8 +7,9 @@ export const fetchMyProjectsTask = async (id: string) => {
 
 interface createTaskPayload {
   title: string;
-  description: string;
+  description?: string;
   projectId: string;
+  parentId?: string;
 }
 export const createTask = async (payload: createTaskPayload) => {
   const response = await axiosInstance.post("/tasks", payload);

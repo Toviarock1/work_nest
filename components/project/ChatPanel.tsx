@@ -184,10 +184,14 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
                     content={msg.feedType === "TEXT" ? msg.content : msg.name}
                     time={formatTime(msg.createdAt)}
                     id={msg.feedType === "TEXT" ? msg.senderId : msg.uploaderId}
+                    messageId={msg.feedType === "TEXT" ? msg.id : undefined}
                     feedType={msg.feedType}
                     url={msg.feedType === "FILE" ? msg.url : undefined}
                     onDelete={() => deleteFileMutation.mutate(msg.id)}
                     members={members}
+                    reactions={
+                      msg.feedType === "TEXT" ? msg.reactions : undefined
+                    }
                   />
                   <div ref={messagesRef}></div>
                 </div>
