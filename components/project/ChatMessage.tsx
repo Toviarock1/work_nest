@@ -49,7 +49,7 @@ const ChatMessage = ({
         </div>
         {feedType === "TEXT" ? (
           <>
-            <div className="chat-bubble text-[15px] leading-relaxed text-[#121717] dark:text-gray-300">
+            <div className="chat-bubble text-[15px] leading-relaxed text-[#121717] dark:text-gray-300 break-words max-w-[80vw] sm:max-w-none">
               <MentionText
                 text={content}
                 members={members}

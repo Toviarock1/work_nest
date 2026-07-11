@@ -48,7 +48,7 @@ export default function Home() {
       <div className="relative z-10 flex h-auto min-h-screen w-full flex-col group/design-root">
         <div className="layout-container flex h-full grow flex-col">
           {/* Nav */}
-          <header className="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-white/40 dark:border-[#1e3a2f]/60 glass px-6 lg:px-40 py-3">
+          <header className="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-white/40 dark:border-[#1e3a2f]/60 glass px-4 md:px-10 lg:px-40 py-3">
             <div className="flex items-center gap-3 text-[#111815] dark:text-white">
               <div className="size-8 text-landing-page-primary spin-slow">
                 <svg
@@ -83,7 +83,7 @@ export default function Home() {
             <div className="relative overflow-hidden min-h-[88vh]">
               <div className="absolute inset-0 grid-floor pointer-events-none z-[1]" />
 
-              <div className="relative z-[2] px-4 lg:px-40 flex flex-1 justify-center py-16 lg:py-32 min-h-[88vh] items-center">
+              <div className="relative z-[2] px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-16 lg:py-32 min-h-[88vh] items-center">
                 <div className="layout-content-container flex flex-col max-w-[1200px] flex-1">
                   <div className="@container">
                     <div className="flex flex-col gap-10 lg:flex-row lg:items-center">
@@ -110,10 +110,13 @@ export default function Home() {
                           </div>
 
                           <div className="flex flex-col sm:flex-row gap-4">
-                            <Link href={"/register"}>
+                            <Link
+                              href={"/register"}
+                              className="w-full sm:w-auto"
+                            >
                               <button
                                 data-magnetic
-                                className="group relative flex min-w-[220px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-xl h-14 px-8 bg-landing-page-primary text-[#111815] text-lg font-extrabold tracking-[0.015em] shadow-[0_20px_60px_-12px_rgba(13,242,147,0.7)] hover:scale-[1.04] transition-transform"
+                                className="group relative flex w-full sm:min-w-[220px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-xl h-14 px-8 bg-landing-page-primary text-[#111815] text-lg font-extrabold tracking-[0.015em] shadow-[0_20px_60px_-12px_rgba(13,242,147,0.7)] hover:scale-[1.04] transition-transform"
                               >
                                 <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/60 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
                                 <span className="relative">
@@ -124,7 +127,7 @@ export default function Home() {
                             </Link>
                             <button
                               data-magnetic
-                              className="flex min-w-40 cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-xl h-14 px-8 glass text-[#111815] dark:text-white text-lg font-bold hover:bg-white/80 dark:hover:bg-white/10 transition-colors"
+                              className="flex w-full sm:w-auto sm:min-w-40 cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-xl h-14 px-8 glass text-[#111815] dark:text-white text-lg font-bold hover:bg-white/80 dark:hover:bg-white/10 transition-colors"
                             >
                               <MousePointerClick className="size-5" />
                               <span className="truncate">Watch Demo</span>
@@ -214,7 +217,7 @@ export default function Home() {
             </div>
 
             {/* ===== FEATURE GRID ===== */}
-            <div className="relative px-4 lg:px-40 flex flex-1 justify-center py-24 backdrop-blur-sm bg-white/20 dark:bg-landing-page-background-dark/20 border-y border-white/20 dark:border-white/5">
+            <div className="relative px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-24 backdrop-blur-sm bg-white/20 dark:bg-landing-page-background-dark/20 border-y border-white/20 dark:border-white/5">
               <div className="layout-content-container flex flex-col max-w-[1200px] flex-1">
                 <div className="flex flex-col gap-14 px-4 @container">
                   <ScrollReveal>
@@ -309,7 +312,7 @@ export default function Home() {
             {/* ===== SCALE HEADER ===== */}
             <ScrollReveal>
               <ParallaxLayer speed={0.1} scale={0.04}>
-                <section className="w-full px-6 md:px-20 lg:px-40 pt-20 text-center">
+                <section className="w-full px-4 md:px-10 lg:px-40 pt-20 text-center">
                   <h2 className="text-3xl md:text-6xl font-black leading-tight tracking-tight max-w-3xl mx-auto">
                     Everything you need to{" "}
                     <span className="gradient-text glow-text">scale</span> your
@@ -320,7 +323,7 @@ export default function Home() {
             </ScrollReveal>
 
             {/* ===== FEATURE ALT 1 ===== */}
-            <section className="w-full px-6 md:px-20 lg:px-40 py-16 md:py-24 perspective-1200">
+            <section className="w-full px-4 md:px-10 lg:px-40 py-16 md:py-24 perspective-1200">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <ScrollReveal direction="right">
                   <ParallaxLayer speed={-0.04} className="flex flex-col gap-6">
@@ -391,7 +394,7 @@ export default function Home() {
 
             {/* ===== FEATURE ALT 2 ===== */}
             <section className="w-full bg-white/15 dark:bg-white/5 backdrop-blur-sm py-16 md:py-24 border-y border-white/20 dark:border-white/5">
-              <div className="mx-auto px-6 md:px-20 lg:px-40">
+              <div className="mx-auto px-4 md:px-10 lg:px-40">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                   <ScrollReveal
                     direction="right"
@@ -478,7 +481,7 @@ export default function Home() {
             </section>
 
             {/* ===== TRUST GRID ===== */}
-            <section className="w-full px-6 md:px-20 lg:px-40 py-24 perspective-1200">
+            <section className="w-full px-4 md:px-10 lg:px-40 py-24 perspective-1200">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
                   {
@@ -526,7 +529,7 @@ export default function Home() {
             <section className="relative transition-colors duration-300">
               <div className="relative flex h-auto w-full flex-col">
                 <div className="layout-container flex h-full grow flex-col">
-                  <div className="px-6 md:px-40 flex flex-col items-center justify-center py-16 md:py-20">
+                  <div className="px-4 md:px-10 lg:px-40 flex flex-col items-center justify-center py-16 md:py-20">
                     <ScrollReveal>
                       <ParallaxLayer speed={0.07}>
                         <div className="layout-content-container flex flex-col max-w-[960px] w-full text-center">
@@ -691,7 +694,7 @@ export default function Home() {
                   </div>
 
                   {/* CTA */}
-                  <div className="px-6 md:px-40 flex flex-1 justify-center py-10">
+                  <div className="px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-10">
                     <div className="layout-content-container flex flex-col max-w-[1100px] flex-1">
                       <ScrollReveal direction="zoom">
                         <TiltCard intensity={6}>
@@ -732,7 +735,7 @@ export default function Home() {
           </main>
 
           {/* Footer */}
-          <footer className="relative px-10 lg:px-40 py-16 glass border-t border-white/30 dark:border-[#1e3a2f]">
+          <footer className="relative px-4 md:px-10 lg:px-40 py-16 glass border-t border-white/30 dark:border-[#1e3a2f]">
             <div className="max-w-[1200px] mx-auto flex flex-col gap-10">
               <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                 <div className="flex items-center gap-3">

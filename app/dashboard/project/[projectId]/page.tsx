@@ -329,9 +329,9 @@ export default function ProjectsPage() {
         <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
           <div className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col">
             {/* <!-- PageHeading & Tabs --> */}
-            <div className="bg-white dark:bg-zinc-950 pt-6 px-8 border-b border-[#dde4e4] dark:border-zinc-800">
-              <div className="flex items-end justify-between mb-6">
-                <div className="min-w-0">
+            <div className="bg-white dark:bg-zinc-950 pt-4 sm:pt-6 px-4 sm:px-8 border-b border-[#dde4e4] dark:border-zinc-800">
+              <div className="flex items-start justify-between gap-3 mb-4 sm:mb-6">
+                <div className="min-w-0 flex-1">
                   <Link
                     href="/dashboard"
                     className="inline-flex items-center gap-1 text-xs font-semibold text-[#678383] hover:text-primary2 transition-colors mb-2"
@@ -339,17 +339,17 @@ export default function ProjectsPage() {
                     <ChevronLeft className="size-3.5" />
                     All projects
                   </Link>
-                  <h2 className="text-xl font-extrabold tracking-tight dark:text-white truncate">
+                  <h2 className="text-lg sm:text-xl font-extrabold tracking-tight dark:text-white truncate">
                     {todos.data.name}
                   </h2>
-                  <p className="text-[#678383] text-sm mt-0.5 whitespace-pre-wrap">
+                  <p className="text-[#678383] text-sm mt-0.5 whitespace-pre-wrap line-clamp-2">
                     {todos.data.description
                       ? todos.data.description
                       : "No description yet."}
                   </p>
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 shrink-0">
                   <PresenceStack
                     users={presentUsers}
                     currentUserId={currentUserId}
@@ -357,29 +357,27 @@ export default function ProjectsPage() {
                   {currentPath === "tasks" && (
                     <button
                       onClick={() => setShowTaskModal(true)}
-                      className="btn flex items-center px-4 h-10 rounded-lg bg-primary2 text-white text-sm font-bold shadow-md shadow-primary2/20 hover:brightness-110"
+                      className="btn flex items-center px-3 sm:px-4 h-9 sm:h-10 rounded-lg bg-primary2 text-white text-sm font-bold shadow-md shadow-primary2/20 hover:brightness-110"
                     >
-                      <span className="material-symbols-outlined text-[20px] mr-2">
-                        <Plus />
-                      </span>
-                      <span>New Task</span>
+                      <Plus className="size-4 mr-1 sm:mr-2" />
+                      <span className="hidden sm:inline">New Task</span>
+                      <span className="sm:hidden">New</span>
                     </button>
                   )}
                   {currentPath === "members" && (
                     <button
                       onClick={() => setShowProjectMemberModal(true)}
-                      className="btn flex items-center px-4 h-10 rounded-lg bg-primary2 text-white text-sm font-bold shadow-md shadow-primary2/20 hover:brightness-110"
+                      className="btn flex items-center px-3 sm:px-4 h-9 sm:h-10 rounded-lg bg-primary2 text-white text-sm font-bold shadow-md shadow-primary2/20 hover:brightness-110"
                     >
-                      <span className="material-symbols-outlined text-[20px] mr-2">
-                        <UserPlus />
-                      </span>
-                      <span>Add Member</span>
+                      <UserPlus className="size-4 mr-1 sm:mr-2" />
+                      <span className="hidden sm:inline">Add Member</span>
+                      <span className="sm:hidden">Add</span>
                     </button>
                   )}
                 </div>
               </div>
               {/* Tabs */}
-              <div className="flex gap-8">
+              <div className="flex gap-1 sm:gap-6 overflow-x-auto scrollbar-hide -mx-4 sm:-mx-8 px-4 sm:px-8">
                 {[
                   {
                     key: "tasks" as const,
@@ -420,7 +418,7 @@ export default function ProjectsPage() {
                     <button
                       key={tab.key}
                       onClick={() => setCurrentPath(tab.key)}
-                      className={`${isActive ? "border-primary2 text-primary2 border-b-2" : "text-[#678383]"} flex cursor-pointer items-center justify-center pb-3 px-1 font-bold text-sm hover:text-primary2 transition-colors`}
+                      className={`${isActive ? "border-primary2 text-primary2 border-b-2" : "text-[#678383]"} shrink-0 flex cursor-pointer items-center justify-center pb-3 px-2 sm:px-1 font-bold text-sm hover:text-primary2 transition-colors`}
                     >
                       <span className="text-[20px] mr-2">{tab.icon}</span>
                       {tab.label}

@@ -20,7 +20,7 @@ interface ProjectMembersProps {
 const ProjectMembers = ({ data, isLoading, onRemove }: ProjectMembersProps) => {
   return (
     <div className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col">
-      <div className="flex-1 p-8 bg-background-light dark:bg-background-dark">
+      <div className="flex-1 p-4 sm:p-8 bg-background-light dark:bg-background-dark">
         <div className="bg-white dark:bg-zinc-950 rounded-2xl border border-[#dde4e4] dark:border-zinc-800 shadow-sm overflow-hidden">
           {isLoading ? (
             <Loader />
@@ -269,22 +269,18 @@ const ProjectMembers = ({ data, isLoading, onRemove }: ProjectMembersProps) => {
             </div>
           )}
         </div>
-        <div className="mt-8 p-6 border-2 border-dashed border-[#dde4e4] dark:border-zinc-800 rounded-2xl flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="size-12 rounded-xl bg-primary2/10 flex items-center justify-center text-primary2">
-              <span className="material-symbols-outlined text-3xl">
-                <Mail />
-              </span>
-            </div>
-            <div>
-              <h4 className="font-bold text-sm">Need to add more hands?</h4>
-              <p className="text-xs text-[#678383]">
-                Invite external freelancers or clients by their email to
-                collaborate on this specific project.
-              </p>
-            </div>
+        <div className="mt-6 p-6 sm:p-7 border-2 border-dashed border-[#dde4e4] dark:border-zinc-800 rounded-2xl flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-6">
+          <div className="size-12 shrink-0 rounded-xl bg-primary2/10 flex items-center justify-center text-primary2">
+            <Mail className="size-6" />
           </div>
-          <button className="px-6 h-10 rounded-lg border-2 border-primary2 text-primary2 text-sm font-bold hover:bg-primary2/5 transition-colors">
+          <div className="flex-1 flex flex-col gap-1">
+            <h4 className="font-bold text-base">Need more hands?</h4>
+            <p className="text-sm text-[#678383] leading-relaxed">
+              Invite external freelancers or clients by their email to
+              collaborate on this specific project.
+            </p>
+          </div>
+          <button className="w-full sm:w-auto shrink-0 h-12 sm:h-10 px-6 rounded-xl border-2 border-primary2 text-primary2 text-sm font-bold hover:bg-primary2/5 transition-colors">
             Send Invitation
           </button>
         </div>

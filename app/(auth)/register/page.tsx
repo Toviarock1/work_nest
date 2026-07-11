@@ -108,9 +108,9 @@ export default function RegisterPage() {
           <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-primary2/5 rounded-full blur-3xl pointer-events-none"></div>
           <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-125 h-125 bg-primary2/10 rounded-full blur-3xl pointer-events-none"></div>
 
-          <div className="w-full max-w-275 flex flex-col lg:flex-row items-stretch gap-0 bg-white dark:bg-[#1f2329] rounded-2xl overflow-hidden shadow-2xl shadow-black/5 border border-gray-100 dark:border-gray-800">
+          <div className="w-full max-w-275 flex flex-col md:flex-row items-stretch gap-0 bg-white dark:bg-[#1f2329] rounded-2xl overflow-hidden shadow-2xl shadow-black/5 border border-gray-100 dark:border-gray-800">
             {/* Left Side: Visual/Context */}
-            <div className="hidden lg:flex flex-1 bg-primary2 p-12 flex-col justify-between relative overflow-hidden">
+            <div className="hidden md:flex flex-1 bg-primary2 p-8 lg:p-12 flex-col justify-between relative overflow-hidden">
               <div className="z-10">
                 <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-wider mb-6">
                   Version 2.4
@@ -164,7 +164,7 @@ export default function RegisterPage() {
             </div>
 
             {/* Right Side: Registration Form */}
-            <div className="flex-1 p-8 lg:p-12">
+            <div className="flex-1 p-6 md:p-8 lg:p-12">
               <div className="max-w-md mx-auto">
                 <div className="mb-8">
                   <h2 className="text-3xl font-black text-[#121717] dark:text-white mb-2">

@@ -155,7 +155,7 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto p-6 space-y-8">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-6 space-y-8">
         {Object.keys(unifiedFeed).length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center text-[#678383] gap-1">
             <p className="text-sm font-bold">No messages yet</p>
@@ -201,7 +201,7 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
         )}
       </div>
       {/* <!-- Message Input Bar (Fixed Bottom) --> */}
-      <div className="px-6 pb-6 pt-2 bg-white dark:bg-background-dark border-t border-transparent">
+      <div className="px-3 sm:px-6 pb-4 sm:pb-6 pt-2 bg-white dark:bg-background-dark border-t border-transparent">
         <div className="relative bg-white dark:bg-gray-800 border border-[#dde4e4] dark:border-gray-700 rounded-xl shadow-lg focus-within:border-primary2/50 focus-within:ring-4 focus-within:ring-primary2/5 transition-all">
           <div className="flex flex-col p-2">
             <MentionTextarea
