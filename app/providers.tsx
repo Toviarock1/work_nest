@@ -10,6 +10,9 @@ import { useState } from "react";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import { env } from "@/lib/env";
 import { SocketProvider } from "@/components/socketProvider/SocketProvider";
+import PostHogProvider from "@/components/analytics/PostHogProvider";
+import BackendSwitcher from "@/components/dev/BackendSwitcher";
+import { Suspense } from "react";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -41,6 +44,13 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   );
   return (
     <QueryClientProvider client={queryClient}>
+      {/* PageViewTracker uses useSearchParams which needs a Suspense boundary. */}
+      <Suspense fallback={null}>
+        <PostHogProvider>
+          <></>
+        </PostHogProvider>
+      </Suspense>
+      {env.NODE_ENV !== "production" && <BackendSwitcher />}
       <SocketProvider>
         {children}
         {env.NODE_ENV === "development" && (

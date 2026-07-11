@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-import { env } from "./env";
+import { getSocketUrl } from "./backendTarget";
 
 const TOKEN_COOKIE = "accessToken";
 
@@ -11,7 +11,10 @@ function readTokenFromCookie(): string | null {
   return match ? decodeURIComponent(match[1]) : null;
 }
 
-const socket = io(env.NEXT_PUBLIC_SOCKET_URL, {
+// URL is read via the runtime override layer; the socket is autoConnect=false
+// so the first connect() after a target switch (followed by a reload) picks
+// up the new endpoint cleanly.
+const socket = io(getSocketUrl(), {
   autoConnect: false,
   transports: ["websocket", "polling"],
 });

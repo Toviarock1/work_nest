@@ -14,7 +14,7 @@
 @theme {
   --color-landing-page-primary: #0df293;
   --color-landing-page-background-light: #f5f8f7;
-  --color-landing-page-background-dark: #10221b;
+  --color-landing-page-background-dark: #0d1117;
   --color-primary2: #1d6d6b !important;
   --color-background-light: #f5f7f9;
   --color-background-dark: #181b20;
@@ -119,10 +119,10 @@ body {
 .aurora-bg {
   background: linear-gradient(
     120deg,
-    rgba(13, 242, 147, 0.22) 0%,
-    rgba(17, 214, 98, 0.1) 30%,
-    rgba(13, 242, 147, 0.18) 60%,
-    rgba(29, 109, 107, 0.22) 100%
+    rgba(13, 242, 147, 0.07) 0%,
+    rgba(17, 214, 98, 0.04) 30%,
+    rgba(13, 242, 147, 0.06) 60%,
+    rgba(29, 109, 107, 0.07) 100%
   );
   background-size: 220% 220%;
   animation: auroraShift 18s ease-in-out infinite;

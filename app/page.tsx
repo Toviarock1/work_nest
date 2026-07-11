@@ -23,8 +23,8 @@ import {
 import TiltCard from "@/components/landing/TiltCard";
 import ScrollReveal from "@/components/landing/ScrollReveal";
 import ParallaxLayer from "@/components/landing/ParallaxLayer";
-import ParallaxBlobs from "@/components/landing/ParallaxBlobs";
 import LandingScene3D from "@/components/landing/LandingScene3D";
+import MagneticCursor from "@/components/landing/MagneticCursor";
 
 function HeroBackground() {
   const [mounted, setMounted] = useState(false);
@@ -39,17 +39,11 @@ function HeroBackground() {
 export default function Home() {
   return (
     <section className="relative bg-landing-page-background-light dark:bg-landing-page-background-dark font-display text-[#111815] dark:text-white transition-colors duration-300 overflow-x-hidden">
-      {/* Animated aurora layer — fixed page-wide ambient tint */}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 aurora-bg opacity-40 dark:opacity-35"
-      />
+      {/* Custom magnetic cursor */}
+      <MagneticCursor />
 
       {/* Fixed full-viewport 3D scene behind the whole page */}
       <HeroBackground />
-
-      {/* Scrolling parallax blobs throughout the page */}
-      <ParallaxBlobs />
 
       <div className="relative z-10 flex h-auto min-h-screen w-full flex-col group/design-root">
         <div className="layout-container flex h-full grow flex-col">
@@ -117,7 +111,10 @@ export default function Home() {
 
                           <div className="flex flex-col sm:flex-row gap-4">
                             <Link href={"/register"}>
-                              <button className="group relative flex min-w-[220px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-xl h-14 px-8 bg-landing-page-primary text-[#111815] text-lg font-extrabold tracking-[0.015em] shadow-[0_20px_60px_-12px_rgba(13,242,147,0.7)] hover:scale-[1.04] transition-transform">
+                              <button
+                                data-magnetic
+                                className="group relative flex min-w-[220px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-xl h-14 px-8 bg-landing-page-primary text-[#111815] text-lg font-extrabold tracking-[0.015em] shadow-[0_20px_60px_-12px_rgba(13,242,147,0.7)] hover:scale-[1.04] transition-transform"
+                              >
                                 <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/60 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
                                 <span className="relative">
                                   Get Started for Free
@@ -125,7 +122,10 @@ export default function Home() {
                                 <ArrowRight className="relative size-5 transition-transform group-hover:translate-x-1" />
                               </button>
                             </Link>
-                            <button className="flex min-w-[160px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-xl h-14 px-8 glass text-[#111815] dark:text-white text-lg font-bold hover:bg-white/80 dark:hover:bg-white/10 transition-colors">
+                            <button
+                              data-magnetic
+                              className="flex min-w-40 cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-xl h-14 px-8 glass text-[#111815] dark:text-white text-lg font-bold hover:bg-white/80 dark:hover:bg-white/10 transition-colors"
+                            >
                               <MousePointerClick className="size-5" />
                               <span className="truncate">Watch Demo</span>
                             </button>

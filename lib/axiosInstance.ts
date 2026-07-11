@@ -1,6 +1,6 @@
 import axios from "axios";
-import { env } from "./env";
 import { disconnectSocket } from "./socket";
+import { getApiBase } from "./backendTarget";
 
 const TOKEN_COOKIE = "accessToken";
 
@@ -13,7 +13,9 @@ function readTokenFromCookie(): string | null {
 }
 
 const axiosInstance = axios.create({
-  baseURL: `${env.NEXT_PUBLIC_API_URL}/api/v1`,
+  // Base URL is read via the runtime override layer so the dev widget can
+  // flip targets without restarting the build.
+  baseURL: getApiBase(),
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
