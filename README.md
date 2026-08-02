@@ -1,100 +1,118 @@
 # WorkNest
 
-A modern collaborative project management platform built with Next.js, featuring real-time communication, Kanban-style task management, and team collaboration tools.
+A full-stack collaborative project management platform built with Next.js and Node.js, featuring a 3D WebGL landing page, real-time presence, Kanban task boards, team chat, and file sharing.
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=flat-square&logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.x-38bdf8?style=flat-square&logo=tailwind-css)
+![Three.js](https://img.shields.io/badge/Three.js-0.184-black?style=flat-square&logo=three.js)
+![Socket.io](https://img.shields.io/badge/Socket.io-client-black?style=flat-square&logo=socket.io)
 
 ## 🚀 Features
+
+### 3D Landing Page
+
+- Scroll-driven 3D scene built with Three.js and React Three Fiber
+- Custom GLSL shaders, grid tunnel, node network, and cursor light
+- Magnetic cursor with hover-reactive 3D shapes
+- Parallax layers, scroll reveal animations, and tilt cards
+- Fully responsive with WebGL detection and error boundary fallback
 
 ### Project Management
 
 - Create, view, and delete projects
-- Project dashboard with search and filtering
-- Project member management (add/remove team members)
+- Project dashboard with ⌘K search palette
+- Breadcrumb navigation and project-level settings
+- Mobile-first responsive layout with slide-out drawer navigation
 
 ### Task Management
 
-- Kanban board with drag-and-drop functionality
+- Kanban board with drag-and-drop (optimistic updates + rollback on failure)
 - Three columns: To Do, In Progress, Done
-- Create, view, and update task status
-- Task details view
+- Subtasks, task attachments, and typed task links
+- Task detail panel with live viewer presence (see who's viewing a task)
+- Press `N` shortcut to create a new task
 
 ### Real-time Collaboration
 
-- Real-time chat with Socket.io
-- Instant message delivery
-- File sharing and uploads
-- Live updates across all connected clients
+- Real-time chat powered by Socket.io
+- Live presence stack showing who's online in each project
+- @mention autocomplete in chat and task comments with toast notifications
+- Emoji reactions on messages
+- File sharing in chat and task attachments (Supabase Storage)
 
 ### Authentication & Security
 
-- JWT-based authentication
-- Protected routes with middleware
-- Session management with cookies
+- JWT-based authentication with HttpOnly cookies
+- Protected routes via AuthGuard middleware
+- Rate-limited login endpoint (brute-force protection)
+- Session management with Zustand + cookie persistence
+
+### Monitoring & Analytics
+
+- Sentry for frontend error tracking and performance monitoring
+- PostHog for product analytics and user behaviour
 
 ## 🛠️ Tech Stack
 
-| Category         | Technology              |
-| ---------------- | ----------------------- |
-| Framework        | Next.js 16 (App Router) |
-| Language         | TypeScript              |
-| Styling          | Tailwind CSS + DaisyUI  |
-| State Management | Zustand                 |
-| Server State     | TanStack React Query    |
-| Real-time        | Socket.io Client        |
-| Forms            | React Hook Form         |
-| Validation       | Zod                     |
-| Icons            | Lucide React            |
-| Drag & Drop      | @hello-pangea/dnd       |
+| Category         | Technology                         |
+| ---------------- | ---------------------------------- |
+| Framework        | Next.js 16 (App Router, Turbopack) |
+| Language         | TypeScript                         |
+| Styling          | Tailwind CSS v4 + DaisyUI          |
+| 3D / WebGL       | Three.js, React Three Fiber, Drei  |
+| State Management | Zustand                            |
+| Server State     | TanStack React Query               |
+| Real-time        | Socket.io Client                   |
+| Forms            | React Hook Form                    |
+| Drag & Drop      | @hello-pangea/dnd                  |
+| Icons            | Lucide React                       |
+| Error Monitoring | Sentry                             |
+| Analytics        | PostHog                            |
 
 ## 📁 Project Structure
 
 ```
 work_nest/
-├── app/                      # Next.js App Router
-│   ├── (auth)/              # Auth routes (login, register)
+├── app/                        # Next.js App Router
+│   ├── (auth)/                # Auth routes (login, register)
 │   │   ├── login/
 │   │   └── register/
-│   ├── dashboard/           # Protected dashboard routes
+│   ├── dashboard/             # Protected dashboard routes
 │   │   ├── project/
-│   │   │   └── [projectId]/
+│   │   │   └── [projectId]/   # Project detail (tasks, chat, files, members)
 │   │   └── settings/
 │   ├── globals.css
 │   ├── layout.tsx
-│   └── page.tsx
-├── components/              # React components
-│   ├── auth/               # Auth guards
-│   ├── file/               # File management
-│   ├── project/            # Project-related components
-│   ├── skeleton/           # Loading skeletons
-│   ├── socketProvider/    # Socket context
-│   └── task/               # Task management
-├── hooks/                  # Custom React hooks
-│   ├── useAuth.ts
+│   └── page.tsx               # 3D landing page
+├── components/
+│   ├── auth/                  # AuthGuard
+│   ├── file/                  # File upload & viewer
+│   ├── landing/               # LandingScene3D, MagneticCursor, TiltCard, etc.
+│   ├── project/               # ChatPanel, ProjectMembers, PresenceStack, etc.
+│   ├── skeleton/              # Loading skeletons
+│   ├── task/                  # TaskBoard, AddTaskModal, ViewProjectTask, etc.
+│   └── ui/                    # SearchPalette, MentionTextarea, QueryError, etc.
+├── hooks/                     # Custom React hooks
 │   ├── useChatSocket.ts
-│   ├── useProject.ts
-│   ├── useProjectSocket.ts
-│   └── useUser.ts
-├── lib/                    # Libraries & utilities
-│   ├── api.ts
-│   ├── auth.ts
+│   ├── useProjectAwareness.ts
+│   ├── useProjectPresence.ts
+│   └── useProjectSocket.ts
+├── lib/                       # Libraries & utilities
 │   ├── axiosInstance.ts
-│   ├── env.ts
 │   └── socket.ts
-├── services/               # API services
+├── services/                  # API service layer
 │   ├── auth.service.ts
 │   ├── file.service.ts
 │   ├── message.service.ts
 │   ├── project.service.ts
 │   ├── task.service.ts
 │   └── user.service.ts
-├── store/                  # Zustand stores
+├── store/                     # Zustand stores
 │   └── useAuthStore.ts
-├── types/                  # TypeScript types
+├── types/                     # TypeScript types
 │   └── index.ts
-└── utils/                  # Utility functions
+└── utils/                     # Utility functions
     ├── fonts.ts
     ├── formatData.ts
     └── helpers.ts
@@ -108,6 +126,9 @@ Create a `.env.local` file in the root directory:
 NEXT_PUBLIC_API_URL=http://localhost:5050
 NEXT_PUBLIC_SOCKET_URL=http://localhost:5050
 NODE_ENV=development
+NEXT_PUBLIC_SENTRY_DSN=your_sentry_dsn
+NEXT_PUBLIC_POSTHOG_KEY=your_posthog_key
+NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
 ```
 
 ## 🚦 Getting Started
@@ -116,101 +137,41 @@ NODE_ENV=development
 
 - Node.js 18.x or higher
 - npm, yarn, pnpm, or bun
+- WorkNest Backend running (see [WorkNest Backend](https://github.com/Toviarock1/worknest-backend))
 
 ### Installation
 
 ```bash
 # Clone the repository
 git clone <repository-url>
-
-# Navigate to the project directory
 cd work_nest
 
 # Install dependencies
 npm install
-# or
-yarn install
-# or
-pnpm install
-# or
-bun install
 ```
 
 ### Development
 
 ```bash
-# Start the development server
 npm run dev
-
-# Open http://localhost:3000 in your browser
+# Open http://localhost:3000
 ```
 
 ### Build
 
 ```bash
-# Build for production
 npm run build
-
-# Start production server
 npm run start
 ```
 
-## 🔌 API Integration
+## 🔌 Backend
 
-The frontend expects a backend API running at `http://localhost:5050` (or your configured API URL). The API should provide the following endpoints:
+This frontend requires the [WorkNest Backend](https://github.com/Toviarock1/worknest-backend) to be running. See that repo for API documentation and setup instructions.
 
-### Authentication
+## 🎨 Theme
 
-- `POST /auth/login` - User login
-- `POST /auth/register` - User registration
-- `GET /auth/me` - Get current user
-
-### Projects
-
-- `GET /project` - Get user's projects
-- `POST /project` - Create new project
-- `GET /project/:id` - Get project details
-- `DELETE /project/:id` - Delete project
-- `GET /project/:id/members` - Get project members
-- `POST /project/add-member` - Add member to project
-- `POST /project/remove-member` - Remove member from project
-
-### Tasks
-
-- `GET /tasks/:projectId` - Get project tasks
-- `POST /tasks` - Create new task
-- `PATCH /tasks/:taskId` - Update task status
-- `DELETE /tasks/:taskId` - Delete task
-
-### Messages
-
-- `GET /message/:projectId` - Get chat history
-- `POST /message` - Send message
-
-### Files
-
-- `GET /file/:projectId` - Get project files
-- `POST /file/upload` - Upload file
-- `DELETE /file/:fileId` - Delete file
-
-## 🎨 Customization
-
-### Theme Colors
-
-The primary color is configured in the Tailwind CSS. Update `app/globals.css` to customize the theme.
-
-### Adding New Features
-
-1. Create API service in `services/`
-2. Add types in `types/index.ts`
-3. Create components in `components/`
-4. Add custom hooks in `hooks/` if needed
-5. Integrate with React Query in pages
-
-## 📄 License
-
-This project is private and proprietary.
+Primary color and design tokens are configured in `app/globals.css` under `@theme`. The app supports light and dark mode via `prefers-color-scheme`.
 
 ## 👤 Author
 
-Built with ❤️ By Simon Adama using Next.js and modern web technologies.
+Built by [Simon Adama](https://simonadama.vercel.app/) — Full-Stack Engineer.
