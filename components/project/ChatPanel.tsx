@@ -7,6 +7,7 @@ import { useChatSocket } from "@/hooks/useChatSocket";
 import { SendHorizontal, Paperclip } from "lucide-react";
 import ChatMessage from "./ChatMessage";
 import QueryError from "@/components/ui/QueryError";
+import DeleteConfirmModal from "@/components/ui/DeleteConfirmModal";
 import ChatSkeleton from "@/components/skeleton/ChatSkeleton";
 import MentionTextarea from "@/components/ui/MentionTextarea";
 import { formatTime, groupMessagesByDate } from "@/utils/formatData";
@@ -25,6 +26,7 @@ type FeedItem =
 
 export default function ChatPanel({ projectId }: { projectId: string }) {
   const [draft, setDraft] = useState("");
+  const [pendingDelete, setPendingDelete] = useState<FeedItem | null>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
@@ -96,6 +98,7 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
   const deleteFileMutation = useMutation({
     mutationFn: (fileId: string) => deleteFile(fileId),
     onSuccess: () => {
+      setPendingDelete(null);
       toast.success("File deleted!");
       queryClient.invalidateQueries({ queryKey: ["file-history", projectId] });
     },
@@ -155,6 +158,20 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
 
   return (
     <>
+      <DeleteConfirmModal
+        show={!!pendingDelete}
+        close={() => !deleteFileMutation.isPending && setPendingDelete(null)}
+        onConfirm={() =>
+          pendingDelete && deleteFileMutation.mutate(pendingDelete.id)
+        }
+        title="Delete file?"
+        itemName={
+          pendingDelete?.feedType === "FILE" ? pendingDelete.name : undefined
+        }
+        message="This file will be permanently removed from the chat."
+        confirmLabel="Delete"
+        isLoading={deleteFileMutation.isPending}
+      />
       <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-6 space-y-8">
         {Object.keys(unifiedFeed).length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center text-[#678383] gap-1">
@@ -187,7 +204,7 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
                     messageId={msg.feedType === "TEXT" ? msg.id : undefined}
                     feedType={msg.feedType}
                     url={msg.feedType === "FILE" ? msg.url : undefined}
-                    onDelete={() => deleteFileMutation.mutate(msg.id)}
+                    onDelete={() => setPendingDelete(msg)}
                     members={members}
                     reactions={
                       msg.feedType === "TEXT" ? msg.reactions : undefined

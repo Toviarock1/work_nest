@@ -37,6 +37,7 @@ import {
   removeProjectMembers,
 } from "@/services/project.service";
 import AddProjectMemberModal from "@/components/project/AddProjectModal";
+import DeleteConfirmModal from "@/components/ui/DeleteConfirmModal";
 import ChatPanel from "@/components/project/ChatPanel";
 import PresenceStack from "@/components/project/PresenceStack";
 import ViewProjectTask from "@/components/task/ViewProjectTask";
@@ -45,6 +46,9 @@ import { useProjectPresence } from "@/hooks/useProjectPresence";
 export default function ProjectsPage() {
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [showProjectMemberModal, setShowProjectMemberModal] = useState(false);
+  const [pendingMemberRemove, setPendingMemberRemove] = useState<string | null>(
+    null,
+  );
   const [currentPath, setCurrentPath] = useState("tasks");
   const [currentTask, setCurrentTask] = useState("");
   const [viewTask, setViewTask] = useState(false);
@@ -203,6 +207,9 @@ export default function ProjectsPage() {
       if (data.type === "add") {
         setShowProjectMemberModal(false);
       }
+      if (data.type === "remove") {
+        setPendingMemberRemove(null);
+      }
       toast.success(`Successfully ${data.type}ed member`);
     },
     onError: (error: AxiosError<{ message?: string }>) => {
@@ -305,7 +312,7 @@ export default function ProjectsPage() {
     membersMutation({ userEmail: data.email, projectId, type: "add" });
   };
   const removeMemberHandler = (email: string) => {
-    membersMutation({ userEmail: email, projectId, type: "remove" });
+    setPendingMemberRemove(email);
   };
 
   const viewTaskHandler = (taskId: string) => {
@@ -481,6 +488,23 @@ export default function ProjectsPage() {
         close={() => setShowProjectMemberModal(false)}
         onSubmit={addMemberHandler}
         isLoading={addMemberLoading}
+      />
+      <DeleteConfirmModal
+        show={!!pendingMemberRemove}
+        close={() => setPendingMemberRemove(null)}
+        onConfirm={() =>
+          pendingMemberRemove &&
+          membersMutation({
+            userEmail: pendingMemberRemove,
+            projectId,
+            type: "remove",
+          })
+        }
+        title="Remove member?"
+        itemName={pendingMemberRemove ?? undefined}
+        message="They will lose access to this project immediately."
+        confirmLabel="Delete"
+        isLoading={addMemberLoading && variables?.type === "remove"}
       />
       <ViewProjectTask
         key={currentTask}

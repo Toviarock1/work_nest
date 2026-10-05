@@ -7,10 +7,14 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Eye, FileText, Trash } from "lucide-react";
 import { toast } from "react-toastify";
 import Loader from "../Loader";
+import DeleteConfirmModal from "../ui/DeleteConfirmModal";
 import UserAvatar from "./../UserAvatar";
 
 const FilesView = ({ projectId }: { projectId: string }) => {
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<GetFileHistorry | null>(
+    null,
+  );
   const { data } = useQuery({
     queryKey: ["file-history", projectId],
     queryFn: () => fetchFileHistory(projectId),
@@ -24,6 +28,7 @@ const FilesView = ({ projectId }: { projectId: string }) => {
     },
     onSuccess: () => {
       setDeleteLoading(false);
+      setPendingDelete(null);
       toast.success("File deleted!");
     },
     onError: (err: AxiosError<{ message?: string }>) => {
@@ -34,6 +39,18 @@ const FilesView = ({ projectId }: { projectId: string }) => {
 
   return (
     <>
+      <DeleteConfirmModal
+        show={!!pendingDelete}
+        close={() => !deleteLoading && setPendingDelete(null)}
+        onConfirm={() =>
+          pendingDelete && deleteFileMutation.mutate(pendingDelete.id)
+        }
+        title="Delete file?"
+        itemName={pendingDelete?.name}
+        message="This file will be permanently removed for everyone."
+        confirmLabel="Delete"
+        isLoading={deleteLoading}
+      />
       <div className="bg-white dark:bg-[#1f2329] rounded-xl border border-[#dde4e4] dark:border-[#2d323a] overflow-hidden shadow-sm mt-10">
         <table className="w-full text-left border-collapse">
           <thead>
@@ -106,7 +123,7 @@ const FilesView = ({ projectId }: { projectId: string }) => {
                       type="button"
                       aria-label={`Delete ${file.name}`}
                       disabled={deleteLoading}
-                      onClick={() => deleteFileMutation.mutate(file.id)}
+                      onClick={() => setPendingDelete(file)}
                       className="p-2 text-[#678383] hover:text-red-500 transition-colors"
                     >
                       {deleteLoading ? (

@@ -4,7 +4,9 @@ import { formatRelative } from "@/utils/formatData";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Clock, EllipsisVertical, Trash2, Users } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { toast } from "react-toastify";
+import DeleteConfirmModal from "../ui/DeleteConfirmModal";
 import UserAvatar from "../UserAvatar";
 
 // Hoisted: identity stays stable across renders so the dropdown trigger
@@ -30,6 +32,7 @@ const ProjectCard = ({
   createdAt,
 }: ProjectCardProps) => {
   const queryClient = useQueryClient();
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const { data: membersData, isLoading: membersLoading } = useQuery({
     queryKey: ["project-members", id],
@@ -56,102 +59,112 @@ const ProjectCard = ({
     },
   });
 
-  const onRemove = (e: React.MouseEvent, id: string) => {
+  const onRemove = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    const ok = window.confirm(
-      `Delete project "${name}"? This will permanently remove all its tasks and cannot be undone.`,
-    );
-    if (!ok) return;
-    mutate({ id });
+    setConfirmOpen(true);
   };
 
   return (
-    <div className="bg-white dark:bg-background-dark rounded-xl border border-[#f1f4f4] dark:border-[#2d3238] shadow-soft hover:shadow-xl hover:-translate-y-1 transition-all duration-300 p-6 group">
-      <div className="flex justify-end items-start mb-4">
-        <div className="dropdown" onClick={stopPropagation}>
-          <button
-            tabIndex={0}
-            className="p-1 text-[#678383] hover:bg-[#f1f4f4] dark:hover:bg-[#2d3238] rounded"
-            onClick={stopPropagation}
-            aria-label="Project options"
-          >
-            <EllipsisVertical className="size-5" />
-          </button>
-          <ul
-            tabIndex={-1}
-            className="dropdown-content menu bg-base-100 rounded-box z-1 p-2 shadow-sm"
-          >
-            <li>
-              <button
-                disabled={isPending}
-                onClick={(e) => onRemove(e, id)}
-                className="w-full btn flex justify-start gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors"
-              >
-                <Trash2 className="size-4" />
-                <span className="font-bold">Delete</span>
-              </button>
-            </li>
-          </ul>
+    <>
+      <DeleteConfirmModal
+        show={confirmOpen}
+        close={() => !isPending && setConfirmOpen(false)}
+        onConfirm={() =>
+          mutate({ id }, { onSuccess: () => setConfirmOpen(false) })
+        }
+        title="Delete project?"
+        itemName={name}
+        message="All its tasks, messages and files will be permanently removed."
+        confirmLabel="Delete"
+        isLoading={isPending}
+      />
+      <div className="bg-white dark:bg-background-dark rounded-xl border border-[#f1f4f4] dark:border-[#2d3238] shadow-soft hover:shadow-xl hover:-translate-y-1 transition-all duration-300 p-6 group">
+        <div className="flex justify-end items-start mb-4">
+          <div className="dropdown" onClick={stopPropagation}>
+            <button
+              tabIndex={0}
+              className="p-1 text-[#678383] hover:bg-[#f1f4f4] dark:hover:bg-[#2d3238] rounded"
+              onClick={stopPropagation}
+              aria-label="Project options"
+            >
+              <EllipsisVertical className="size-5" />
+            </button>
+            <ul
+              tabIndex={-1}
+              className="dropdown-content menu bg-base-100 rounded-box z-1 p-2 shadow-sm"
+            >
+              <li>
+                <button
+                  disabled={isPending}
+                  onClick={(e) => onRemove(e)}
+                  className="w-full btn flex justify-start gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors"
+                >
+                  <Trash2 className="size-4" />
+                  <span className="font-bold">Delete</span>
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-      <Link href={`dashboard/project/${id}`} className="block">
-        <div className="mb-6">
-          <h3 className="text-lg font-bold mb-1 capitalize">{name}</h3>
-          <p className="text-sm text-[#678383] line-clamp-2">{description}</p>
-        </div>
-        <div className="flex items-center justify-between pt-4 border-t border-[#f1f4f4] dark:border-[#2d3238]">
-          {/* Avatar stack + count */}
-          <div className="flex items-center gap-2">
-            <div className="flex -space-x-2">
-              {membersLoading ? (
-                <>
-                  <div className="skeleton size-8 rounded-full ring-2 ring-white dark:ring-background-dark" />
-                  <div className="skeleton size-8 rounded-full ring-2 ring-white dark:ring-background-dark" />
-                  <div className="skeleton size-8 rounded-full ring-2 ring-white dark:ring-background-dark" />
-                </>
-              ) : visibleMembers.length > 0 ? (
-                visibleMembers.map((m) => (
-                  <div
-                    key={m.id}
-                    className="ring-2 ring-white dark:ring-background-dark rounded-full"
-                    title={m.user?.name}
-                  >
-                    <UserAvatar customName={m.user?.name} size="sm" />
+        <Link href={`dashboard/project/${id}`} className="block">
+          <div className="mb-6">
+            <h3 className="text-lg font-bold mb-1 capitalize">{name}</h3>
+            <p className="text-sm text-[#678383] line-clamp-2">{description}</p>
+          </div>
+          <div className="flex items-center justify-between pt-4 border-t border-[#f1f4f4] dark:border-[#2d3238]">
+            {/* Avatar stack + count */}
+            <div className="flex items-center gap-2">
+              <div className="flex -space-x-2">
+                {membersLoading ? (
+                  <>
+                    <div className="skeleton size-8 rounded-full ring-2 ring-white dark:ring-background-dark" />
+                    <div className="skeleton size-8 rounded-full ring-2 ring-white dark:ring-background-dark" />
+                    <div className="skeleton size-8 rounded-full ring-2 ring-white dark:ring-background-dark" />
+                  </>
+                ) : visibleMembers.length > 0 ? (
+                  visibleMembers.map((m) => (
+                    <div
+                      key={m.id}
+                      className="ring-2 ring-white dark:ring-background-dark rounded-full"
+                      title={m.user?.name}
+                    >
+                      <UserAvatar customName={m.user?.name} size="sm" />
+                    </div>
+                  ))
+                ) : (
+                  <span className="inline-flex items-center gap-1 text-xs text-[#678383]">
+                    <Users className="size-4" />
+                    No members
+                  </span>
+                )}
+                {overflow > 0 && (
+                  <div className="ring-2 ring-white dark:ring-background-dark size-8 rounded-full bg-[#f1f4f4] dark:bg-[#2d3238] text-[#678383] text-xs font-bold flex items-center justify-center">
+                    +{overflow}
                   </div>
-                ))
-              ) : (
-                <span className="inline-flex items-center gap-1 text-xs text-[#678383]">
-                  <Users className="size-4" />
-                  No members
+                )}
+              </div>
+              {!membersLoading && members.length > 0 && (
+                <span className="text-xs text-[#678383] ml-1">
+                  {members.length} member{members.length === 1 ? "" : "s"}
                 </span>
               )}
-              {overflow > 0 && (
-                <div className="ring-2 ring-white dark:ring-background-dark size-8 rounded-full bg-[#f1f4f4] dark:bg-[#2d3238] text-[#678383] text-xs font-bold flex items-center justify-center">
-                  +{overflow}
-                </div>
-              )}
             </div>
-            {!membersLoading && members.length > 0 && (
-              <span className="text-xs text-[#678383] ml-1">
-                {members.length} member{members.length === 1 ? "" : "s"}
+
+            {/* Created at */}
+            {createdAt && (
+              <span
+                className="inline-flex items-center gap-1 text-xs text-[#678383]"
+                title={new Date(createdAt).toLocaleString()}
+              >
+                <Clock className="size-3.5" />
+                {formatRelative(createdAt)}
               </span>
             )}
           </div>
-
-          {/* Created at */}
-          {createdAt && (
-            <span
-              className="inline-flex items-center gap-1 text-xs text-[#678383]"
-              title={new Date(createdAt).toLocaleString()}
-            >
-              <Clock className="size-3.5" />
-              {formatRelative(createdAt)}
-            </span>
-          )}
-        </div>
-      </Link>
-    </div>
+        </Link>
+      </div>
+    </>
   );
 };
 
