@@ -216,7 +216,7 @@ const SettingsPage = () => {
           </button>
         </div>
       </div>
-      {/* <!-- Danger Zone --> */}
+      {/* <!-- Danger Zone (disabled: no backend support yet)
       <div className="mt-12 p-6 rounded-xl border border-red-200 bg-red-50/30 flex items-center justify-between">
         <div>
           <h3 className="text-red-600 font-bold">Deactivate Account</h3>
@@ -228,6 +228,7 @@ const SettingsPage = () => {
           Deactivate
         </button>
       </div>
+      --> */}
     </div>
   );
 };

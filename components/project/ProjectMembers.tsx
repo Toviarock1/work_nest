@@ -1,10 +1,4 @@
-import {
-  ArrowLeftRight,
-  EllipsisVertical,
-  Mail,
-  Settings,
-  Trash2,
-} from "lucide-react";
+import { EllipsisVertical, Mail, Trash2 } from "lucide-react";
 import Loader from "../Loader";
 import { formatDate } from "@/utils/formatData";
 import UserAvatar from "./../UserAvatar";
@@ -99,25 +93,11 @@ const ProjectMembers = ({
                           tabIndex={-1}
                           className="absolute dropdown-content right-6 top-10 w-56 bg-white dark:bg-zinc-900 rounded-xl shadow-xl border border-[#dde4e4] dark:border-zinc-800 z-50 py-1 overflow-hidden"
                         >
-                          <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[#121717] dark:text-zinc-200 hover:bg-background-light dark:hover:bg-zinc-800 transition-colors">
-                            <span className="material-symbols-outlined text-[18px] text-[#678383]">
-                              <Settings />
-                            </span>
-                            <span className="font-semibold">
-                              Edit Permissions
-                            </span>
-                          </button>
-                          <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[#121717] dark:text-zinc-200 hover:bg-background-light dark:hover:bg-zinc-800 transition-colors">
-                            <span className="material-symbols-outlined text-[18px] text-[#678383]">
-                              <ArrowLeftRight />
-                            </span>
-                            <span className="font-semibold">
-                              Transfer Ownership
-                            </span>
-                          </button>
-                          <div className="h-px bg-[#dde4e4] dark:bg-zinc-800 my-1 mx-2"></div>
                           <button
-                            onClick={() => onRemove(member.user.email)}
+                            onClick={() => {
+                              (document.activeElement as HTMLElement)?.blur();
+                              onRemove(member.user.email);
+                            }}
                             className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors"
                           >
                             <span className="material-symbols-outlined text-[18px]">

@@ -209,6 +209,9 @@ export default function ProjectsPage() {
       }
       if (data.type === "remove") {
         setPendingMemberRemove(null);
+        queryClient.invalidateQueries({
+          queryKey: ["project-members", projectId],
+        });
       }
       toast.success(`Successfully ${data.type}ed member`);
     },
