@@ -103,6 +103,7 @@ export interface Message {
   createdAt: Date;
   sender: {
     name: string;
+    avatarUrl?: string | null;
   };
   reactions?: MessageReactionRow[];
 }

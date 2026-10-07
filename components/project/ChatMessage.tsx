@@ -17,6 +17,7 @@ const ChatMessage = ({
   onDelete,
   members = [],
   reactions,
+  avatarUrl,
 }: {
   id: string;
   name: string;
@@ -30,6 +31,7 @@ const ChatMessage = ({
   onDelete: () => void;
   members?: ProjectMembersType[];
   reactions?: MessageReactionRow[];
+  avatarUrl?: string | null;
 }) => {
   const userId = useAuthStore((state) => state.user?.id);
 
@@ -38,7 +40,7 @@ const ChatMessage = ({
       <div className={`chat ${userId === id ? "chat-end" : "chat-start"} my-4`}>
         <div className="chat-image avatar">
           <div className="w-10 rounded-full">
-            <UserAvatar customName={name} />
+            <UserAvatar customName={name} imageUrl={avatarUrl} />
           </div>
         </div>
         <div className="chat-header">

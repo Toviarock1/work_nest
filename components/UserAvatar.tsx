@@ -15,7 +15,11 @@ export default function UserAvatar({
 }: Props) {
   const { user } = useUser();
   const name = customName ? customName : user.name;
-  const src = imageUrl ?? (user as { avatarUrl?: string | null })?.avatarUrl;
+  // Only fall back to the logged-in user's photo when rendering self.
+  // Member rows pass customName + their own imageUrl — never borrow mine.
+  const src =
+    imageUrl ??
+    (customName ? null : (user as { avatarUrl?: string | null })?.avatarUrl);
   const firstLetter = name?.charAt(0).toUpperCase();
 
   // 2. Define sizes

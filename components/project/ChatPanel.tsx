@@ -209,6 +209,11 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
                     reactions={
                       msg.feedType === "TEXT" ? msg.reactions : undefined
                     }
+                    avatarUrl={
+                      msg.feedType === "TEXT"
+                        ? msg.sender?.avatarUrl
+                        : undefined
+                    }
                   />
                   <div ref={messagesRef}></div>
                 </div>
