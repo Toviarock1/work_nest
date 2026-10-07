@@ -66,7 +66,9 @@ const ProjectMembers = ({
                               {member.user.name}
                             </p>
                             <p className="text-[11px] text-[#678383] font-medium">
-                              Project Manager
+                              {member.role === "owner"
+                                ? "Project Manager"
+                                : "Member"}
                             </p>
                           </div>
                         </div>
