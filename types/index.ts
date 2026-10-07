@@ -83,6 +83,7 @@ export interface TasksType {
     name: string;
     email: string;
     id: string;
+    avatarUrl?: string | null;
   };
   subtasks?: TaskSubtaskRow[];
   files?: TaskFileRow[];
@@ -118,6 +119,7 @@ export interface GetFileHistorry {
   createdAt: string;
   uploader: {
     name: string;
+    avatarUrl?: string | null;
   };
 }
 
@@ -147,5 +149,6 @@ export interface TaskComment {
     id: string;
     name: string | null;
     email: string;
+    avatarUrl?: string | null;
   };
 }

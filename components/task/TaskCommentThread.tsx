@@ -187,7 +187,11 @@ const TaskCommentThread = ({
               const isMine = c.authorId === currentUserId;
               return (
                 <li key={c.id} className="flex gap-3 group">
-                  <UserAvatar customName={c.author?.name ?? "?"} size="sm" />
+                  <UserAvatar
+                    customName={c.author?.name ?? "?"}
+                    imageUrl={c.author?.avatarUrl}
+                    size="sm"
+                  />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-2 mb-1">
                       <span className="text-sm font-bold dark:text-zinc-100">

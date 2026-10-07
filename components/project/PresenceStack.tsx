@@ -2,15 +2,17 @@
 
 import UserAvatar from "../UserAvatar";
 import type { PresenceUser } from "@/hooks/useProjectPresence";
+import type { ProjectMembersType } from "@/types";
 
 const MAX_VISIBLE = 5;
 
 interface Props {
   users: PresenceUser[];
   currentUserId?: string | null;
+  members?: ProjectMembersType[];
 }
 
-const PresenceStack = ({ users, currentUserId }: Props) => {
+const PresenceStack = ({ users, currentUserId, members = [] }: Props) => {
   // Filter out the current user — you don't need to see yourself in the "who's here" strip.
   const others = currentUserId
     ? users.filter((u) => u.userId !== currentUserId)
@@ -20,6 +22,8 @@ const PresenceStack = ({ users, currentUserId }: Props) => {
 
   const visible = others.slice(0, MAX_VISIBLE);
   const overflow = Math.max(0, others.length - MAX_VISIBLE);
+  const avatarFor = (userId: string) =>
+    members.find((m) => m.userId === userId)?.user.avatarUrl ?? null;
 
   return (
     <div
@@ -33,7 +37,11 @@ const PresenceStack = ({ users, currentUserId }: Props) => {
             title={u.name ?? "Member"}
             className="ring-2 ring-white dark:ring-zinc-950 rounded-xl"
           >
-            <UserAvatar customName={u.name ?? "?"} size="sm" />
+            <UserAvatar
+              customName={u.name ?? "?"}
+              imageUrl={avatarFor(u.userId)}
+              size="sm"
+            />
           </div>
         ))}
         {overflow > 0 && (

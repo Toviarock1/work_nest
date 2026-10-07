@@ -212,7 +212,7 @@ export default function ChatPanel({ projectId }: { projectId: string }) {
                     avatarUrl={
                       msg.feedType === "TEXT"
                         ? msg.sender?.avatarUrl
-                        : undefined
+                        : msg.uploader?.avatarUrl
                     }
                   />
                   <div ref={messagesRef}></div>

@@ -336,6 +336,7 @@ const ViewProjectTask = ({
                       >
                         <UserAvatar
                           customName={data.assignedTo?.name ?? "Unassigned"}
+                          imageUrl={data.assignedTo?.avatarUrl}
                         />
                         <span className="text-sm font-semibold dark:text-zinc-200 flex-1 text-left">
                           {isAssigning
@@ -401,6 +402,7 @@ const ViewProjectTask = ({
                                       >
                                         <UserAvatar
                                           customName={member.user.name}
+                                          imageUrl={member.user.avatarUrl}
                                         />
                                         <span className="text-sm font-medium dark:text-zinc-200 flex-1 truncate">
                                           {member.user.name}
@@ -421,6 +423,7 @@ const ViewProjectTask = ({
                     <div className="flex items-center gap-3">
                       <UserAvatar
                         customName={data.assignedTo?.name ?? "Unassigned"}
+                        imageUrl={data.assignedTo?.avatarUrl}
                       />
                       <span className="text-sm font-semibold dark:text-zinc-200">
                         {data.assignedTo?.name ?? "Unassigned"}

@@ -363,6 +363,7 @@ export default function ProjectsPage() {
                   <PresenceStack
                     users={presentUsers}
                     currentUserId={currentUserId}
+                    members={members?.data?.projectMembers ?? []}
                   />
                   {currentPath === "tasks" && (
                     <button

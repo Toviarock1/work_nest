@@ -97,7 +97,10 @@ const FilesView = ({ projectId }: { projectId: string }) => {
                 <td className="px-6 py-4 text-sm text-[#678383]">Image</td>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-2">
-                    <UserAvatar />
+                    <UserAvatar
+                      customName={file?.uploader?.name ?? "?"}
+                      imageUrl={file?.uploader?.avatarUrl}
+                    />
                     <span className="text-sm font-medium text-[#121717] dark:text-white">
                       {file?.uploader?.name}
                     </span>

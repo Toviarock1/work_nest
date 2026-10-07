@@ -171,7 +171,11 @@ const MentionTextarea = forwardRef<MentionTextareaHandle, Props>(
                     : "hover:bg-background-light dark:hover:bg-zinc-800"
                 }`}
               >
-                <UserAvatar customName={s.member.user.name ?? "?"} size="sm" />
+                <UserAvatar
+                  customName={s.member.user.name ?? "?"}
+                  imageUrl={s.member.user.avatarUrl}
+                  size="sm"
+                />
                 <div className="flex-1 min-w-0">
                   <p className="font-bold truncate dark:text-zinc-100">
                     {s.member.user.name ?? "Unknown"}

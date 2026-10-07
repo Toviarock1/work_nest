@@ -129,7 +129,11 @@ const ProjectCard = ({
                       className="ring-2 ring-white dark:ring-background-dark rounded-full"
                       title={m.user?.name}
                     >
-                      <UserAvatar customName={m.user?.name} size="sm" />
+                      <UserAvatar
+                        customName={m.user?.name}
+                        imageUrl={m.user?.avatarUrl}
+                        size="sm"
+                      />
                     </div>
                   ))
                 ) : (
