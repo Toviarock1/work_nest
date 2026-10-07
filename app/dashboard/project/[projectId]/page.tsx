@@ -463,6 +463,7 @@ export default function ProjectsPage() {
                 data={members?.data?.projectMembers}
                 isLoading={membersLoading}
                 onRemove={removeMemberHandler}
+                onInvite={() => setShowProjectMemberModal(true)}
                 type={variables?.type}
               />
             )}

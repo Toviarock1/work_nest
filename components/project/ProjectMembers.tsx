@@ -14,10 +14,16 @@ interface ProjectMembersProps {
   data: ProjectMembersType[] | undefined;
   isLoading: boolean;
   onRemove: (email: string) => void;
+  onInvite: () => void;
   type?: "add" | "remove";
 }
 
-const ProjectMembers = ({ data, isLoading, onRemove }: ProjectMembersProps) => {
+const ProjectMembers = ({
+  data,
+  isLoading,
+  onRemove,
+  onInvite,
+}: ProjectMembersProps) => {
   return (
     <div className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col">
       <div className="flex-1 p-4 sm:p-8 bg-background-light dark:bg-background-dark">
@@ -280,7 +286,10 @@ const ProjectMembers = ({ data, isLoading, onRemove }: ProjectMembersProps) => {
               collaborate on this specific project.
             </p>
           </div>
-          <button className="w-full sm:w-auto shrink-0 h-12 sm:h-10 px-6 rounded-xl border-2 border-primary2 text-primary2 text-sm font-bold hover:bg-primary2/5 transition-colors">
+          <button
+            onClick={onInvite}
+            className="w-full sm:w-auto shrink-0 h-12 sm:h-10 px-6 rounded-xl border-2 border-primary2 text-primary2 text-sm font-bold hover:bg-primary2/5 transition-colors"
+          >
             Send Invitation
           </button>
         </div>
