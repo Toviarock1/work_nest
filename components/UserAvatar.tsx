@@ -4,15 +4,18 @@ interface Props {
   size?: "sm" | "md" | "lg" | "xl";
   className?: string;
   customName?: string;
+  imageUrl?: string | null;
 }
 
 export default function UserAvatar({
   size = "md",
   className = "",
   customName,
+  imageUrl,
 }: Props) {
   const { user } = useUser();
   const name = customName ? customName : user.name;
+  const src = imageUrl ?? (user as { avatarUrl?: string | null })?.avatarUrl;
   const firstLetter = name?.charAt(0).toUpperCase();
 
   // 2. Define sizes
@@ -40,9 +43,18 @@ export default function UserAvatar({
 
   return (
     <div
-      className={`flex items-center justify-center rounded-xl font-bold shadow-sm shrink-0 ${sizeClasses[size]} ${bgColor} ${className}`}
+      className={`flex items-center justify-center rounded-xl font-bold shadow-sm shrink-0 overflow-hidden ${sizeClasses[size]} ${src ? "" : bgColor} ${className}`}
     >
-      {firstLetter}
+      {src ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt={name ?? "Profile"}
+          className="h-full w-full object-cover"
+        />
+      ) : (
+        firstLetter
+      )}
     </div>
   );
 }

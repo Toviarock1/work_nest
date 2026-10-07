@@ -54,7 +54,10 @@ const ProjectMembers = ({
                     >
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <UserAvatar customName={member.user.name} />
+                          <UserAvatar
+                            customName={member.user.name}
+                            imageUrl={member.user.avatarUrl}
+                          />
                           <div>
                             <p className="text-sm font-bold">
                               {member.user.name}

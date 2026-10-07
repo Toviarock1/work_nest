@@ -1,13 +1,31 @@
 "use client";
 import UserAvatar from "@/components/UserAvatar";
+import DeleteConfirmModal from "@/components/ui/DeleteConfirmModal";
 import { useUser } from "@/hooks/useUser";
-import { updateUserName } from "@/services/user.service";
-import { useMutation } from "@tanstack/react-query";
+import {
+  removeAvatar,
+  updateUserName,
+  uploadAvatar,
+} from "@/services/user.service";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
+const AVATAR_MAX_BYTES = 800 * 1024;
+const AVATAR_MIME_ALLOW = [
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+];
+
 const SettingsPage = () => {
   const { user } = useUser();
+  const queryClient = useQueryClient();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [confirmRemove, setConfirmRemove] = useState(false);
   const {
     register,
     handleSubmit,
@@ -34,6 +52,52 @@ const SettingsPage = () => {
       return;
     }
     mutate(name);
+  };
+
+  const { mutate: uploadMutate, isPending: uploading } = useMutation({
+    mutationFn: uploadAvatar,
+    onSuccess: () => {
+      toast.success("Profile picture updated");
+      setPreview(null);
+      queryClient.invalidateQueries({ queryKey: ["user-me"] });
+    },
+    onError: (err: unknown) => {
+      const message =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message ?? "Upload failed. Try again.";
+      toast.error(message);
+      setPreview(null);
+    },
+  });
+
+  const { mutate: removeMutate, isPending: removing } = useMutation({
+    mutationFn: removeAvatar,
+    onSuccess: () => {
+      toast.success("Profile picture removed");
+      setConfirmRemove(false);
+      queryClient.invalidateQueries({ queryKey: ["user-me"] });
+    },
+    onError: () => {
+      toast.error("Remove failed. Try again.");
+    },
+  });
+
+  const pickFile = () => fileRef.current?.click();
+
+  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    if (!AVATAR_MIME_ALLOW.includes(file.type)) {
+      toast.error("Please choose a JPG, PNG, GIF or WebP image");
+      return;
+    }
+    if (file.size > AVATAR_MAX_BYTES) {
+      toast.error("Image too large — max 800KB");
+      return;
+    }
+    setPreview(URL.createObjectURL(file));
+    uploadMutate(file);
   };
 
   return (
@@ -65,10 +129,26 @@ const SettingsPage = () => {
           <h2 className="text-lg font-bold mb-6">Profile Picture</h2>
           <div className="flex flex-col sm:flex-row gap-8 items-center sm:items-start">
             <div className="relative group">
-              <UserAvatar size={"xl"} />
-              <button className="absolute bottom-1 right-1 bg-white dark:bg-[#1f2329] border border-[#e5e7eb] dark:border-[#2d323a] size-8 rounded-full flex items-center justify-center shadow-lg hover:text-primary2">
+              <UserAvatar size={"xl"} imageUrl={preview ?? user.avatarUrl} />
+              {(uploading || removing) && (
+                <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-black/40">
+                  <span className="loading loading-spinner loading-md text-white" />
+                </div>
+              )}
+              <button
+                onClick={pickFile}
+                aria-label="Change profile picture"
+                className="absolute bottom-1 right-1 bg-white dark:bg-[#1f2329] border border-[#e5e7eb] dark:border-[#2d323a] size-8 rounded-full flex items-center justify-center shadow-lg hover:text-primary2"
+              >
                 <span className="material-symbols-outlined text-lg">edit</span>
               </button>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/jpeg,image/png,image/gif,image/webp"
+                className="hidden"
+                onChange={onFileChange}
+              />
             </div>
             <div className="flex-1 text-center sm:text-left">
               <p className="font-bold text-lg mb-1">Update your photo</p>
@@ -77,12 +157,22 @@ const SettingsPage = () => {
                 400x400.
               </p>
               <div className="flex gap-3 justify-center sm:justify-start">
-                <button className="px-4 py-2 bg-primary2/10 text-primary2 font-bold text-xs uppercase tracking-wider rounded-lg hover:bg-primary2 hover:text-white transition-all">
-                  Upload New
+                <button
+                  onClick={pickFile}
+                  disabled={uploading}
+                  className="px-4 py-2 bg-primary2/10 text-primary2 font-bold text-xs uppercase tracking-wider rounded-lg hover:bg-primary2 hover:text-white transition-all disabled:opacity-60"
+                >
+                  {uploading ? "Uploading…" : "Upload New"}
                 </button>
-                <button className="px-4 py-2 bg-red-50 text-red-600 font-bold text-xs uppercase tracking-wider rounded-lg hover:bg-red-600 hover:text-white transition-all">
-                  Remove
-                </button>
+                {user.avatarUrl && (
+                  <button
+                    onClick={() => setConfirmRemove(true)}
+                    disabled={removing}
+                    className="px-4 py-2 bg-red-50 text-red-600 font-bold text-xs uppercase tracking-wider rounded-lg hover:bg-red-600 hover:text-white transition-all disabled:opacity-60"
+                  >
+                    Remove
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -229,6 +319,15 @@ const SettingsPage = () => {
         </button>
       </div>
       --> */}
+      <DeleteConfirmModal
+        show={confirmRemove}
+        close={() => setConfirmRemove(false)}
+        onConfirm={() => removeMutate()}
+        title="Remove profile picture?"
+        message="Your avatar will revert to your initial."
+        confirmLabel="Delete"
+        isLoading={removing}
+      />
     </div>
   );
 };

@@ -9,6 +9,7 @@ export interface AuthUser {
   id: string;
   name: string;
   email: string;
+  avatarUrl?: string | null;
   token?: string;
 }
 
@@ -125,7 +126,7 @@ export interface ProjectMembersType {
   projectId: string;
   role: string;
   joinedAt: string;
-  user: { name: string; email: string };
+  user: { name: string; email: string; avatarUrl?: string | null };
 }
 
 export interface AssignTaskPayload {
